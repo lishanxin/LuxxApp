@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg" >
+
+    <include
+        android:id="@+id/addswitch_title"
+        layout="@layout/title_bar" />
+
+    <net.senink.seninkapp.ui.view.StepsView
+        android:id="@+id/addswitch_step"
+        android:layout_width="@dimen/addbubble_stepview_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/addswitch_title"
+        android:layout_marginLeft="@dimen/addbubble_stepview_marginleft"
+        android:layout_marginTop="@dimen/addbubble_content_margintop" />
+
+    <RelativeLayout
+        android:id="@+id/addswitch_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addswitch_title"
+        android:layout_marginTop="@dimen/addbubble_content_margintop"
+        android:layout_toRightOf="@id/addswitch_step" >
+
+        <RelativeLayout
+            android:id="@+id/addswitch_step1_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" >
+
+            <TextView
+                android:id="@+id/addswitch_step1_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/addbubble_step1_height"
+                android:layout_alignParentLeft="true"
+                android:text="@string/addswitch_title"
+                android:textColor="@color/addbubble_textcolor"
+                android:textSize="@dimen/addbubble_step_textsize" />
+
+            <ImageView
+                android:id="@+id/addswitch_anima1"
+                android:layout_width="@dimen/addbubble_step1_height"
+                android:layout_height="@dimen/addbubble_step1_height"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/addbubble_stepview_marginleft"
+                android:layout_toRightOf="@id/addbubble_step1_tip"
+                android:background="@drawable/anim_black_loading"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/addswitch_scan_layout"
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_below="@id/addswitch_step1_layout"/>
+
+        <RelativeLayout
+            android:id="@+id/addswitch_input_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@id/addswitch_scan_layout"
+            android:visibility="gone"
+            android:gravity="center" >
+
+            <RelativeLayout
+                android:id="@+id/addswitch_ssid_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/wifi_connect_item_height"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/wifi_connect_margintop"
+                android:background="@android:color/white" >
+
+                <TextView
+                    android:id="@+id/addswitch_ssid_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/wifi_connect_item_marginleft"
+                    android:gravity="center_vertical"
+                    android:text="@string/ssid"
+                    android:textColor="@color/wifi_name_textcolor"
+                    android:textSize="@dimen/wifi_connect_textsize_large" />
+
+                <EditText
+                    android:id="@+id/addswitch_ssid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/wifi_connect_pwd_margin"
+                    android:layout_marginRight="@dimen/wifi_connect_pwd_margin"
+                    android:layout_toRightOf="@id/addswitch_ssid_tip"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/wifi_ssid_input"
+                    android:singleLine="true"
+                    android:textColor="@color/wifi_name_textcolor"
+                    android:textSize="@dimen/wifi_connect_textsize_small" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/addswitch_pwd_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/wifi_connect_item_height"
+                android:layout_below="@id/addswitch_ssid_layout"
+                android:layout_marginTop="@dimen/wifi_connect_margintop"
+                android:background="@android:color/white" >
+
+                <TextView
+                    android:id="@+id/addswitch_connect_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/wifi_connect_item_marginleft"
+                    android:gravity="center_vertical"
+                    android:text="@string/pwd"
+                    android:textColor="@color/wifi_name_textcolor"
+                    android:textSize="@dimen/wifi_connect_textsize_large" />
+
+                <EditText
+                    android:id="@+id/addswitch_connect_pwd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/wifi_connect_pwd_margin"
+                    android:layout_marginRight="@dimen/wifi_connect_pwd_margin"
+                    android:layout_toRightOf="@id/addswitch_connect_tip"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/password_hint"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:textColor="@color/wifi_name_textcolor"
+                    android:textSize="@dimen/wifi_connect_textsize_small" />
+            </RelativeLayout>
+            
+            <LinearLayout
+                android:id="@+id/addswitch_btn_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/wifi_connect_item_height"
+                android:layout_below="@id/addswitch_pwd_layout"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent" >
+
+                <Button
+                    android:id="@+id/addswitch_btn_ok"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="7dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/ok"
+                    android:background="#ff2acca4"
+                    android:textColor="@android:color/white"/>
+
+                <Button
+                    android:id="@+id/addswitch_btn_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="7dp"
+                    android:layout_marginLeft="@dimen/wifi_connect_pwd_margin"
+                    android:background="#ffe5a535"
+                    android:gravity="center"
+                    android:text="@string/cancel"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/addswitch_space"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/addbubble_space_height"
+            android:layout_below="@id/addswitch_input_layout"
+            android:background="@android:color/transparent" />
+
+        <RelativeLayout
+            android:id="@+id/addswitch_step2_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/addswitch_space" >
+
+            <TextView
+                android:id="@+id/addswitch_step2_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/addbubble_step_height"
+                android:layout_alignParentLeft="true"
+                android:text="@string/addbubble_step2_tip"
+                android:textColor="@color/addbubble_textcolor"
+                android:textSize="@dimen/addbubble_step_textsize" />
+
+            <ImageView
+                android:id="@+id/addswitch_anima2"
+                android:layout_width="@dimen/addbubble_step1_height"
+                android:layout_height="@dimen/addbubble_step1_height"
+                android:layout_marginLeft="@dimen/addbubble_stepview_marginleft"
+                android:layout_toRightOf="@id/addswitch_step2_tip"
+                android:background="@drawable/anim_black_loading"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/addswitch_step3_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/addswitch_step2_layout" >
+
+            <TextView
+                android:id="@+id/addswitch_step3_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/addbubble_step_height"
+                android:layout_alignParentLeft="true"
+                android:text="@string/addbubble_step3_tip"
+                android:textColor="@color/addbubble_textcolor"
+                android:textSize="@dimen/addbubble_step_textsize" />
+
+            <ImageView
+                android:id="@+id/addswitch_anima3"
+                android:layout_width="@dimen/addbubble_step1_height"
+                android:layout_height="@dimen/addbubble_step1_height"
+                android:layout_marginLeft="@dimen/addbubble_stepview_marginleft"
+                android:layout_toRightOf="@id/addswitch_step3_tip"
+                android:background="@drawable/anim_black_loading"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/addswitch_step4_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/addswitch_step3_layout"
+            android:text="@string/addbubble_step4_tip"
+            android:textColor="@color/addbubble_textcolor"
+            android:textSize="@dimen/addbubble_step_textsize" />
+    </RelativeLayout>
+
+</RelativeLayout>

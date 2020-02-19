@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff" >
+
+    <net.senink.seninkapp.ui.view.TopNavArea
+        android:id="@+id/icon_search_top"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:layout_alignParentTop="true" />
+
+    <net.senink.seninkapp.ui.view.BottomNavArea
+        android:id="@+id/icon_search_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="smart" />
+
+    <ImageView
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="10dip"
+        android:src="@drawable/freshselector"
+        android:visibility="gone" />
+
+    <net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshListView
+        android:id="@+id/smart_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/icon_search_bottom"
+        android:layout_below="@id/icon_search_top"
+        android:layout_marginTop="@dimen/lightcontrol_margintop"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="1dp"
+        android:fadingEdge="none"
+        android:headerDividersEnabled="true"
+        android:scrollbars="none" />
+
+</RelativeLayout>

@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color" >
+
+    <include
+        android:id="@+id/device_list_title"
+        layout="@layout/title_bar" />
+
+    <net.senink.seninkapp.ui.view.BottomNavArea
+        android:id="@+id/icon_search_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="setting" />
+
+    <TextView
+        android:id="@+id/she_bei_list_lebal"
+        style="@style/TextStyleInverse"
+        android:layout_height="30dip"
+        android:layout_below="@id/device_list_title"
+        android:layout_marginLeft="24dp"
+        android:text="@string/she_bei_list"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/she_bei_list_lebal"
+        android:background="#B6B6B6"
+        android:visibility="gone" />
+
+    <net.senink.seninkapp.ui.view.listview.SwipeMenuListView
+        android:id="@+id/device_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/icon_search_bottom"
+        android:layout_below="@id/device_list_title"
+        android:background="@color/bg_color"
+        android:scrollbars="none"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@color/light_divider_line_bg"
+        android:dividerHeight="1dp"
+        android:headerDividersEnabled="false"
+        android:footerDividersEnabled="true" />
+
+    <RelativeLayout
+        android:id="@+id/device_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/icon_loading_bg" >
+
+        <ImageView
+            android:id="@+id/device_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/anim_loading" />
+    </RelativeLayout>
+
+</RelativeLayout>

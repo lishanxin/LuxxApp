@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/lightedit_listview_item_height"
+    android:paddingLeft="@dimen/lightedit_item_padding"
+    android:paddingRight="@dimen/lightedit_item_padding" >
+
+    <Button
+        android:id="@+id/remoter_edit_item_name"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/lightedit_listview_item_height"
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/remoter_light"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/light_name_textcolor"
+        android:textSize="@dimen/lightedit_content_textsize" />
+
+</RelativeLayout>

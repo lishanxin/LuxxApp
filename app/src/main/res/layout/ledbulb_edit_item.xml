@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <CheckBox
+        android:id="@+id/ledbulb_edit_checkbox"
+        style="@style/CheckboxStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/ledbulb_edit_margin"
+        android:layout_marginRight="@dimen/ledbulb_edit_checkbox_margin" />
+
+    <TextView
+        android:id="@+id/ledbulb_edit_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/ledbulb_edit_checkbox"
+        android:text="壁灯1"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/ledbulb_edit_name_textsize" />
+
+    <TextView
+        android:id="@+id/ledbulb_edit_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/ledbulb_edit_margin"
+        android:alpha="0.6"
+        android:text="客厅"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/ledbulb_edit_location_textsize" />
+
+</RelativeLayout>

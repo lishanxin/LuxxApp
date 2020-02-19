@@ -1,0 +1,146 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <net.senink.seninkapp.ui.view.BottomNavArea
+        android:id="@+id/icon_search_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="home" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/icon_search_bottom"
+        android:orientation="vertical" >
+
+        <RelativeLayout style="@style/TitleLayoutStyle" >
+
+            <TextView
+                android:id="@+id/text_in_title"
+                style="@style/TextInTitleStyle" />
+
+            <ImageView
+                android:id="@+id/back"
+                style="@style/BackInTitleStyle"
+                android:layout_alignParentLeft="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/TitleLayoutStyle"
+            android:background="@android:color/white" 
+            >
+
+            <TextView
+                android:id="@+id/visit_internet"
+                style="@style/TextStyleInverse"
+                android:layout_marginLeft="24dp"
+                android:text="@string/visit_internet" />
+
+            <CheckBox
+                android:id="@+id/visit_internet_radio"
+                style="@style/MenuInTitleStyle"
+                android:button="@drawable/switch_btn_bg" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#B6B6B6" 
+            />
+
+        <RelativeLayout
+            style="@style/TitleLayoutStyle"
+            android:background="@android:color/white" 
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/add_to_black_list"
+                style="@style/TextStyleInverse"
+                android:layout_marginLeft="24dp"
+                android:text="@string/add_to_black_list" />
+
+            <CheckBox
+                android:id="@+id/add_to_black_list_radio"
+                style="@style/MenuInTitleStyle"
+                android:button="@drawable/switch_btn_bg" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#B6B6B6" 
+            android:visibility="gone"/>
+
+        <LinearLayout
+            style="@style/TitleLayoutStyle"
+            android:background="@android:color/white"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/connected_time_digit"
+                style="@style/TextStyleInverse"
+                android:layout_marginLeft="24dp"
+                 />
+
+            <TextView
+                style="@style/TextStyleInverse"
+                android:layout_marginLeft="24dp"
+                android:text="@string/connected_time" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#B6B6B6" />
+
+        <LinearLayout
+            style="@style/TitleLayoutStyle"
+            android:background="@android:color/white"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/previous_total_data_info"
+                style="@style/TextStyleInverse"
+                android:layout_marginLeft="24dp"
+                 />
+
+            <TextView
+                style="@style/TextStyleInverse"
+                android:layout_marginLeft="24dp"
+                android:text="@string/download_total_liu_liang" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#B6B6B6" />
+
+        <LinearLayout
+            style="@style/TitleLayoutStyle"
+            android:background="@android:color/white"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/download_speed"
+                style="@style/TextStyleInverse"
+                android:layout_marginLeft="24dp"
+               />
+
+            <TextView
+                style="@style/TextStyleInverse"
+                android:layout_marginLeft="24dp"
+                android:text="@string/download_speed" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#B6B6B6" />
+    </LinearLayout>
+
+</RelativeLayout>

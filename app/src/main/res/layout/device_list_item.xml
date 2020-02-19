@@ -1,0 +1,60 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@android:color/transparent"
+    android:layout_height="68dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="32dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:clickable="true"
+        android:contentDescription="@string/device_info_title"
+        android:src="@drawable/icon_device_default"
+        android:layout_height="32dp" />
+
+    <TextView
+        android:id="@+id/position"
+        style="@style/TextStyleInverse"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:drawablePadding="5dp"
+        android:drawableRight="@drawable/icon_arrow"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:background="@android:color/transparent"
+        android:textColor="@color/light_text_color"
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/icon"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:background="@android:color/transparent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/light_text_color" />
+
+        <TextView
+            android:id="@+id/mac"
+            style="@style/TextStyleInverse"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/light_text_color"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</RelativeLayout>

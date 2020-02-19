@@ -1,0 +1,120 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            style="@style/TextInTitleStyle"
+            android:text="@string/smart_device_manager" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:text="@string/smart_device_list" />
+
+        <RelativeLayout
+            android:id="@+id/plug_001"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                style="@style/EditStyle"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/icon_plug"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:text="排插1" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/icon_delete" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:background="#B6B6B6" />
+
+        <RelativeLayout
+            android:id="@+id/plug_002"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                style="@style/EditStyle"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/icon_plug"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:text="排插2" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/icon_delete" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/add_new_device"
+                style="@style/BtnStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="@dimen/login_loginbtn_marginTop"
+                android:layout_weight="0.5"
+                android:drawableLeft="@drawable/icon_add"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="6dp"
+                android:paddingTop="10dp"
+                android:text="@string/add_new_device" />
+
+            <TextView
+                android:id="@+id/add_exited_device"
+                style="@style/BtnStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginTop="@dimen/login_loginbtn_marginTop"
+                android:layout_weight="0.5"
+                android:drawableLeft="@drawable/icon_add"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingLeft="6dp"
+                android:paddingTop="10dp"
+                android:text="@string/add_exited_device" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

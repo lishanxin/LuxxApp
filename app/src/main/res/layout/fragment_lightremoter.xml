@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/remoter_list"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/lightcontrol_margintop"
+    android:cacheColorHint="@android:color/transparent"
+    android:divider="@color/light_divider_line_bg"
+    android:dividerHeight="1dp"
+    android:fadingEdge="none"
+    android:headerDividersEnabled="true"
+    android:scrollbars="none" />

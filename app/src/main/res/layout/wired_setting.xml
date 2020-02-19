@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            style="@style/TextInTitleStyle"
+            android:text="@string/access_wired_network" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/save"
+            style="@style/MenuInTitleStyle"
+            android:background="@null"
+            android:text="@string/save"
+            android:textColor="#ffffffff"
+            android:textSize="16dip" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:text="@string/access_wired_network" />
+
+        <EditText
+            android:id="@+id/ssid"
+            style="@style/EditStyle"
+            android:hint="@string/select_wirless" />
+
+        <EditText
+            android:id="@+id/password"
+            style="@style/EditStyle"
+            android:hint="@string/password_hint" />
+    </LinearLayout>
+
+</LinearLayout>

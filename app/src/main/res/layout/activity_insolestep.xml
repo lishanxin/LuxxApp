@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg" >
+
+    <include
+        android:id="@+id/insolestep_title"
+        layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/insolestep_step_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/insolestep_steps_height"
+        android:layout_below="@id/insolestep_title"
+        android:layout_marginBottom="@dimen/insolestep_stepslayout_marginbottom"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/insolestep_padding"
+        android:paddingRight="@dimen/insolestep_padding" >
+
+        <TextView
+            android:id="@+id/insolestep_steps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/insolestep_steps_distance"
+            android:text="7889"
+            android:maxLength="6"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:textColor="@color/insolestep_steps_textcolor"
+            android:textSize="@dimen/insolestep_steps_textsize" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/insolestep_steps"
+            android:paddingTop="@dimen/insolestep_steps_paddingtop"
+            android:text="@string/steps"
+            android:textColor="@color/insolestep_steps_textcolor"
+            android:textSize="@dimen/insolestep_steps_small_textsize" />
+
+        <TextView
+            android:id="@+id/insolestep_todaystep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:drawablePadding="@dimen/insolestep_todaystep_drawablepadding"
+            android:drawableTop="@drawable/icon_step_walk"
+            android:text="@string/today_steps"
+            android:textColor="@color/insolestep_steps_tip_textcolor"
+            android:textSize="@dimen/insolestep_time_textsize" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/insolestep_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/insolestep_step_layout"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/insolestep_date_padding"
+        android:paddingRight="@dimen/insolestep_date_padding" >
+
+        <LinearLayout
+            android:id="@+id/insolestep_time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/insolestep_time_margintop"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <CheckBox
+                    android:id="@+id/insolestep_day"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:button="@android:color/transparent"
+                    android:gravity="center_horizontal|bottom"
+                    android:text="@string/day"
+                    android:paddingRight="@dimen/insolestep_date_paddingright"
+                    android:textColor="@color/insole_date_textcolor"
+                    android:textSize="@dimen/insolestep_date_textsize" />
+
+                <net.senink.seninkapp.ui.view.LineView
+                    android:id="@+id/insolestep_day_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/insolestep_line_height"
+                    android:layout_below="@id/insolestep_day" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <CheckBox
+                    android:id="@+id/insolestep_week"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:button="@android:color/transparent"
+                    android:gravity="center_horizontal|bottom"
+                    android:text="@string/week"
+                    android:paddingRight="@dimen/insolestep_date_paddingright"
+                    android:textColor="@color/insole_date_textcolor"
+                    android:textSize="@dimen/insolestep_date_textsize" />
+
+                <net.senink.seninkapp.ui.view.LineView
+                    android:id="@+id/insolestep_week_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/insolestep_line_height"
+                    android:layout_below="@id/insolestep_week" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <CheckBox
+                    android:id="@+id/insolestep_month"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:button="@android:color/transparent"
+                    android:gravity="center_horizontal|bottom"
+                    android:paddingRight="@dimen/insolestep_date_paddingright"
+                    android:text="@string/month"
+                    android:textColor="@color/insole_date_textcolor"
+                    android:textSize="@dimen/insolestep_date_textsize" />
+
+                <net.senink.seninkapp.ui.view.LineView
+                    android:id="@+id/insolestep_month_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/insolestep_line_height"
+                    android:layout_below="@id/insolestep_month" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <CheckBox
+                    android:id="@+id/insolestep_year"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:button="@android:color/transparent"
+                    android:gravity="center_horizontal|bottom"
+                    android:paddingRight="@dimen/insolestep_date_paddingright"
+                    android:text="@string/year"
+                    android:textColor="@color/insole_date_textcolor"
+                    android:textSize="@dimen/insolestep_date_textsize" />
+
+                <net.senink.seninkapp.ui.view.LineView
+                    android:id="@+id/insolestep_year_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/insolestep_line_height"
+                    android:layout_below="@id/insolestep_year" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/insolestep_time"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/insolestep_time_height"
+            android:layout_below="@id/insolestep_time_layout"
+            android:gravity="center_vertical"
+            android:text="12月"
+            android:textColor="@color/insolestep_date_normal_textcolor"
+            android:textSize="@dimen/insolestep_time_textsize" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/insolestep_content_height"
+            android:layout_below="@id/insolestep_time"
+            android:background="@drawable/icon_step_content_bg"
+            android:padding="@dimen/insolestep_content_padding" >
+
+            <TextView
+                android:id="@+id/insolestep_stepnum_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/insolestep_stepnum_margintop"
+                android:gravity="center_vertical"
+                android:text="12月"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/insolestep_stepnum_tip_textsize" />
+
+            <TextView
+                android:id="@+id/insolestep_stepnum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/insolestep_stepnum_tip"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/insolestep_stepnum_paddingtop"
+                android:text="12月"
+                android:textColor="@color/insolestep_stepnum_textcolor"
+                android:textSize="@dimen/insolestep_time_textsize" />
+            
+            <net.senink.seninkapp.ui.view.CurveProfileView
+                android:id="@+id/insolestep_curve"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_below="@id/insolestep_stepnum"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

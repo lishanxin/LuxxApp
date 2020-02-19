@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg" >
+
+    <RelativeLayout
+        android:id="@+id/scenedetail_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/scene_detail_picture_height"
+        android:background="@drawable/icon_scene_bg_default"
+        android:paddingBottom="@dimen/scene_detail_picture_paddingBottom" >
+
+        <include
+            android:id="@+id/scenedetail_title"
+            layout="@layout/title_bar" />
+
+        <ImageButton
+            android:id="@+id/scenedetail_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/scenedetail_title"
+            android:contentDescription="@string/scene"
+            android:layout_marginRight="@dimen/scene_detail_camera_marginright"
+            android:layout_marginTop="@dimen/scene_detail_camera_margintop"
+            android:background="@drawable/btn_camera_selector" />
+
+        <ImageButton
+            android:id="@+id/scenedetail_selectpicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/scenedetail_camera"
+            android:contentDescription="@string/scene"
+            android:layout_marginRight="@dimen/scene_detail_camera_marginright"
+            android:layout_marginTop="@dimen/scene_detail_camera_margintop"
+            android:background="@drawable/btn_select_picture_selector" />
+    </RelativeLayout>
+
+   <RelativeLayout
+        android:id="@+id/scenendetail_editname_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/scenen_detail_name_height"
+        android:layout_below="@id/scenedetail_title_layout"
+        android:background="@drawable/icon_scenename_edit"
+        android:layout_marginBottom="@dimen/scenen_detail_name_marginbottom"
+        android:clickable="true"
+        android:layout_centerHorizontal="true"
+        android:descendantFocusability="beforeDescendants"
+        android:minWidth="@dimen/scene_detail_name_minWidth" >
+
+       <EditText
+            android:id="@+id/scenedetail_scenename"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/scenen_detail_name_height"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:maxLength="8"
+            android:hint=""
+            android:singleLine="true"
+            android:textColor="@color/threebtn_bg"
+            android:textSize="@dimen/scene_detail_name_textsize" />
+       <!--android:drawableRight="@drawable/icon_write_big"-->
+    </RelativeLayout>
+
+    <net.senink.seninkapp.ui.view.ColorCircle
+        android:id="@+id/scenedetail_colorcircle"
+        android:layout_width="@dimen/scene_circle_width"
+        android:layout_height="@dimen/scene_circle_height"
+        android:layout_below="@id/scenendetail_editname_layout"
+        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:id="@+id/scenedetail_bright_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/scene_detail_white_marginbottom"
+        android:layout_marginLeft="@dimen/light_item_paddingleft"
+        android:layout_marginRight="@dimen/light_item_paddingleft" >
+
+        <ImageView
+            android:id="@+id/scenedetail_bright_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/scene"
+            android:background="@drawable/icon_dark1" />
+
+        <SeekBar
+            android:id="@+id/scenedetail_bright_seekbar"
+            android:layout_width="@dimen/lightsetting_seekbar_width"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:max="255"
+            android:maxHeight="@dimen/scene_detail_seekbar_maxheight"
+            android:minHeight="@dimen/scene_detail_seekbar_minheight"
+            android:paddingLeft="@dimen/scene_detail_seekbar_paddingleft"
+            android:paddingRight="@dimen/scene_detail_seekbar_paddingright"
+            android:progress="255"
+            android:progressDrawable="@drawable/seekbar_bright"
+            android:thumb="@drawable/seekbar_thumb" />
+
+        <ImageView
+            android:id="@+id/scenedetail_bright_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/scene"
+            android:background="@drawable/icon_bright1" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/scenedetail_coldwarm_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/scene_detail_coldwarm_marginbottom"
+        android:layout_marginLeft="@dimen/light_item_paddingleft"
+        android:layout_marginRight="@dimen/light_item_paddingleft" >
+
+        <ImageView
+            android:id="@+id/scenedetail_coldwarm_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/scene"
+            android:background="@drawable/icon_cold0" />
+
+        <SeekBar
+            android:id="@+id/scenedetail_coldwarm_seekbar"
+            android:layout_width="@dimen/lightsetting_seekbar_width"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:max="255"
+            android:maxHeight="@dimen/scene_detail_seekbar_maxheight"
+            android:minHeight="@dimen/scene_detail_seekbar_minheight"
+            android:paddingLeft="@dimen/scene_detail_seekbar_paddingleft"
+            android:paddingRight="@dimen/scene_detail_seekbar_paddingright"
+            android:progress="127"
+            android:progressDrawable="@drawable/seekbar_coldwarm_progressdrawable"
+            android:thumb="@drawable/seekbar_thumb" />
+
+        <ImageView
+            android:id="@+id/scenedetail_coldwarm_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/scene"
+            android:background="@drawable/icon_warm0" />
+    </RelativeLayout>
+
+</RelativeLayout>

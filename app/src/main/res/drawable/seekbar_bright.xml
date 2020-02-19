@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+<!-- 全部能量图 -->
+
+    <item android:id="@android:id/background" >
+        <scale android:drawable="@drawable/light_seekbar_bg" android:scaleGravity="fill_horizontal"/>
+    </item>
+    <item android:id="@android:id/secondaryProgress">
+        <clip android:drawable="@drawable/light_seekbar_fg" android:gravity="left" android:clipOrientation="horizontal"/>
+    </item>
+
+    <!--<item android:id="@android:id/progress" android:drawable="@drawable/light_seekbar_fg"/>-->
+    <!--<item android:id="@android:id/background" android:drawable="@drawable/light_seekbar_bg"/>-->
+</layer-list>

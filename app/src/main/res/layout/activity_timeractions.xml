@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/timer_action_bgcolor" >
+
+    <include
+        android:id="@+id/timerdeviceaction_title"
+        layout="@layout/title_bar" />
+
+    <GridView
+        android:id="@+id/timerdeviceaction_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:padding="0dp"
+        android:layout_below="@id/timerdeviceaction_title"
+        android:cacheColorHint="@android:color/transparent"
+        android:horizontalSpacing="1dp"
+        android:columnWidth="@dimen/timeraction_item_height"
+        android:listSelector="@null"
+        android:numColumns="4"
+        android:verticalSpacing="1dp" />
+
+</RelativeLayout>

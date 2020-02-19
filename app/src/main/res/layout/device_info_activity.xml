@@ -1,0 +1,342 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff" >
+
+    <include
+        android:id="@+id/device_infor_title"
+        layout="@layout/title_bar" />
+
+    <net.senink.seninkapp.ui.view.BottomNavArea
+        android:id="@+id/icon_search_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="setting" />
+
+    <ScrollView
+        android:id="@+id/content_title_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/icon_search_bottom"
+        android:layout_below="@id/device_infor_title"
+        android:background="@color/bg_color">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/device_name_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/transparent" >
+
+                <ImageView
+                    android:id="@+id/device_icon"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:contentDescription="@string/device_info_title"
+                    android:src="@drawable/icon_device_default"
+                    android:layout_height="38dp"
+                    android:layout_width="38dp" />
+
+                <Button
+                    android:id="@+id/device_name_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/device_name"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dip"
+                    android:layout_toLeftOf="@id/device_name_right"
+                    android:layout_toRightOf="@id/device_icon"
+                    android:gravity="right"
+                    android:text="@string/no_know"
+                    android:textSize="12sp"
+                    android:textColor="@color/light_text_color" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/light_divider_line_bg" />
+
+            <RelativeLayout
+                android:id="@+id/position_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/transparent"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/position_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/location" />
+
+                <Button
+                    android:id="@+id/position_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow" />
+
+                <TextView
+                    android:id="@+id/position_name"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@id/position_right"
+                    android:layout_toRightOf="@id/position_lebal"
+                    android:gravity="right"
+                    android:text="@string/no_know"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/light_divider_line_bg"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/hard_version_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/transparent" >
+
+                <TextView
+                    android:id="@+id/hard_version_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/gu_jian_version"
+                    android:textColor="@color/light_text_color" />
+
+                <Button
+                    android:id="@+id/hard_version_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow" />
+
+                <ProgressBar
+                    android:id="@+id/loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/hard_version_right"
+                    android:background="@android:color/transparent" />
+
+                <TextView
+                    android:id="@+id/version"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@id/loading"
+                    android:layout_toRightOf="@id/hard_version_lebal"
+                    android:gravity="right"
+                    android:textSize="12sp"
+                    android:textColor="@color/light_text_color" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/light_divider_line_bg" />
+
+            <RelativeLayout
+                android:id="@+id/mac_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/transparent" >
+
+                <TextView
+                    android:id="@+id/mac_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/mac_address"
+                    android:textColor="@color/light_text_color" />
+
+                <Button
+                    android:id="@+id/mac_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/mac"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/mac_right"
+                    android:layout_toRightOf="@id/mac_lebal"
+                    android:gravity="right"
+                    android:textSize="12sp"
+                    android:textColor="@color/light_text_color" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/light_divider_line_bg" />
+
+            <Button
+                android:id="@+id/unbond"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bottom_nav_area_height"
+                android:layout_margin="15dp"
+                android:background="#fff00000"
+                android:text="解除绑定"
+                android:textColor="#ffffffff"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/type_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/type_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="类型" />
+
+                <Button
+                    android:id="@+id/type_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/type"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/type_right"
+                    android:layout_toRightOf="@id/type_lebal"
+                    android:gravity="right"
+                    android:text="网关"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/make_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/make_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/make_lebal" />
+
+                <Button
+                    android:id="@+id/make_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/maker"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/make_right"
+                    android:layout_toRightOf="@id/make_lebal"
+                    android:gravity="right"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/xing_hao_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/transparent"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/xing_hao_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/xing_hao" />
+
+                <Button
+                    android:id="@+id/xing_hao_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/xing_hao"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/xing_hao_right"
+                    android:layout_toRightOf="@id/xing_hao_lebal"
+                    android:gravity="right"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/product_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/product_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/chan_di" />
+
+                <Button
+                    android:id="@+id/product_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/product"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/product_right"
+                    android:layout_toRightOf="@id/product_lebal"
+                    android:gravity="right"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

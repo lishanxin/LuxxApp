@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="net.senink.seninkapp"
+    android:label="${app_name}"
+    android:icon="${app_icon}" >
+
+     <uses-sdk
+        android:minSdkVersion="17"
+        android:targetSdkVersion="23" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+    <!--<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />-->
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
+    <!--<uses-permission android:name="android.permission.DISABLE_KEYGUARD" />-->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />-->
+    <!--<uses-permission android:name="android.permission.CAMERA" />-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--<uses-permission android:name="android.permission.VIBRATE" />-->
+    <!--<uses-permission android:name="android.permission.FLASHLIGHT" />-->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!--<uses-feature android:name="android.hardware.camera" />-->
+    <!--<uses-feature android:name="android.hardware.camera.autofocus" />-->
+
+    <application
+        android:name="net.senink.seninkapp.MyApplication"
+        android:allowBackup="true"
+        android:label="${app_name}"
+        android:icon="${app_icon}"
+        tools:replace="android:label,android:icon"
+        android:hardwareAccelerated="false"
+        android:theme="@android:style/Theme.Light.NoTitleBar" >
+        <activity
+            android:name="net.senink.seninkapp.ui.home.HomeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/Theme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.LoginActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.home.SettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.SwitchDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.LightSettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.ModifyNameActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.WifiActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+       <activity
+            android:name="net.senink.seninkapp.ui.activity.AddSwitchActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="nosensor"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.WifiConnectActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.WifiOtherConnectActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.LightEffectsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.RemoterSettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.LightGroupSettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.LightEditActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.SceneDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.SceneSettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.RemoterEditActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.AddDevicesActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+         <activity
+            android:name="net.senink.seninkapp.ui.activity.AddBlueToothDeviceActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />         
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.DevicePositionActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.LightRGBDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.LightTimerListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.LightLEDDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.LightTimerAddActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.musicColorDetailActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name=".ui.activity.musicControlActivify"
+            android:theme="@style/MusicDialogStyleBottom" />
+        <activity
+            android:name="net.senink.seninkapp.ui.setting.TabSettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.setting.UserInfoActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.setting.DeviceListActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.setting.DeviceInfoActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.setting.AddNewAccuActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.setting.ParentAccuActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.RegisterActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.ForgetPasswordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+         <activity
+            android:name="net.senink.seninkapp.ui.activity.ResetPasswordActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+         <activity
+            android:name="net.senink.seninkapp.ui.activity.TimerListActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+         <activity
+            android:name="net.senink.seninkapp.ui.activity.TimerActionsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+         <activity
+            android:name="net.senink.seninkapp.ui.activity.TimerConditionActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+         <!--<activity-->
+            <!--android:name="net.senink.seninkapp.ui.activity.AddTimerActivity"-->
+            <!--android:launchMode="singleTop"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@style/Theme" />-->
+         <activity
+            android:name="net.senink.seninkapp.ui.activity.MarqueeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+         <activity
+            android:name="net.senink.seninkapp.ui.activity.MarqueeColorActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+         <activity
+            android:name="net.senink.seninkapp.ui.activity.MarqueeLightActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.RegisterDeviceDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.ConnectedPortDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.SelectWorkingModeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.AdvanceSettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.InternetAccountSetting"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.WiredSetting"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.WirlessSetting"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.smart.SmartMainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.smart.AddSmartActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.smart.ParentsControl"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.smart.AddDevice"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.smart.AddTimer"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.DeviceDetailActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.DeviceManagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.DeviceNameActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.DevicePostionActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.AdvanceSelectWorkingModeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.AdvanceNetActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.AdvanceInternetAccountSetting"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.StaticIpSetting"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.LanSetting"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.WirelessAdvanceSettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.WirelessInfoSettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.smart.KuanDaiControlDeviceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.smart.LiuLiangControlDeviceActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.smart.LiuLiangSettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.activity.MipcaCaptureActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="nosensor"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name="net.senink.seninkapp.ui.smart.AddIntallSmartActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.setting.ModifyPasswordActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.setting.AboutActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.setting.LocationListsActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity
+            android:name="net.senink.seninkapp.ui.home.DeviceNameListsActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme" />
+        <activity android:name="com.pgyersdk.activity.FeedbackActivity"/>
+        <service
+            android:name="net.senink.seninkapp.service.musicService"
+            android:enabled="true"
+            android:exported="false" >
+        </service>
+        <meta-data
+            android:name="PGYER_APPID"
+            android:value="${PGYER_APPID}" >
+        </meta-data>
+         <!--<meta-data-->
+            <!--android:name="UMENG_APPKEY"-->
+            <!--android:value="558cb20367e58edd8b003a18" >-->
+        <!--</meta-data>-->
+        <!--<meta-data-->
+            <!--android:name="UMENG_CHANNEL"-->
+            <!--android:value="senink" >-->
+        <!--</meta-data>-->
+    </application>
+
+</manifest>

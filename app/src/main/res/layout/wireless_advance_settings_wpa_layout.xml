@@ -1,0 +1,121 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical" >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#B6B6B6" />
+
+    <TextView
+        style="@style/TextStyleInverse"
+        android:layout_marginBottom="@dimen/edittext_padding_left_right"
+        android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+        android:layout_marginRight="@dimen/advance_settings_marginLeft"
+        android:layout_marginTop="@dimen/edittext_padding_left_right"
+        android:text="@string/wireless_encryption_type" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#B6B6B6" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+        android:layout_marginRight="@dimen/advance_settings_marginLeft"
+        android:layout_marginTop="@dimen/edittext_padding_left_right"
+        android:background="@android:color/white"
+        android:orientation="horizontal" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:background="@android:color/transparent"
+            android:text="@string/wireless_WPA_encryption_mode"
+            android:textColor="@color/blackColor" />
+
+        <TextView
+            android:id="@+id/wireless_WPA_encryption_mode"
+            style="@style/EditStyle"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawablePadding="@dimen/wireless_text_draw_padding"
+            android:drawableRight="@drawable/icon_arrow"
+            android:gravity="center_vertical|right"
+            android:text="@string/select_wirless" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+        android:layout_marginRight="@dimen/advance_settings_marginLeft"
+        android:background="#B6B6B6" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+        android:layout_marginRight="@dimen/advance_settings_marginLeft"
+        android:background="@android:color/white"
+        android:orientation="horizontal" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:background="@android:color/transparent"
+            android:text="@string/wireless_key_algorithm"
+            android:textColor="@color/blackColor" />
+
+        <TextView
+            android:id="@+id/wireless_WPA_key_algorithm"
+            style="@style/EditStyle"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:drawablePadding="@dimen/wireless_text_draw_padding"
+            android:drawableRight="@drawable/icon_arrow"
+            android:gravity="center_vertical|right"
+            android:text="@string/select_wirless" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+        android:layout_marginRight="@dimen/advance_settings_marginLeft"
+        android:background="#B6B6B6" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/edittext_padding_left_right"
+        android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+        android:layout_marginRight="@dimen/advance_settings_marginLeft"
+        android:background="@android:color/white"
+        android:orientation="horizontal" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:background="@android:color/transparent"
+            android:text="@string/wireless_wpa_password"
+            android:textColor="@color/blackColor" />
+
+        <EditText
+            android:id="@+id/wireless_password"
+            style="@style/EditStyle"
+            android:layout_width="0dip"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/wireless_edit_margin_right"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical|right"
+            android:hint="@string/password_hint"
+            android:inputType="textPassword" />
+    </LinearLayout>
+
+</LinearLayout>

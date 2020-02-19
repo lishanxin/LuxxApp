@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/deviceposition_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/deviceposition_title_bottom"
+        layout="@layout/title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_below="@id/deviceposition_title" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+<!--             <RelativeLayout
+                android:id="@+id/position_defined_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/deviceposition_item_height"
+                android:background="@android:color/white" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/deviceposition_margin"
+                    android:gravity="center"
+                    android:text="@string/custom"
+                    android:textColor="@color/deviceposition_textcolor"
+                    android:textSize="@dimen/deviceposition_item_textsize" />
+
+                <Button
+                    android:id="@+id/deviceposition_custom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/deviceposition_defined_marginright"
+                    android:background="@drawable/arrow_left" />
+            </RelativeLayout>
+            <View 
+                android:id="@+id/deviceposition_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider_bgcolor"
+                android:layout_below="@id/position_defined_layout"/> -->
+            <net.senink.seninkapp.ui.view.DeviceListView
+                android:id="@+id/deviceposition_listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:background="@android:color/white"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@color/deviceposition_divider_bg"
+                android:dividerHeight="1dp" />
+        </RelativeLayout>
+    </ScrollView>
+ <RelativeLayout
+        android:id="@+id/deviceposition_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@drawable/icon_loading_bg" >
+
+        <ImageView
+            android:id="@+id/deviceposition_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/anim_loading" />
+    </RelativeLayout>
+</RelativeLayout>

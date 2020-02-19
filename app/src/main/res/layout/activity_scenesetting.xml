@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white" >
+
+    <include
+        android:id="@+id/scenesetting_title"
+        layout="@layout/title_bar" />
+
+    <TextView
+        android:id="@+id/scenesetting_use_tip"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/scenesetting_title"
+        android:paddingLeft="23dp"
+        android:background="@color/light_bg"
+        android:gravity="center_vertical"
+        android:text="@string/scene_setting_use_scene"
+        android:textColor="#ff999999"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/scenesetting_tip"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/scenesetting_use_tip"
+        android:layout_marginTop="202dp"
+        android:background="@color/light_bg"
+        android:gravity="center_vertical|right"
+        android:paddingRight="23dp"
+        android:text="可以将任意场景添加至常用场景"
+        android:textColor="#ff999999"
+        android:textSize="15sp"
+        android:visibility="gone" />
+
+    <net.senink.seninkapp.ui.gridview.DynamicGridView
+        android:id="@+id/scenesetting_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/scenesetting_use_tip"
+        android:background="@android:color/transparent"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="3"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="15dp" />
+</RelativeLayout>

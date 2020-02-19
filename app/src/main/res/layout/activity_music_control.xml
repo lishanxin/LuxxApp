@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/music_controlpanel">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:baselineAligned="true"
+        android:orientation="horizontal"
+        android:layout_above="@+id/lv_songs_list"
+        android:background="@drawable/lv_music_control_boder"
+        android:clickable="true"
+        android:contextClickable="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Local Files"
+            android:textColor="#51A4FC"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:id="@+id/tv_music_count_title"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="24"
+            android:textColor="#51A4FC"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+            android:layout_marginLeft="8dp"
+            android:singleLine="true"
+            android:layout_marginBottom="4dp"
+            android:id="@+id/tv_music_count"
+            android:textSize="12dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|end">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/ib_playmode"
+                android:src="@drawable/btn_music_mode_order_selector"
+                android:background="@android:color/transparent"
+                android:layout_marginRight="20dp" />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/ib_effect"
+                android:src="@drawable/btn_music_effect_selector"
+                android:background="@android:color/transparent"
+                android:layout_marginRight="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cdcdcd"
+        android:layout_above="@+id/lv_songs_list" />
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/music_control_songs_list_high"
+        android:id="@+id/lv_songs_list"
+        android:layout_above="@+id/music_controlbar"
+        android:background="@drawable/lv_music_control_boder"
+        android:dividerHeight="-1dp"
+        android:clickable="true"
+        android:choiceMode="singleChoice">
+
+    </ListView>
+    <include
+        android:id="@+id/music_controlbar"
+        layout="@layout/activity_music_controlpanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

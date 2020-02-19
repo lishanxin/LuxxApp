@@ -1,0 +1,89 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/TextInTitleStyle"
+            android:text="@string/static_ip" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/save"
+            style="@style/MenuInTitleStyle"
+            android:background="@null"
+            android:text="@string/save"
+            android:textColor="#ffffffff"
+            android:textSize="16dip" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:text="@string/ip_address" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#ffdddddd" />
+
+        <EditText
+            android:id="@+id/ip_address"
+            style="@style/EditStyle"
+            android:hint="@string/ip_address" />
+
+        <EditText
+            android:id="@+id/yan_ma"
+            style="@style/EditStyle"
+            android:hint="@string/yan_ma" />
+
+        <EditText
+            android:id="@+id/wang_guan_ip"
+            style="@style/EditStyle"
+            android:hint="@string/wang_guan_ip" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginTop="5dip"
+            android:background="#ffdddddd" />
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:text="@string/dns_set" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:layout_marginTop="5dip"
+            android:background="#ffdddddd" />
+
+        <EditText
+            android:id="@+id/dns"
+            style="@style/EditStyle"
+            android:hint="@string/yu_ming" />
+
+        <EditText
+            android:id="@+id/bei_yong_ip"
+            style="@style/EditStyle"
+            android:hint="@string/yu_ming_backup" />
+    </LinearLayout>
+
+
+</LinearLayout>

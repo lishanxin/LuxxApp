@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="repeat_dates" translatable="false">
+        <item>日</item>
+        <item>一</item>
+        <item>二</item>
+        <item>三</item>
+        <item>四</item>
+        <item>五</item>
+        <item>六</item>
+    </string-array>
+    
+      <string-array name="repeat_dates_num" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="information_gridview" translatable="false">
+        <item>上网信息</item>
+        <item>名称</item>
+        <item>名称</item>
+    </string-array>
+    
+    <string-array name="select_time" translatable="false">
+        <item>1:00</item>
+        <item>2:00</item>
+        <item>3:00</item>
+        <item>4:00</item>
+        <item>5:00</item>
+        <item>6:00</item>
+        <item>7:00</item>
+        <item>8:00</item>
+        <item>9:00</item>
+        <item>10:00</item>
+        <item>11:00</item>
+        <item>12:00</item>
+        <item>13:00</item>
+        <item>14:00</item>
+        <item>15:00</item>
+        <item>16:00</item>
+        <item>17:00</item>
+        <item>18:00</item>
+        <item>19:00</item>
+        <item>20:00</item>
+        <item>21:00</item>
+        <item>22:00</item>
+        <item>23:00</item>
+        <item>00:00</item>
+    </string-array>
+    <string-array name="position_array" translatable="false">
+        <item>花园</item>
+        <item>后花园</item>
+        <item>绿地</item>
+        <item>入户花园</item>
+        <item>主客厅 </item>
+        <item>副客厅</item>
+        <item>小客厅</item>
+        <item>餐厅</item>
+        <item>小餐厅</item>
+        <item>主厨房</item>
+        <item>小厨房</item>
+        <item>车库</item>
+        <item>停车位</item>
+        <item>主卧室</item>
+        <item>客房一</item>
+        <item>客房二</item>
+        <item>客房三</item>
+        <item>客房四</item>
+        <item>客房五</item>
+        <item>客房六</item>
+        <item>儿童房</item>
+        <item>玩具房</item>
+        <item>视听室</item>
+        <item>茶室</item>
+        <item>储物间 </item>
+        <item>主卧卫生间</item>
+        <item>客房一洗手间</item>
+        <item>客房二洗手间</item>
+        <item>客房三洗手间</item>
+        <item>客房四洗手间</item>
+        <item>客房五洗手间</item>
+        <item>客房六洗手间</item>
+        <item>公共卫生间</item>
+        <item>浴室</item>
+        <item>主凉台</item>
+        <item>生活凉台</item>
+        <item>活动区</item>
+        <item>儿童活动区</item>
+        <item>屋顶</item>
+        <item>储物房</item>
+    </string-array>
+</resources>

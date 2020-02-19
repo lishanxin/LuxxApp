@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/remoter_bgcolor" >
+
+    <include
+        android:id="@+id/remoter_setting_title"
+        layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/remoter_setting_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/remoter_setting_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/remoter_frame_margin"
+        android:layout_marginRight="@dimen/remoter_frame_margin"
+        android:layout_marginTop="@dimen/remoter_frame_margintop"
+        android:background="@drawable/remoter_setting_frame"
+        android:paddingBottom="@dimen/remoter_frame_paddingbottom" >
+
+        <Button
+            android:id="@+id/remoter_setting_model"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/remoter_switcher_marginleft"
+            android:layout_marginTop="@dimen/remoter_light_margintop"
+            android:background="@drawable/remote_btn_on"
+            android:enabled="false" />
+
+        <Button
+            android:id="@+id/remoter_setting_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="@dimen/remoter_switcher_marginleft"
+            android:layout_marginTop="@dimen/remoter_light_margintop"
+            android:background="@drawable/remote_btn_off"
+            android:enabled="false" />
+
+        <Button
+            android:id="@+id/remoter_setting_allon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/remoter_setting_model"
+            android:layout_marginLeft="@dimen/remoter_switcher_marginleft"
+            android:layout_marginTop="@dimen/remoter_switcher_margintop"
+            android:background="@drawable/remote_btn_model"
+            android:enabled="false" />
+
+        <Button
+            android:id="@+id/remoter_setting_alloff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/remoter_setting_light"
+            android:layout_marginRight="@dimen/remoter_switcher_marginleft"
+            android:layout_marginTop="@dimen/remoter_switcher_margintop"
+            android:background="@drawable/remote_btn_light"
+            android:enabled="false" />
+
+        <RelativeLayout
+            android:id="@+id/remoter_setting_position_layout"
+            android:layout_width="@dimen/remoter_circle_width"
+            android:layout_height="@dimen/remoter_circle_height"
+            android:layout_below="@id/remoter_setting_alloff"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/remoter_circle_margintop"
+            android:background="@drawable/remote_circle" >
+
+            <ImageButton
+                android:id="@+id/remoter_setting_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/remoter_arrow_margin"
+                android:background="@android:color/transparent"
+                android:src="@drawable/btn_left" />
+
+            <ImageButton
+                android:id="@+id/remoter_setting_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/remoter_arrow_margintop"
+                android:background="@android:color/transparent"
+                android:src="@drawable/btn_top" />
+
+            <ImageButton
+                android:id="@+id/remoter_setting_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/remoter_arrow_margin"
+                android:background="@android:color/transparent"
+                android:src="@drawable/btn_right" />
+
+            <ImageButton
+                android:id="@+id/remoter_setting_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/remoter_arrow_margintop"
+                android:background="@android:color/transparent"
+                android:src="@drawable/btn_bottom" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/remoter_setting_group_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/remoter_setting_position_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/remoter_group_margin"
+            android:layout_marginRight="@dimen/remoter_group_margin"
+            android:layout_marginTop="@dimen/remoter_group_margintop"
+            android:orientation="horizontal"
+            android:weightSum="4" >
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <Button
+                    android:id="@+id/remoter_setting_btn_a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/remoter_btn_a_selector" />
+
+                <TextView
+                    android:id="@+id/remoter_setting_group_a"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/remoter_setting_btn_a"
+                    android:layout_centerHorizontal="true"
+                    android:maxLength="6"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="@color/remoter_groupname_textcolor"
+                    android:textSize="@dimen/remoter_name_textsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <Button
+                    android:id="@+id/remoter_setting_btn_b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/remoter_btn_b_selector" />
+
+                <TextView
+                    android:id="@+id/remoter_setting_group_b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/remoter_setting_btn_b"
+                    android:layout_centerHorizontal="true"
+                    android:maxLength="6"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:textColor="@color/remoter_groupname_textcolor"
+                    android:textSize="@dimen/remoter_name_textsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <Button
+                    android:id="@+id/remoter_setting_btn_c"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="@dimen/remoter_arrow_margin"
+                    android:background="@drawable/remoter_btn_c_selector" />
+
+                <TextView
+                    android:id="@+id/remoter_setting_group_c"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/remoter_setting_btn_c"
+                    android:layout_centerHorizontal="true"
+                    android:maxLength="6"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:ellipsize="end"
+                    android:textColor="@color/remoter_groupname_textcolor"
+                    android:textSize="@dimen/remoter_name_textsize" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <Button
+                    android:id="@+id/remoter_setting_btn_d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="@dimen/remoter_arrow_margin"
+                    android:background="@drawable/remoter_btn_d_selector" />
+
+                <TextView
+                    android:id="@+id/remoter_setting_group_d"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/remoter_setting_btn_d"
+                    android:layout_centerHorizontal="true"
+                    android:maxLength="6"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:ellipsize="end"
+                    android:textColor="@color/remoter_groupname_textcolor"
+                    android:textSize="@dimen/remoter_name_textsize" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/remoter_setting_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/remoter_tip"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/remoter_setting_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/remoter_prompt" />
+
+  <!--   <RelativeLayout
+        android:id="@+id/remoter_setting_bluetooth_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/remoter_setting_title"
+        android:alpha="0.4"
+        android:background="@android:color/black" >
+
+        <include layout="@layout/bluetooth_disconnect_tip" />
+    </RelativeLayout> -->
+
+</RelativeLayout>

@@ -1,0 +1,50 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff" >
+
+    <net.senink.seninkapp.ui.view.TopNavArea
+        android:id="@+id/icon_search_top"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:layout_alignParentTop="true" />
+
+    <net.senink.seninkapp.ui.view.BottomNavArea
+        android:id="@+id/icon_search_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="home" />
+
+    <TextView
+        android:id="@+id/she_bei_list_lebal"
+        style="@style/TextStyleInverse"
+        android:layout_height="30dip"
+        android:layout_below="@id/icon_search_top"
+        android:layout_marginLeft="24dp"
+        android:text="@string/set_name" 
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:layout_below="@id/she_bei_list_lebal"
+        android:background="#B6B6B6" 
+        android:visibility="gone"/>
+
+    <net.senink.seninkapp.ui.view.CusPullListView
+        android:id="@+id/she_bei_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/icon_search_bottom"
+        android:layout_below="@id/icon_search_top" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

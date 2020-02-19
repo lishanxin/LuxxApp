@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ListView的头部 -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/yao_qing_area"
+        style="@style/TitleLayoutStyle"
+        android:background="@android:color/white" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@drawable/icon_add"
+            android:gravity="center_vertical"
+            android:text="@string/yao_qing_jia_ru" />
+
+        <Button
+            style="@style/MenuInTitleStyle"
+            android:background="@drawable/icon_arrow"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</LinearLayout>

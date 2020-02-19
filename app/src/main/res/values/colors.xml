@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright Statement:
+ *
+ * This software/firmware and related documentation ("MediaTek Software") are
+ * protected under relevant copyright laws. The information contained herein
+ * is confidential and proprietary to MediaTek Inc. and/or its licensors.
+ * Without the prior written permission of MediaTek inc. and/or its licensors,
+ * any reproduction, modification, use or disclosure of MediaTek Software,
+ * and information contained herein, in whole or in part, shall be strictly prohibited.
+ *
+ * MediaTek Inc. (C) 2013. All rights reserved.
+ *
+ * BY OPENING THIS FILE, RECEIVER HEREBY UNEQUIVOCALLY ACKNOWLEDGES AND AGREES
+ * THAT THE SOFTWARE/FIRMWARE AND ITS DOCUMENTATIONS ("MEDIATEK SOFTWARE")
+ * RECEIVED FROM MEDIATEK AND/OR ITS REPRESENTATIVES ARE PROVIDED TO RECEIVER ON
+ * AN "AS-IS" BASIS ONLY. MEDIATEK EXPRESSLY DISCLAIMS ANY AND ALL WARRANTIES,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR NONINFRINGEMENT.
+ * NEITHER DOES MEDIATEK PROVIDE ANY WARRANTY WHATSOEVER WITH RESPECT TO THE
+ * SOFTWARE OF ANY THIRD PARTY WHICH MAY BE USED BY, INCORPORATED IN, OR
+ * SUPPLIED WITH THE MEDIATEK SOFTWARE, AND RECEIVER AGREES TO LOOK ONLY TO SUCH
+ * THIRD PARTY FOR ANY WARRANTY CLAIM RELATING THERETO. RECEIVER EXPRESSLY ACKNOWLEDGES
+ * THAT IT IS RECEIVER'S SOLE RESPONSIBILITY TO OBTAIN FROM ANY THIRD PARTY ALL PROPER LICENSES
+ * CONTAINED IN MEDIATEK SOFTWARE. MEDIATEK SHALL ALSO NOT BE RESPONSIBLE FOR ANY MEDIATEK
+ * SOFTWARE RELEASES MADE TO RECEIVER'S SPECIFICATION OR TO CONFORM TO A PARTICULAR
+ * STANDARD OR OPEN FORUM. RECEIVER'S SOLE AND EXCLUSIVE REMEDY AND MEDIATEK'S ENTIRE AND
+ * CUMULATIVE LIABILITY WITH RESPECT TO THE MEDIATEK SOFTWARE RELEASED HEREUNDER WILL BE,
+ * AT MEDIATEK'S OPTION, TO REVISE OR REPLACE THE MEDIATEK SOFTWARE AT ISSUE,
+ * OR REFUND ANY SOFTWARE LICENSE FEES OR SERVICE CHARGE PAID BY RECEIVER TO
+ * MEDIATEK FOR SUCH MEDIATEK SOFTWARE AT ISSUE.
+ *
+ * The following software/firmware and/or related documentation ("MediaTek Software")
+ * have been modified by MediaTek Inc. All revisions are subject to any receiver's
+ * applicable license agreements with MediaTek Inc.
+ */
+-->
+<resources>
+    <color name="bg_color">#c0c0c0</color>
+    <color name="main_view_bg">#ffffffff</color>
+    <color name="frameLayoutGrayColor">#0069808b</color>
+    <color name="linearLayoutGrayColor">#5069808b</color>
+    <color name="blackColor">#000000</color>
+    <color name="whiteColor">#FFFFFFFF</color>
+    <color name="edit_bg">#eaf4fb</color>
+    <color name="btn_bg_normal">#175ba3</color>
+    <color name="btn_bg_pressed">#1a68bb</color>
+    <color name="text_color_normal">#ffffff</color>
+    <color name="text_color_pressed">#99999999</color>
+    <color name="edittext_color">#FF898989</color>
+    <color name="edittext_hint_color">#808080</color>
+    <color name="text_color_normal_inverse">#808080</color>
+    <color name="home_menu_bg">#595659</color>
+    <color name="device_bg_blue">#21b1c9</color>
+    <color name="device_bg_green">#20f014</color>
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="threebtn_bg">#ff007aff</color>
+    <color name="divider_bgcolor">#CCCCCC</color>
+    <!-- register -->
+    <color name="register_bg">#fffafafa</color>
+    <color name="register_tip_textcolor">#ff3584d8</color>
+    <color name="register_account_tip_textcolor">#ff011221</color>
+    <!-- light setting -->
+    <color name="light_bg_deepgray">#A5A3A6</color>
+    <color name="light_divider_line_bg">#a5a3a6</color>
+    <color name="light_name_textcolor">#ff333333</color>
+    <color name="light_tip_textcolor">#666666</color>
+    <color name="light_currentcolor_textcolor">#ffc4c4c4</color>
+    <color name="light_editbtn_bg">#ffc7c7c7</color>
+    <color name="light_bg">#ffeeeeee</color>
+    <color name="light_setting_effects_color">#ff545454</color>
+    <color name="lightsetting_seekbar_flash_color">#ff017aff</color>
+    <color name="lightsetting_seekbar_cycle_color">#ffffa800</color>
+    <color name="lightsetting_delectbtn_bg">#FFEE7600</color>
+    <!-- device position -->
+    <color name="deviceposition_divider_bg">#cccccc</color>
+    <color name="deviceposition_textcolor">#333333</color>
+    <!-- bluelinker -->
+    <color name="bluelinker_name_color">#ff333333</color>
+    <color name="bluelinker_version_color">#ff999999</color>
+    <color name="bluelinker_network_textcolor">#ffb7b7b7</color>
+    <color name="bluelinker_divider_color">#CCCCCC</color>
+    <!-- wifi -->
+    <color name="wifi_bgcolor">#fafafa</color>
+    <color name="wifi_name_textcolor">#ff333333</color>
+    <color name="wifi_infor_textcolor">#ff999999</color>
+    <!-- remoter -->
+    <color name="remoter_item_textcolor">#ff666666</color>
+    <color name="remoter_bgcolor">#fffafafa</color>
+    <color name="remoter_edit_bgcolor">#ffeeeeee</color>
+    <color name="remoter_groupname_textcolor">#ff999999</color>
+    <!-- crsmesh -->
+    <color name="mesh_scanbtn_color">#AAAAAA</color>
+    <color name="scan_item_bgcolor">#40000000</color>
+    <color name="scan_status_color">#ffaaaaaa</color>
+    <color name="scan_rssi_textcolor">#ffaaaaaa</color>
+    <!-- add led bubble -->
+    <color name="addbubble_textcolor">#909ca0</color>
+    <color name="transparent_color">#50000000</color>
+    <!-- timer -->
+    <color name="timer_item_bgcolor">#ffdcdbdb</color>
+    <color name="timer_line_default_bgcolor">#ffe5e5e5</color>
+    <color name="timer_line_bgcolor">#ffbbbbbb</color>
+    <color name="timer_bgcolor">#fff2f2f2</color>
+    <color name="timer_time_textcolor">#ff848484</color>
+    <color name="timer_name_textcolor">#ff848484</color>
+    <color name="timer_time_default_textcolor">#ff333333</color>
+    <color name="timer_name_default_textcolor">#ff999999</color>
+    <color name="timer_switch_textcolor">#ff666666</color>
+    <!-- timer action -->
+    <color name="timer_action_bgcolor">#fff2f2f2</color>
+    <color name="timer_action_textcolor">#ff999999</color>
+    <!-- add timer -->
+    <color name="addtimer_bgcolor">#ffeeeeee</color>
+    <color name="addtimer_item_bgcolor">#fff6f6f6</color>
+    <color name="addtimer_divider_bgcolor">#ffd6d6d6</color>
+    <!-- timer coditon -->
+    <color name="timercodition_item_bgcolor">#fff6f6f6</color>
+    <color name="timercodition_bgcolor">#ffeeeeee</color>
+    <color name="timercodition_yearname_bgcolor">#ff52a6ff</color>
+    <color name="timercodition_yearname_default_bgcolor">#ff999999</color>
+    <color name="timercodition_line_bgcolor">#ffe3e3e3</color>
+    <color name="timercodition_time_bgcolor">#ff666666</color>
+    <color name="timercodition_checkbox_textcolor">#ffeaeaea</color>
+    <!-- marquee -->
+    <color name="marquee_bgcolor">#fffafafa</color>
+    <color name="marquee_textcolor">#ff666666</color>
+    <color name="marquee_divider_bg">#ffc4c4c4</color>
+    <color name="marquee_bar_textcolor_noraml">#ffc4c4c4</color>
+    <color name="marquee_bar_textcolor_selected">#ff52a6ff</color>
+    <color name="marquee_item_textcolor">#ff999999</color>
+    <color name="insole_title_bgcolor">#ffca3939</color>
+    <!-- insole -->
+    <color name="insole_steps_textcolor">#FFFFD2D4</color>
+    <color name="insole_linear_bgcolor">#FFFF979B</color>
+    <color name="insole_checkbox_bgcolor">#FFC54C52</color>
+    <color name="insole_hasmode_textcolor">#FF671414</color>
+    <color name="insole_nomode_textcolor">#FFBF484E</color>
+    <!-- insole step -->
+    <color name="insolestep_steps_textcolor">#FFDE4E4F</color>
+    <color name="insolestep_steps_tip_textcolor">#FF999999</color>
+    <color name="insolestep_date_normal_textcolor">#FF666666</color>
+    <color name="insolestep_stepnum_textcolor">#FFFEB9BA</color>
+    <color name="insolestep_line_bgcolor">#FFD3DBE6</color>
+	<!-- SwitchButton -->
+	<color name="ksw_md_ripple_normal">#1E000000</color>
+	<color name="ksw_md_ripple_checked">#33019285</color>
+
+	<color name="ksw_md_solid_shadow">#33000000</color>
+
+	<color name="ksw_md_solid_normal">#ECECEC</color>
+	<color name="ksw_md_solid_checked">#019285</color>
+	<color name="ksw_md_solid_disable">#FFFFFF</color>
+	<color name="ksw_md_solid_checked_disable">#aaaaaa</color>
+    <color name="light_text_color">#ffffff</color>
+</resources>

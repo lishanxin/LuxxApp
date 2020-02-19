@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            android:id="@+id/text_in_title"
+            style="@style/TextInTitleStyle"
+            android:text="@string/settings_title" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/quick_setting_guide"
+        style="@style/TitleLayoutStyle"
+        android:background="@android:color/white" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_marginLeft="24dp"
+            android:text="@string/quick_setting_guide" />
+
+        <Button
+            style="@style/MenuInTitleStyle"
+            android:background="@drawable/icon_arrow" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#B6B6B6" />
+
+    <RelativeLayout
+        android:id="@+id/advanced_settings"
+        style="@style/TitleLayoutStyle"
+        android:background="@android:color/white" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_marginLeft="24dp"
+            android:text="@string/advanced_settings" />
+
+        <Button
+            style="@style/MenuInTitleStyle"
+            android:background="@drawable/icon_arrow" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#B6B6B6" />
+
+</LinearLayout>

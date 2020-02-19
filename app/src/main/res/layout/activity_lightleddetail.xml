@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/light_title"
+        layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/light_selectcolor_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/light_title"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="35dp" >
+
+        <RelativeLayout
+            android:id="@+id/light_scene1_layout"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/icon_default_big_scene1" >
+
+            <TextView
+                android:id="@+id/light_sceneName1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/scene_item_bg"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLength="6"
+                android:padding="4dp"
+                android:singleLine="true"
+                android:text="场景一"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/light_scene1_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/icon_selected"
+                android:contentDescription="@string/scene"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/light_scene1_loadding"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/anim_loading"
+                android:contentDescription="@string/scene"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/light_scene2_layout"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/icon_default_big_scene2" >
+
+            <TextView
+                android:id="@+id/light_sceneName2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/scene_item_bg"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLength="6"
+                android:padding="4dp"
+                android:singleLine="true"
+                android:text="场景二"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/light_scene2_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/icon_selected"
+                android:contentDescription="@string/scene"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/light_scene2_loadding"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/anim_loading"
+                android:contentDescription="@string/scene"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/light_scene3_layout"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/icon_default_big_scene3" >
+
+            <TextView
+                android:id="@+id/light_sceneName3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/scene_item_bg"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLength="6"
+                android:padding="4dp"
+                android:singleLine="true"
+                android:text="场景三"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/light_scene3_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/icon_selected"
+                android:contentDescription="@string/scene"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/light_scene3_loadding"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/anim_loading"
+                android:contentDescription="@string/scene"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/light_scene4_layout"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/light_scene1_layout"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/icon_default_big_scene4" >
+
+            <TextView
+                android:id="@+id/light_sceneName4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/scene_item_bg"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLength="6"
+                android:padding="4dp"
+                android:singleLine="true"
+                android:text="场景四"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/light_scene4_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/icon_selected"
+                android:contentDescription="@string/scene"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/light_scene4_loadding"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/anim_loading"
+                android:contentDescription="@string/scene"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/light_scene5_layout"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_below="@id/light_scene2_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/icon_default_big_scene5" >
+
+            <TextView
+                android:id="@+id/light_sceneName5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/scene_item_bg"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLength="6"
+                android:padding="4dp"
+                android:singleLine="true"
+                android:text="场景五"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/light_scene5_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/icon_selected"
+                android:contentDescription="@string/scene"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/light_scene5_loadding"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/anim_loading"
+                android:contentDescription="@string/scene"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/light_sceneMore_layout"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/light_scene3_layout"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_sogoodscene_more_selector"
+            android:contentDescription="@string/scene" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_marginBottom="35dp"
+        android:layout_marginLeft="@dimen/light_item_paddingleft"
+        android:layout_marginRight="@dimen/light_item_paddingleft"
+        android:layout_below="@+id/light_selectcolor_layout"
+        android:layout_marginTop="30dp">
+
+        <RelativeLayout
+            android:id="@+id/light_bright_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true">
+
+            <Button
+                android:id="@+id/light_bright_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="18dp"
+                android:text="亮度"
+                android:gravity="bottom|center_horizontal"
+                android:drawablePadding="3dp"
+                android:textColor="#FF8E8E8E"
+                android:textSize="12sp"
+                android:background="@android:color/transparent"
+                android:drawableTop="@drawable/seekbar_bright_left_selector"
+                android:contentDescription="@string/scene" />
+
+            <SeekBar
+                android:id="@+id/light_bright_seekbar"
+                android:layout_width="@dimen/lightsetting_seekbar_width"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:max="255"
+                android:maxHeight="4.0dp"
+                android:minHeight="4.0dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:progress="255"
+                android:progressDrawable="@drawable/seekbar_bright"
+                android:thumb="@drawable/icon_sogood_thumb" />
+
+            <ImageView
+                android:id="@+id/light_bright_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/seekbar_bright_right_selector"
+                android:contentDescription="@string/scene" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lightdetail_led_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/light_bright_layout"
+            android:layout_alignParentStart="true">
+
+            <Button
+                android:id="@+id/light_coldwarm_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="18dp"
+                android:gravity="bottom|center_horizontal"
+                android:text="色温"
+                android:background="@android:color/transparent"
+                android:drawablePadding="3dp"
+                android:textColor="#FF8E8E8E"
+                android:textSize="12sp"
+                android:drawableTop="@drawable/seekbar_coldwarm_left_selector"
+                android:contentDescription="@string/scene" />
+
+            <SeekBar
+                android:id="@+id/light_coldwarm_seekbar"
+                android:layout_width="@dimen/lightsetting_seekbar_width"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:max="255"
+                android:maxHeight="4.0dp"
+                android:minHeight="4.0dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:progress="127"
+                android:progressDrawable="@drawable/seekbar_coldwarm_progressdrawable"
+                android:thumb="@drawable/icon_sogood_thumb" />
+
+            <ImageView
+                android:id="@+id/light_coldwarm_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/seekbar_coldwarm_right_selector"
+                android:contentDescription="@string/scene" />
+        </RelativeLayout>
+
+        <CheckBox
+            android:id="@+id/light_switcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lightdetail_led_layout"
+            android:layout_centerHorizontal="true"
+            android:button="@drawable/checkbox_scene_switch_selector"
+            android:layout_marginTop="30dp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/light_loadding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/anim_black_loading"
+        android:contentDescription="@string/scene"
+        android:visibility="gone" />
+
+</RelativeLayout>

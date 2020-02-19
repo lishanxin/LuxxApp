@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cdcdcd"/>
+
+    <LinearLayout
+        android:id="@+id/music_controlbar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/music_color_body"
+        android:background="@drawable/lv_music_control_boder"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="4"
+            android:gravity="left"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_music_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="2dp"
+                android:lines="1"
+                android:longClickable="false"
+                android:maxLines="1"
+                android:textAlignment="textStart"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_music_singer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="罗俊"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small.Inverse"
+                android:textColor="#8e8e8e"
+                android:textSize="8sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_music_control"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <ImageButton
+                android:id="@+id/ib_music_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:src="@drawable/btn_music_play_selector"
+                android:layout_gravity="center_vertical" />
+
+            <ImageButton
+                android:id="@+id/ib_music_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:src="@drawable/btn_music_next_selector"
+                android:layout_gravity="center_vertical" />
+
+            <ImageButton
+                android:id="@+id/ib_music_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="false"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:src="@drawable/btn_music_more_selector"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

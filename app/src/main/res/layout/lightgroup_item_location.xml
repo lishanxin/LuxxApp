@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lightgroupsetting_groupinfor_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/lightsetting_item_height"
+    android:layout_below="@id/lightgroupsetting_status_layout"
+    android:background="@android:color/white"
+    android:paddingLeft="@dimen/lightsetting_item_paddingleft"
+    android:paddingRight="@dimen/lightsetting_item_paddingleft" >
+
+    <TextView
+        android:id="@+id/light_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/lightsetting_item_height"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:text="@string/lightsetting_light_in_group"
+        android:textColor="@color/light_name_textcolor"
+        android:textSize="@dimen/lightsetting_content_textsize" />
+
+</RelativeLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color" >
+
+    <include
+        android:id="@+id/lightedit_title"
+        layout="@layout/title_bar" />
+
+    <net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshListView
+        android:id="@+id/lightedit_grouplist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/lightedit_title"
+        android:background="@color/bg_color"
+        android:scrollbars="none"
+        android:divider="@color/light_divider_line_bg"
+        android:dividerHeight="1dp"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="true"
+        android:fadingEdge="none" />
+
+    <RelativeLayout
+        android:id="@+id/lightedit_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/icon_loading_bg"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/lightedit_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/anim_loading" />
+    </RelativeLayout>
+
+</RelativeLayout>

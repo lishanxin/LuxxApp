@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/title_layout"
+    style="@style/TitleLayoutStyle"
+    android:layout_alignParentTop="true" >
+
+    <Button
+        android:id="@+id/title_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/title_btn_margin"
+        android:background="@drawable/title_bar_back"
+        android:paddingLeft="@dimen/title_btn_margin"
+        android:paddingRight="@dimen/title_btn_margin"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/title_logo"
+        android:layout_width="111dp"
+        android:layout_height="12dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/title_btn_margin"
+        android:background="@drawable/titlebar_logo_luxx"
+        android:paddingLeft="@dimen/title_btn_margin"
+        android:paddingRight="@dimen/title_btn_margin"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/title_name"
+        style="@style/TextInTitleStyle"
+        android:text="@string/title_device"
+        android:textSize="18sp"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/title_logo_center"
+        style="@style/TextInTitleStyle"
+        android:layout_width="148dp"
+        android:layout_height="16dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/titlebar_logo_luxx"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/title_add"
+        style="@style/MenuInTitleStyle"
+        android:background="@drawable/icon_add"
+        android:visibility="gone" />
+    <Button
+        android:id="@+id/title_finished"
+        style="@style/MenuInTitleStyle"
+        android:background="@drawable/icon_add"
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/title_setting"
+        style="@style/MenuInTitleStyle"
+        android:background="@drawable/icon_top_modify"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/title_delete"
+        style="@style/TextInRightStyle"
+        android:layout_width="wrap_content"
+        android:text="@string/lightgroup_delete"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <!--<TextView-->
+        <!--android:id="@+id/title_delete"-->
+        <!--style="@style/TextInRightStyle"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_toEndOf="@+id/title_back"-->
+        <!--android:text="@string/lightgroup_delete"-->
+        <!--android:visibility="gone" />-->
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#a5a3a6"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

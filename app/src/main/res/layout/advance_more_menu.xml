@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="100dip"
+        android:layout_height="wrap_content"
+        android:background="#ff000000"
+        android:orientation="vertical" >
+        
+         <TextView
+            android:id="@+id/save"
+            style="@style/TextStyleInverse"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:gravity="center"
+            android:text="@string/save"
+            android:textColor="#ffffffff" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#ffffffff" />
+
+        <TextView
+            android:id="@+id/chong_qi"
+            style="@style/TextStyleInverse"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:gravity="center"
+            android:text="@string/reboot"
+            android:textColor="#ffffffff" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dip"
+            android:background="#ffffffff" />
+
+        <TextView
+            android:id="@+id/hui_fu_setting"
+            style="@style/TextStyleInverse"
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:gravity="center"
+            android:text="@string/hui_fu_chu_chang"
+            android:textColor="#ffffffff" />
+    </LinearLayout>
+
+</LinearLayout>

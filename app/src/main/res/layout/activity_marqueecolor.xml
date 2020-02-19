@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:senink="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/marquee_bgcolor" >
+
+    <include
+        android:id="@+id/marqueecolor_title"
+        layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/marqueecolor_status_layout"
+        style="@style/MarqueeItemStyle"
+        android:layout_below="@id/marqueecolor_title" >
+
+        <TextView
+            style="@style/MarqueeTextViewStyle"
+            android:layout_centerVertical="true"
+            android:text="@string/random" />
+
+        <CheckBox
+            android:id="@+id/marqueecolor_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:button="@drawable/checkbox_switch_selector" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/marqueecolor_line1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/marquee_divider_height"
+        android:layout_below="@id/marqueecolor_status_layout"
+        android:layout_marginLeft="@dimen/marquee_item_padding"
+        android:background="@color/marquee_divider_bg" />
+
+    <RelativeLayout
+        android:id="@+id/marqueecolor_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/marqueecolor_line1" >
+
+        <RelativeLayout
+            android:id="@+id/marqueecolor_bg_layout"
+            style="@style/MarqueeItemStyle"
+            android:layout_alignParentTop="true" >
+
+            <TextView
+                android:id="@+id/marqueecolor_bg_tip"
+                style="@style/MarqueeTextViewStyle"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/marqueecolor_waterdrop_marginbottom"
+                android:layout_marginRight="@dimen/marqueecolor_bg_marginright"
+                android:text="@string/background" />
+
+            <net.senink.seninkapp.ui.view.WaterDrop
+                android:id="@+id/marqueecolor_bg_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marqueecolor_waterdrop_height"
+                android:layout_marginRight="@dimen/marqueecolor_bar_marginright"
+                android:layout_toRightOf="@id/marqueecolor_bg_tip"
+                android:background="@drawable/icon_marquee_seekbar_background"
+                senink:bgHeight="@dimen/marqueecolor_bgbar_height"
+                senink:drawPadding="@dimen/marqueecolor_waterdrop_drawablepadding"
+                android:height="@dimen/marqueecolor_waterdrop_maxheight"
+                senink:paddingBottom="@dimen/marqueecolor_waterdrop_paddingbottom"
+                senink:paddingTop="0dp"
+                senink:thumb="@drawable/icon_seebar_currentcolor" />
+
+            <View
+                android:id="@+id/marqueecolor_bg_view1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marqueecolor_bgbar_height"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/marqueecolor_waterdrop_marginbottom"
+                android:layout_marginRight="@dimen/marqueecolor_bar_marginright"
+                android:layout_toRightOf="@id/marqueecolor_bg_tip"
+                android:background="@drawable/icon_marquee_seekbar_background" />
+
+            <SeekBar
+                android:id="@+id/marqueecolor_bgbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/marqueecolor_waterdrop_marginbottom"
+                android:layout_marginRight="@dimen/marqueecolor_bar_marginright"
+                android:layout_toRightOf="@id/marqueecolor_bg_tip"
+                android:max="255"
+                android:maxHeight="@dimen/marquee_seekbar_maxheight"
+                android:minHeight="@dimen/marquee_seekbar_minheight"
+                android:paddingEnd="@dimen/marqueecolor_bar_padding"
+                android:paddingStart="@dimen/marqueecolor_bar_padding"
+                android:progressDrawable="@drawable/marquee_color_seekbar"
+                android:thumb="@drawable/icon_marquee_thumb" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/marqueecolor_line2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/marquee_divider_height"
+            android:layout_below="@id/marqueecolor_bg_layout"
+            android:layout_marginLeft="@dimen/marquee_item_padding"
+            android:background="@color/marquee_divider_bg" />
+
+        <RelativeLayout
+            android:id="@+id/marqueecolor_fore_layout"
+            style="@style/MarqueeItemStyle"
+            android:layout_below="@id/marqueecolor_line2" >
+
+            <TextView
+                android:id="@+id/marqueecolor_fore_tip"
+                style="@style/MarqueeTextViewStyle"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/marqueecolor_waterdrop_marginbottom"
+                android:layout_marginRight="@dimen/marqueecolor_frontview_marginright"
+                android:text="@string/foreview" />
+
+            <net.senink.seninkapp.ui.view.WaterDrop
+                android:id="@+id/marqueecolor_front_waterdrop"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marqueecolor_waterdrop_height"
+                android:layout_marginRight="@dimen/marqueecolor_bar_marginright"
+                android:layout_toRightOf="@id/marqueecolor_fore_tip"
+                android:background="@drawable/icon_marquee_seekbar_background"
+                senink:bgHeight="@dimen/marqueecolor_bgbar_height"
+                senink:drawPadding="@dimen/marqueecolor_waterdrop_drawablepadding"
+                android:height="@dimen/marqueecolor_waterdrop_maxheight"
+                senink:paddingBottom="@dimen/marqueecolor_waterdrop_paddingbottom"
+                senink:paddingTop="0dp"
+                senink:thumb="@drawable/icon_seebar_currentcolor" />
+
+            <View
+                android:id="@+id/marqueecolor_front_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marqueecolor_bgbar_height"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/marqueecolor_waterdrop_marginbottom"
+                android:layout_marginRight="@dimen/marqueecolor_bar_marginright"
+                android:layout_toRightOf="@id/marqueecolor_fore_tip"
+                android:background="@drawable/icon_marquee_seekbar_background" />
+
+            <SeekBar
+                android:id="@+id/marqueecolor_fore_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/marqueecolor_waterdrop_marginbottom"
+                android:layout_marginRight="@dimen/marqueecolor_bar_marginright"
+                android:layout_toRightOf="@id/marqueecolor_fore_tip"
+                android:max="255"
+                android:maxHeight="@dimen/marquee_seekbar_maxheight"
+                android:minHeight="@dimen/marquee_seekbar_minheight"
+                android:paddingEnd="@dimen/marqueecolor_bar_padding"
+                android:paddingStart="@dimen/marqueecolor_bar_padding"
+                android:progressDrawable="@drawable/marquee_color_seekbar"
+                android:thumb="@drawable/icon_marquee_thumb" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/marqueecolor_line3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/marquee_divider_height"
+            android:layout_below="@id/marqueecolor_fore_layout"
+            android:layout_marginLeft="@dimen/marquee_item_padding"
+            android:background="@color/marquee_divider_bg" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,143 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/top"
+        style="@style/TitleLayoutStyle" >
+
+        <TextView
+            android:id="@+id/text_in_title"
+            style="@style/TextInTitleStyle"
+            android:gravity="center"
+            android:text="@string/lu_you_gao_ji_set" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+
+        <ImageView
+            android:id="@+id/more_setting"
+            style="@style/MenuInTitleStyle"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:src="@drawable/icon_top_list" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/work_mode_item"
+        style="@style/TitleLayoutStyle"
+        android:background="@android:color/white" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_marginLeft="24dp"
+            android:text="@string/work_mode" />
+
+        <Button
+            android:id="@+id/work_mode_arrow"
+            style="@style/MenuInTitleStyle"
+            android:background="@drawable/icon_arrow" />
+
+        <TextView
+            android:id="@+id/work_mode"
+            style="@style/TextStyleInverse"
+            android:layout_toLeftOf="@id/work_mode_arrow"
+            android:text="@string/lu_you_biao_zui"
+            android:textSize="12dip" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#B6B6B6" />
+
+    <RelativeLayout
+        android:id="@+id/net_lianjia_item"
+        style="@style/TitleLayoutStyle"
+        android:background="@android:color/white" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_marginLeft="24dp"
+            android:text="@string/net_fang_si" />
+
+        <Button
+            android:id="@+id/net_lianjia_arrow"
+            style="@style/MenuInTitleStyle"
+            android:background="@drawable/icon_arrow" />
+
+        <TextView
+            android:id="@+id/net_lianjia"
+            style="@style/TextStyleInverse"
+            android:layout_toLeftOf="@id/net_lianjia_arrow"
+            android:text="@string/quick_setting_guide"
+            android:textSize="12dip" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#B6B6B6" />
+
+    <RelativeLayout
+        android:id="@+id/ju_yu_net_item"
+        style="@style/TitleLayoutStyle"
+        android:background="@android:color/white" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_marginLeft="24dp"
+            android:text="@string/ju_yu_net_set" />
+
+        <Button
+            android:id="@+id/ju_yu_net_arrow"
+            style="@style/MenuInTitleStyle"
+            android:background="@drawable/icon_arrow" />
+
+        <TextView
+            android:id="@+id/ju_yu_net"
+            style="@style/TextStyleInverse"
+            android:layout_toLeftOf="@id/ju_yu_net_arrow"
+            android:text="@string/quick_setting_guide"
+            android:textSize="12dip" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#B6B6B6" />
+
+    <RelativeLayout
+        android:id="@+id/wu_xian_item"
+        style="@style/TitleLayoutStyle"
+        android:background="@android:color/white" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_marginLeft="24dp"
+            android:text="@string/wu_xian_set" />
+
+        <Button
+            android:id="@+id/wu_xian_arrow"
+            style="@style/MenuInTitleStyle"
+            android:background="@drawable/icon_arrow" />
+
+        <TextView
+            android:id="@+id/wu_xian"
+            style="@style/TextStyleInverse"
+            android:layout_toLeftOf="@id/wu_xian_arrow"
+            android:text="@string/quick_setting_guide"
+            android:textSize="12dip" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#B6B6B6" />
+
+</LinearLayout>

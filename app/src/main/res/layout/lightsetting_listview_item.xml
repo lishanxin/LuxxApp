@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_root"
+    android:layout_width="match_parent"
+    android:paddingLeft="@dimen/lightsetting_item_paddingleft"
+    android:paddingRight="@dimen/lightsetting_item_paddingleft"
+    android:layout_height="50dp"
+    android:background="@color/bg_color">
+
+    <ImageView
+        android:id="@+id/item_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:scaleType="center"
+        android:background="@drawable/pro_000005000308_normal"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="7dp" />
+
+    <TextView
+        android:id="@+id/item_groupname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/lightsetting_listview_item_marginLeft"
+        android:layout_toRightOf="@id/item_icon"
+        android:gravity="center_vertical"
+        android:text="组一"
+        android:textColor="@color/light_text_color"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/arrow_left"
+        android:scaleType="fitCenter" />
+
+</RelativeLayout>

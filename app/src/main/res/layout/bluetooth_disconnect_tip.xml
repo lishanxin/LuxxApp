@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bluetooth_tip_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:background="@color/light_bg_deepgray"
+    android:alpha="0.82">
+
+    <ImageView
+        android:id="@+id/bluetooth_connecting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/anim_loading"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/bluetooth_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="8dp"
+        android:text="@string/home_connect_ble_tip"
+        android:layout_centerVertical="true"
+        android:textColor="@color/light_text_color"
+        android:gravity="center"
+        android:textSize="14sp" />
+
+</RelativeLayout>

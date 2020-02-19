@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg" >
+
+    <include
+        android:id="@+id/timer_title"
+        layout="@layout/title_bar" />
+
+    <ImageView
+        android:id="@+id/timer_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/icon_smart_timer"
+        android:contentDescription="@string/timer" />
+
+     <RelativeLayout
+        android:id="@+id/timer_switch_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/timer_item_default_height"
+        android:layout_below="@id/timer_title"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/timer_item_padding"
+        android:paddingRight="@dimen/timer_item_padding" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/run"
+            android:textColor="@color/timer_switch_textcolor"
+            android:textSize="@dimen/timer_item_textsize" />
+
+        <CheckBox
+            android:id="@+id/timer_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:button="@drawable/checkbox_switch_selector" />
+    </RelativeLayout>
+    
+    <ListView
+        android:id="@+id/timer_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timer_switch_layout"
+        android:layout_marginTop="@dimen/timer_margintop"
+        android:background="@android:color/white"
+        android:scrollbars="none"
+        android:cacheColorHint="@android:color/transparent"
+        android:descendantFocusability="afterDescendants"
+        android:divider="@color/light_divider_line_bg"
+        android:dividerHeight="@dimen/timer_divider_height" />
+
+    <RelativeLayout
+        android:id="@+id/timer_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/icon_loading_bg"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/timer_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/anim_loading"
+            android:contentDescription="@string/timer" />
+    </RelativeLayout>
+
+</RelativeLayout>

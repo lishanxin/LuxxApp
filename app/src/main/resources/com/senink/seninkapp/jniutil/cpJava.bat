@@ -1,0 +1,1 @@
+copy *.java *.java.txt

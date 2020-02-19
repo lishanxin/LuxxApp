@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <net.senink.seninkapp.ui.view.RemoterListView
+        android:id="@+id/insole_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#ffffffff"
+        android:divider="@color/light_divider_line_bg"
+        android:dividerHeight="1dp"
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:layout_marginBottom="@dimen/remoter_listview_marginbottom"
+        android:headerDividersEnabled="true" />
+
+</LinearLayout>

@@ -1,0 +1,158 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="false"
+    android:gravity="center"
+    android:background="@android:color/white"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:id="@+id/switcher_item1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1" >
+
+        <Button
+            android:id="@+id/switcher_name1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/pro_000002000101_selector"
+            android:ellipsize="end"
+            android:gravity="center_horizontal|bottom"
+            android:maxLength="8"
+            android:paddingBottom="4dp"
+            android:singleLine="true"
+            android:text="豆浆机"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/home_item_name_textsize" />
+
+        <ImageView
+            android:id="@+id/switcher_number1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:background="@drawable/grade_green_1"
+            android:gravity="center" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/switcher_item2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1" >
+
+        <Button
+            android:id="@+id/switcher_name2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/pro_000002000101_selector"
+            android:ellipsize="end"
+            android:gravity="center_horizontal|bottom"
+            android:maxLength="8"
+            android:paddingBottom="4dp"
+            android:singleLine="true"
+            android:text="豆浆机"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/home_item_name_textsize" />
+
+        <ImageView
+            android:id="@+id/switcher_number2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:background="@drawable/grade_green_2"
+            android:gravity="center" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/switcher_item3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1" >
+
+        <Button
+            android:id="@+id/switcher_name3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/pro_000002000101_selector"
+            android:ellipsize="end"
+            android:gravity="center_horizontal|bottom"
+            android:maxLength="8"
+            android:paddingBottom="4dp"
+            android:singleLine="true"
+            android:text="豆浆机"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/home_item_name_textsize" />
+
+        <ImageView
+            android:id="@+id/switcher_number3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:background="@drawable/grade_green_3"
+            android:gravity="center" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/switcher_item4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1" >
+
+        <Button
+            android:id="@+id/switcher_name4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/pro_000002000101_selector"
+            android:ellipsize="end"
+            android:gravity="center_horizontal|bottom"
+            android:maxLength="8"
+            android:paddingBottom="4dp"
+            android:singleLine="true"
+            android:text="豆浆机"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/home_item_name_textsize" />
+
+        <ImageView
+            android:id="@+id/switcher_number4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:background="@drawable/grade_green_4"
+            android:gravity="center" />
+    </RelativeLayout>
+
+</LinearLayout>

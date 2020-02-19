@@ -1,0 +1,147 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            android:id="@+id/text_in_title"
+            style="@style/TextInTitleStyle"
+            android:text="@string/parents_control_title" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            style="@style/MainViewPadding"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/parents_control_timer"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/parents_control_timer_title" />
+
+            <LinearLayout
+                android:id="@+id/parents_control_timer_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/parents_control_add_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawablePadding="12dp"
+                android:drawableRight="@drawable/icon_add"
+                android:gravity="center_vertical"
+                android:text="@string/parents_control_add_timer" />
+
+            <TextView
+                android:id="@+id/parents_control_device"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/parents_control_device_title" />
+
+            <LinearLayout
+                android:id="@+id/parents_control_device_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/whiteColor"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/parents_control_add_device"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawablePadding="12dp"
+                android:drawableRight="@drawable/icon_add"
+                android:gravity="center_vertical"
+                android:text="@string/parents_control_add_device" />
+
+            <TextView
+                android:id="@+id/parents_control_duration"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/parents_control_duration_title" /> 
+
+            <TextView
+                android:id="@+id/parents_control_duration_total"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="6dp"
+                android:text="@string/parents_control_duration_total" />
+
+          <!--   <TextView
+                android:id="@+id/parents_control_consumed_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/icon_arrow"
+                android:paddingLeft="6dp"
+                android:text="@string/parents_control_consumed_time" />
+
+            <TextView
+                android:id="@+id/parents_control_info"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/parents_control_info_title" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="6dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title" />
+
+                <EditText
+                    android:id="@+id/parents_control_info_title"
+                    style="@style/EditStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/hint_input" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/description" />
+
+                <EditText
+                    android:id="@+id/parents_control_info_description"
+                    style="@style/EditStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/hint_input" />
+            </LinearLayout> -->
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

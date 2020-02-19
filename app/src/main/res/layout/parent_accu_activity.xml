@@ -1,0 +1,27 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff" >
+
+    <include
+        android:id="@+id/accu_title"
+        layout="@layout/title_bar" />
+
+    <net.senink.seninkapp.ui.view.BottomNavArea
+        android:id="@+id/icon_search_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="setting" />
+
+    <net.senink.seninkapp.ui.view.CusPullListView
+        android:id="@+id/parent_accu_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/icon_search_bottom"
+        android:layout_below="@id/accu_title"
+        android:cacheColorHint="#ffffffff"
+        android:fadingEdge="none" />
+
+</RelativeLayout>

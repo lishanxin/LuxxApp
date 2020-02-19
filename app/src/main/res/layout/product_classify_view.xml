@@ -1,0 +1,121 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="35dip"
+    android:layout_marginLeft="15dip"
+    android:layout_marginRight="15dip"
+    android:layout_marginTop="10dip"
+    android:background="@drawable/rectangle_circle"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/home_classify_switch"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+    <Button
+        android:id="@+id/home_classify_switch_btn"
+        android:layout_width="0dip"
+        android:layout_height="35dip"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@drawable/left_button_selector"
+        android:gravity="center"
+        android:text="@string/home_insert"
+        android:textColor="@color/threebtn_bg"
+        android:textSize="17sp" />
+
+    <View
+        android:layout_width="1dip"
+        android:layout_height="35dip"
+        android:background="@color/threebtn_bg" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/home_classify_light"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+    <Button
+        android:id="@+id/home_classify_light_btn"
+        android:layout_width="0dip"
+        android:layout_height="35dip"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@drawable/middle_button_selector"
+        android:gravity="center"
+        android:text="@string/home_bubble"
+        android:textColor="@color/threebtn_bg"
+        android:textSize="17sp" />
+
+    <View
+        android:layout_width="1dip"
+        android:layout_height="35dip"
+        android:background="@color/threebtn_bg" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/home_classify_network"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+    <Button
+        android:id="@+id/home_classify_network_btn"
+        android:layout_width="0dip"
+        android:layout_height="35dip"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@drawable/middle_button_selector"
+        android:gravity="center"
+        android:text="@string/home_gateway"
+        android:textColor="@color/threebtn_bg"
+        android:textSize="17sp" />
+
+    <View
+        android:layout_width="1dip"
+        android:layout_height="35dip"
+        android:background="@color/threebtn_bg" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/home_classify_remoter"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+    <Button
+        android:id="@+id/home_classify_remoter_btn"
+        android:layout_width="0dip"
+        android:layout_height="35dip"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@drawable/middle_button_selector"
+        android:gravity="center"
+        android:text="@string/home_remoter"
+        android:textColor="@color/threebtn_bg"
+        android:textSize="17sp" />
+
+    <View
+        android:layout_width="1dip"
+        android:layout_height="35dip"
+        android:background="@color/threebtn_bg" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/home_classify_wearable"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+    <Button
+        android:id="@+id/home_classify_wearable_btn"
+        android:layout_width="0dip"
+        android:layout_height="35dip"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@drawable/right_button_selector"
+        android:gravity="center"
+        android:text="@string/home_insole"
+        android:textColor="@color/threebtn_bg"
+        android:textSize="17sp" />
+        <View
+            android:layout_width="1dip"
+            android:layout_height="35dip"
+            android:background="@color/threebtn_bg" />
+    </LinearLayout>
+</LinearLayout>

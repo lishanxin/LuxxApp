@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/adddevices_content_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:baselineAligned="false"
+    android:weightSum="4"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:id="@+id/newdevice_item1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        <ImageButton
+            android:id="@+id/newdevice_btn1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/add"
+            android:background="@drawable/pro_default_selector" />
+
+        <TextView
+            android:id="@+id/newdevice_tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/newdevice_btn1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/add_main_child_margintop"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/newdevice_item2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        <ImageButton
+            android:id="@+id/newdevice_btn2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/add"
+            android:background="@drawable/pro_default_selector" />
+
+        <TextView
+            android:id="@+id/newdevice_tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/newdevice_btn2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/add_main_child_margintop"
+            android:text="@string/add_remoter"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+
+    <RelativeLayout
+    android:id="@+id/newdevice_item3"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
+
+    <ImageButton
+        android:id="@+id/newdevice_btn3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/add"
+        android:background="@drawable/pro_default_selector" />
+
+    <TextView
+        android:id="@+id/newdevice_tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newdevice_btn3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/add_main_child_margintop"
+        android:text="@string/add_bridge"
+        android:textColor="@android:color/white" />
+</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/newdevice_item4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
+
+        <ImageButton
+            android:id="@+id/newdevice_btn4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/add"
+            android:background="@drawable/pro_default_selector" />
+
+        <TextView
+            android:id="@+id/newdevice_tv4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/newdevice_btn4"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/add_main_child_margintop"
+            android:text="@string/add_bridge"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+</LinearLayout>

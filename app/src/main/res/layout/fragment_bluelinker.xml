@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    android:background="@color/wifi_bgcolor" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:id="@+id/bluelinker_infor_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bluelinker_infor_layout_height"
+            android:layout_marginBottom="@dimen/bluelinker_divider_height"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/bluelinker_padding"
+            android:paddingLeft="@dimen/bluelinker_paddingleft"
+            android:paddingTop="@dimen/bluelinker_padding" >
+
+            <ImageView
+                android:id="@+id/bluelinker_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/icon_blueblink" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/bluelinker_infor_margin"
+                android:layout_marginRight="@dimen/bluelinker_infor_margin"
+                android:layout_toRightOf="@id/bluelinker_icon"
+                android:gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/bluelinker_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home_gateway"
+                    android:singleLine="true"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/bluelinker_name_color"
+                    android:textSize="@dimen/bluelinker_name_textsize" />
+
+                <TextView
+                    android:id="@+id/bluelinker_version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/bluelinker_version_color"
+                    android:textSize="@dimen/bluelinker_infor_textsize" />
+
+                <TextView
+                    android:id="@+id/bluelinker_macaddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/bluelinker_version_color"
+                    android:textSize="@dimen/bluelinker_infor_textsize" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bluelinker_network_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bluelinker_wifi_height"
+            android:layout_below="@id/bluelinker_infor_layout"
+            android:layout_marginBottom="@dimen/bluelinker_divider_height"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingLeft="@dimen/bluelinker_paddingleft"
+            android:paddingRight="@dimen/bluelinker_paddingleft" >
+
+            <TextView
+                android:id="@+id/bluelinker_network_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:textColor="@color/bluelinker_name_color"
+                android:textSize="@dimen/bluelinker_name_textsize" />
+
+            <Button
+                android:id="@+id/bluelinker_network_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/bluelinker_network_tip"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical|right"
+                android:background="@android:color/transparent"
+                android:drawablePadding="@dimen/bluelinker_network_drawablepadding"
+                android:drawableRight="@drawable/arrow_left"
+                android:textColor="@color/bluelinker_network_textcolor"
+                android:textSize="@dimen/bluelinker_infor_textsize" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bluelinker_buffer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bluelinker_wifi_height"
+            android:layout_below="@id/bluelinker_network_layout"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/bluelinker_paddingleft"
+            android:paddingRight="@dimen/bluelinker_paddingleft" >
+
+            <TextView
+                android:id="@+id/bluelinker_buffer_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:text="@string/bluelinker_buffer_service"
+                android:textColor="@color/bluelinker_name_color"
+                android:textSize="@dimen/bluelinker_name_textsize" />
+
+            <CheckBox
+                android:id="@+id/bluelinker_buffer"
+                style="@style/MenuInTitleStyle"
+                android:layout_gravity="center_vertical"
+                android:button="@drawable/checkbox_switch_selector"
+                android:focusable="false" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/bluelinker_device_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/bluelinker_device_height"
+            android:layout_below="@id/bluelinker_buffer_layout"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:text="@string/bluelinker_device_infor"
+            android:layout_marginLeft="@dimen/bluelinker_paddingleft"
+            android:gravity="center_vertical"
+            android:textColor="@color/bluelinker_version_color"
+            android:textSize="@dimen/bluelinker_infor_textsize" />
+        <net.senink.seninkapp.ui.view.BlueLinkerListView
+            android:id="@+id/bluelinker_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bluelinker_device_tip"
+            android:cacheColorHint="@android:color/transparent"
+            android:layout_marginBottom="@dimen/bluelinker_listview_marginbottom"
+            android:dividerHeight="1dp"
+            android:divider="@color/bluelinker_divider_color"/>
+    </RelativeLayout>
+
+</ScrollView>

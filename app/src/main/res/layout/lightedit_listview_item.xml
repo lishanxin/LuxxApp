@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_root"
+    android:layout_width="match_parent"
+    android:paddingLeft="@dimen/lightedit_item_padding"
+    android:paddingRight="@dimen/lightedit_item_padding"
+    android:background="@color/bg_color"
+    android:layout_height="50dp">
+
+    <ImageView
+        android:id="@+id/lightedit_item_icon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/pro_000508000108_normal"
+        android:scaleType="center"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp" />
+
+    <Button
+        android:id="@+id/lightedit_item_groupname"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/lightedit_item_marginLeft"
+        android:layout_toRightOf="@id/lightedit_item_icon"
+        android:gravity="center_vertical"
+        android:text="组一"
+        android:background="@android:color/transparent"
+        android:textColor="@color/light_text_color"
+        android:textSize="12sp"
+        android:layout_toLeftOf="@+id/lightedit_item_location" />
+
+    <TextView
+        android:id="@+id/lightedit_item_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:drawableLeft="@drawable/icon_location"
+        android:drawablePadding="@dimen/lightedit_location_drawablepadding"
+        android:text="客厅"
+        android:textColor="@color/light_text_color"
+        android:textSize="10sp" />
+
+</RelativeLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/TitleLayoutStyle"
+    android:layout_alignParentTop="true" >
+
+    <Button
+        android:id="@+id/wifi_title_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/title_btn_margin"
+        android:background="@android:color/transparent"
+        android:paddingLeft="@dimen/title_btn_margin"
+        android:paddingRight="@dimen/title_btn_margin"
+        android:text="@string/cancel"
+        android:textColor="@android:color/white"
+        android:textSize="19sp" />
+
+    <TextView
+        android:id="@+id/wifi_title_name"
+        style="@style/TextInTitleStyle"
+        android:singleLine="true"
+        android:maxLength="25"
+        android:text="@string/title_device" />
+
+    <Button
+        android:id="@+id/wifi_title_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/title_btn_margin"
+        android:background="@android:color/transparent"
+        android:paddingLeft="@dimen/title_btn_margin"
+        android:paddingRight="@dimen/title_btn_margin"
+        android:text="@string/add"
+        android:enabled="false"
+        android:textColor="#ff5da2ec"
+        android:textSize="19sp" />
+
+</RelativeLayout>

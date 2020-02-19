@@ -1,0 +1,127 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:anroid="http://schemas.android.com/apk/res-auto"
+    android:background="@color/wifi_bgcolor">
+
+    <include
+        android:id="@+id/home_title"
+        layout="@layout/title_bar" />
+    <RelativeLayout
+        android:id="@+id/title_bluetooth_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/home_title"
+        android:visibility="gone">
+        <include 
+            layout="@layout/bluetooth_disconnect_tip"/>
+    </RelativeLayout>
+ 
+    <net.senink.seninkapp.ui.view.ProductClassifyView
+        android:id="@+id/home_classify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_bluetooth_tip"
+        android:background="@color/wifi_bgcolor"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/home_classify"
+        android:layout_marginBottom="@dimen/home_fragment_marginbottom"
+        android:orientation="vertical"
+        android:id="@+id/fragment_manager"
+        android:longClickable="true">
+
+        <fragment
+            android:id="@+id/home_lightfragment"
+            android:name="net.senink.seninkapp.fragment.LightControlFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_lightcontrol" />
+
+        <fragment
+            android:id="@+id/home_switchfragment"
+            android:name="net.senink.seninkapp.fragment.SwitchFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_switcher" />
+
+        <fragment
+            android:id="@+id/home_blueLinerfragment"
+            android:name="net.senink.seninkapp.fragment.BlueLinkerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_bluelinker" />
+
+        <fragment
+            android:id="@+id/home_remoterfragment"
+            android:name="net.senink.seninkapp.fragment.RemoterFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_lightremoter" />
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/empty_page"
+        style="@style/MainViewPadding"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="false"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/home_fragment_margintop"
+        android:layout_marginBottom="@dimen/home_fragment_marginbottom"
+        android:layout_below="@+id/home_title">
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_device_title"
+            android:textSize="@dimen/btn_textsize"
+            android:textStyle="bold" />
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/login_loginbtn_marginTop"
+            android:drawableBottom="@drawable/empty_device"
+            android:text="@string/empty_device_info" />
+
+        <TextView
+            android:id="@+id/home_btn_add_device"
+            style="@style/BtnStyleLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/login_loginbtn_marginTop"
+            android:drawableStart="@drawable/icon_add"
+            android:drawablePadding="@dimen/home_addbtn_drawablepadding"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/home_addbtn_paddingbottom"
+            android:paddingStart="@dimen/home_addbtn_paddingleft"
+            android:paddingTop="@dimen/home_addbtn_paddingtop"
+            android:text="@string/btn_add_device" />
+    </LinearLayout>
+
+    <net.senink.seninkapp.ui.view.BottomNavArea
+        android:id="@+id/icon_search_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_nav_area_height"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="home" />
+
+    <RelativeLayout
+        android:id="@+id/home_dialog_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_color"
+        android:alpha="0.82">
+
+        <include layout="@layout/dialog_upgrade" />
+    </RelativeLayout>
+
+</RelativeLayout>

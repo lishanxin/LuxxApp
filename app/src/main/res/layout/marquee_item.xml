@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/marquee_item_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/marquee"
+        android:src="@drawable/icon_equipment_light_group" />
+
+    <TextView
+        android:id="@+id/marquee_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/marquee_listview_item_height"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/marquee_listview_name_marginleft"
+        android:layout_toRightOf="@id/marquee_item_icon"
+        android:gravity="center_vertical"
+        android:textColor="@color/marquee_item_textcolor"
+        android:textSize="@dimen/marquee_listview_item_textsize" />
+
+    <ImageView
+        android:id="@+id/marquee_item_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/marquee_listview_item_margin"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/marquee"
+        android:src="@drawable/icon_marquee_next" />
+
+</RelativeLayout>

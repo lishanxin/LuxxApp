@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/bluelinker_item_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/bluelinker_item_icon_margintop"
+        android:layout_marginBottom="@dimen/bluelinker_item_icon_margin"
+        android:layout_marginRight="@dimen/bluelinker_item_icon_marginright"
+        android:layout_marginLeft="@dimen/bluelinker_item_icon_marginleft"
+        android:src="@drawable/icon_bluelinker_light" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/bluelinker_item_layout_margin"
+        android:layout_marginBottom="@dimen/bluelinker_item_layout_margin"
+        android:layout_toRightOf="@id/bluelinker_item_icon"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/bluelinker_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/home_gateway"
+            android:textColor="@color/bluelinker_name_color"
+            android:textSize="@dimen/bluelinker_name_textsize" />
+
+        <TextView
+            android:id="@+id/bluelinker_item_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/bluelinker_version_color"
+            android:textSize="@dimen/bluelinker_infor_textsize" />
+
+        <TextView
+            android:id="@+id/bluelinker_item_macaddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/bluelinker_version_color"
+            android:textSize="@dimen/bluelinker_infor_textsize" />
+    </LinearLayout>
+
+</RelativeLayout>

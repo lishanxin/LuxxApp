@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+    <Button 
+        android:id="@+id/popup_adddevice"
+        android:layout_height="0dp"
+        android:layout_width="@dimen/home_popup_width"
+        android:layout_weight="1"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        android:text="@string/home_adddevice"
+        android:background="@android:color/transparent"
+        android:textSize="@dimen/home_popup_textsize"
+        android:padding="@dimen/home_popup_padding"/>
+    <View
+        android:layout_width="@dimen/home_popup_width"
+        android:layout_height="1dp"
+        android:background="@color/divider_bgcolor"/>
+    <Button 
+        android:id="@+id/popup_addgroup"
+        android:layout_height="0dp"
+        android:layout_width="@dimen/home_popup_width"
+        android:layout_weight="1"
+        android:text="@string/home_addgroup"
+        android:textColor="@android:color/black"
+        android:background="@android:color/transparent"
+        android:gravity="center"
+        android:textSize="@dimen/home_popup_textsize"
+        android:padding="@dimen/home_popup_padding"/>
+</LinearLayout>

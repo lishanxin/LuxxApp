@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg" >
+
+    <include
+        android:id="@+id/addinsoletime_title"
+        layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/addinsoletime_heat_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/addinsoletimer_item_height"
+        android:layout_below="@id/addinsoletime_title"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/addtimer_item_padding"
+        android:paddingRight="@dimen/addtimer_item_padding" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/heat"
+            android:textColor="@color/light_tip_textcolor"
+            android:textSize="@dimen/addtimer_item_textsize" />
+
+        <CheckBox
+            android:id="@+id/addinsoletime_heat"
+            style="@style/InsoleSwitchStyle" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/addinsoletime_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/insoletimerlist_divider_height"
+        android:layout_below="@id/addinsoletime_heat_layout"
+        android:background="@color/addtimer_divider_bgcolor" />
+
+    <RelativeLayout
+        android:id="@+id/addinsoletime_repeat_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/addinsoletimer_item_height"
+        android:layout_below="@id/addinsoletime_divider"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/addtimer_item_padding"
+        android:paddingRight="@dimen/addtimer_item_padding" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/heat"
+            android:textColor="@color/light_tip_textcolor"
+            android:textSize="@dimen/addtimer_item_textsize" />
+
+        <CheckBox
+            android:id="@+id/addinsoletime_repeat"
+            style="@style/InsoleSwitchStyle" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/insoletimerlist_divider1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/insoletimerlist_divider_height"
+        android:layout_below="@id/addinsoletime_repeat_layout"
+        android:background="@color/addtimer_divider_bgcolor" />
+
+    <LinearLayout
+        android:id="@+id/insoletimerlist_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/addtimer_calendar_height"
+        android:layout_below="@id/addinsoletime_title"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/white">
+
+        <com.datepicker.WheelView
+            android:id="@+id/insoletimerlist_hour"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/addtimer_calendar_height"
+            android:layout_weight="1"
+            android:paddingTop="@dimen/addtimer_margintop" />
+
+        <com.datepicker.WheelView
+            android:id="@+id/insoletimerlist_mins"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/addtimer_calendar_height"
+            android:layout_weight="1"
+            android:paddingTop="@dimen/addtimer_margintop" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/addinsoletimer_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/icon_loading_bg"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/addinsoletimer_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/anim_loading"
+            android:contentDescription="@string/timer" />
+    </RelativeLayout>
+
+</RelativeLayout>

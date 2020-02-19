@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            android:id="@+id/text_in_title"
+            style="@style/TextInTitleStyle"
+            android:text="@string/ip_address_fen_pei" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/selecet_working_mode_next"
+            style="@style/MenuInTitleStyle"
+            android:layout_height="match_parent"
+            android:text="@string/next"
+            android:background="@null"
+            android:gravity="center"
+            android:textColor="#ffffffff"
+            android:textSize="16dip"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/TextStyleInverse"
+        android:text="@string/net_fang_si" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp" >
+
+
+        <RadioButton
+            android:id="@+id/dong_tai_ip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/radio_bg"
+            android:text="@string/change_ip" />
+
+
+        <RadioButton
+            android:id="@+id/static_ip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/radio_bg"
+            android:text="@string/static_ip" />
+
+    </RadioGroup>
+
+</LinearLayout>

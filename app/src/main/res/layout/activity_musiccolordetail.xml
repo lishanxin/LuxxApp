@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg"
+    android:orientation="vertical" >
+
+    <!--<include-->
+        <!--android:id="@+id/light_title"-->
+        <!--layout="@layout/title_bar" />-->
+    <include
+        android:id="@+id/music_color_body"
+        layout="@layout/activity_lightrgbdetail"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/music_controlbar" />
+    <include
+    android:id="@+id/music_controlbar"
+    layout="@layout/activity_music_controlpanel"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/marquee_bgcolor" >
+
+    <include
+        android:id="@+id/marquee_title"
+        layout="@layout/title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:layout_below="@id/marquee_title" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <RelativeLayout
+                android:id="@+id/marquee_switch_layout"
+                style="@style/MarqueeItemStyle"
+                android:layout_alignParentTop="true" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/run"
+                    android:textColor="@color/timer_switch_textcolor"
+                    android:textSize="@dimen/timer_item_textsize" />
+
+                <CheckBox
+                    android:id="@+id/marquee_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:button="@drawable/checkbox_switch_selector" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/marquee_line1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marquee_divider_height"
+                android:layout_below="@id/marquee_switch_layout"
+                android:layout_marginLeft="@dimen/marquee_item_padding"
+                android:background="@color/marquee_divider_bg" />
+
+            <RelativeLayout
+                android:id="@+id/marquee_bar_layout"
+                style="@style/MarqueeItemStyle"
+                android:layout_below="@id/marquee_line1" >
+
+                <TextView
+                    android:id="@+id/marquee_speed"
+                    style="@style/MarqueeTextViewStyle"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/marquee_speed_marginright"
+                    android:layout_marginTop="@dimen/marquee_speed_margintop"
+                    android:text="@string/speed" />
+
+                <SeekBar
+                    android:id="@+id/marquee_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="@dimen/marquee_bar_margintop"
+                    android:layout_toRightOf="@id/marquee_speed"
+                    android:max="255"
+                    android:maxHeight="@dimen/marquee_seekbar_maxheight"
+                    android:minHeight="@dimen/marquee_seekbar_minheight"
+                    android:paddingEnd="@dimen/marquee_bar_padding"
+                    android:paddingStart="@dimen/marquee_bar_padding"
+                    android:progressDrawable="@drawable/marquee_seekbar"
+                    android:thumb="@drawable/icon_marquee_thumb" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/marquee_bar"
+                    android:layout_toRightOf="@id/marquee_speed"
+                    android:orientation="horizontal"
+                    android:weightSum="3" >
+
+                    <TextView
+                        android:id="@+id/marquee_fast"
+                        style="@style/MarqueeBarStyle"
+                        android:text="@string/fast" />
+
+                    <TextView
+                        android:id="@+id/marquee_middle"
+                        style="@style/MarqueeBarStyle"
+                        android:text="@string/middle" />
+
+                    <TextView
+                        android:id="@+id/marquee_slow"
+                        style="@style/MarqueeBarStyle"
+                        android:text="@string/slow" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/marquee_line2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marquee_divider_height"
+                android:layout_below="@id/marquee_bar_layout"
+                android:layout_marginLeft="@dimen/marquee_item_padding"
+                android:background="@color/marquee_divider_bg" />
+
+            <RelativeLayout
+                android:id="@+id/marquee_color_layout"
+                style="@style/MarqueeItemStyle"
+                android:layout_below="@id/marquee_line2" >
+
+                <TextView
+                    style="@style/MarqueeTextViewStyle"
+                    android:text="@string/color" />
+
+                <TextView
+                    android:id="@+id/marquee_random"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawablePadding="@dimen/marquee_drawablePadding"
+                    android:drawableRight="@drawable/icon_marquee_next"
+                    android:textColor="@color/marquee_item_textcolor"
+                    android:textSize="@dimen/marquee_listview_item_textsize" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/marquee_line3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marquee_divider_height"
+                android:layout_below="@id/marquee_color_layout"
+                android:layout_marginLeft="@dimen/marquee_item_padding"
+                android:background="@color/marquee_divider_bg" />
+
+            <RelativeLayout
+                android:id="@+id/marquee_addgroup_layout"
+                style="@style/MarqueeItemStyle"
+                android:layout_below="@id/marquee_line3" >
+
+                <TextView
+                    style="@style/MarqueeTextViewStyle"
+                    android:text="@string/marquee_set_group" />
+
+                <TextView
+                    android:id="@+id/marquee_groupname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:drawablePadding="@dimen/marquee_drawablePadding"
+                    android:drawableRight="@drawable/icon_marquee_next"
+                    android:textColor="@color/marquee_item_textcolor"
+                    android:textSize="@dimen/marquee_listview_item_textsize" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/marquee_line4"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marquee_divider_height"
+                android:layout_below="@id/marquee_addgroup_layout"
+                android:layout_marginLeft="@dimen/marquee_item_padding"
+                android:background="@color/marquee_divider_bg" />
+
+            <RelativeLayout
+                android:id="@+id/marquee_add_layout"
+                style="@style/MarqueeItemStyle"
+                android:layout_below="@id/marquee_line4" >
+
+                <TextView
+                    style="@style/MarqueeTextViewStyle"
+                    android:text="@string/marquee_add_lights" />
+
+                <ImageView
+                    style="@style/MarqueeImageViewStyle"
+                    android:contentDescription="@string/marquee" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/marquee_line5"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marquee_divider_height"
+                android:layout_below="@id/marquee_add_layout"
+                android:layout_marginLeft="@dimen/marquee_item_padding"
+                android:background="@color/marquee_divider_bg" />
+
+            <net.senink.seninkapp.ui.view.listview.SwipeMenuListView
+                android:id="@+id/marquee_lights"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/marquee_line5"
+                android:layout_marginLeft="@dimen/marquee_listview_item_margin"
+                android:background="@android:color/transparent"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@color/marquee_divider_bg"
+                android:dividerHeight="@dimen/marquee_divider_height"
+                android:footerDividersEnabled="true" />
+
+            <View
+                android:id="@+id/marquee_line6"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/marquee_divider_height"
+                android:layout_below="@id/marquee_lights"
+                android:layout_marginLeft="@dimen/marquee_item_padding"
+                android:background="@color/marquee_divider_bg"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

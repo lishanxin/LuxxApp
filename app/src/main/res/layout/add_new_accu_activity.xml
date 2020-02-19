@@ -1,0 +1,94 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffdddddd" >
+
+    <net.senink.seninkapp.ui.view.TopNavArea
+        android:id="@+id/icon_search_top"
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:layout_alignParentTop="true" />
+
+    <net.senink.seninkapp.ui.view.BottomNavArea
+        android:id="@+id/icon_search_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="setting" />
+
+    <ScrollView
+        android:id="@+id/content_title_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/icon_search_bottom"
+        android:layout_below="@id/icon_search_top" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/accu"
+                android:layout_width="match_parent"
+                android:layout_height="40dip"
+                android:layout_marginLeft="24dip"
+                android:layout_marginRight="24dip"
+                android:layout_marginTop="24dip"
+                android:background="#ffffffff"
+                android:hint="@string/input_zi_zhang_hao" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="40dip"
+                android:layout_marginLeft="24dip"
+                android:layout_marginRight="24dip"
+                android:layout_marginTop="24dip"
+                android:background="#ffffffff"
+                android:hint="@string/input_password" />
+
+            <EditText
+                android:id="@+id/password_ok"
+                android:layout_width="match_parent"
+                android:layout_height="40dip"
+                android:layout_marginLeft="24dip"
+                android:layout_marginRight="24dip"
+                android:layout_marginTop="24dip"
+                android:background="#ffffffff"
+                android:hint="@string/re_input_password" />
+
+            <RelativeLayout
+                android:id="@+id/succeful_alert"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/add_succeful_alert"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    />
+
+                <Button
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/add_accu"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/bottom_nav_area_height"
+                android:layout_marginLeft="24dip"
+                android:layout_marginRight="24dip"
+                android:layout_marginTop="30dip"
+                android:background="#fff00000"
+                android:text="@string/new_zi_zhang_hao"
+                android:textColor="#ffffffff"
+                android:textSize="20dip" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

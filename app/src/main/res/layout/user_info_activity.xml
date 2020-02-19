@@ -1,0 +1,279 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff" >
+
+    <include
+        android:id="@+id/userinfor_title"
+        layout="@layout/title_bar" />
+
+    <net.senink.seninkapp.ui.view.BottomNavArea
+        android:id="@+id/icon_search_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="setting" />
+
+    <ScrollView
+        android:id="@+id/content_title_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/icon_search_bottom"
+        android:layout_below="@id/userinfor_title" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/TextStyleInverse"
+                android:layout_height="30dip"
+                android:layout_marginLeft="24dp"
+                android:text="@string/user_info"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/user_name_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white" >
+
+                <TextView
+                    android:id="@+id/user_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/ni_cheng" />
+
+                <EditText
+                    android:id="@+id/user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="80dp"
+                    android:singleLine="true"
+                    android:maxLength="15"
+                    android:layout_toRightOf="@id/user_lebal"
+                    android:background="@android:color/transparent"
+                    android:hint=""
+                    android:textColor="@color/text_color_normal_inverse" />
+
+                <Button
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6" />
+
+            <RelativeLayout
+                android:id="@+id/address_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white" >
+
+                <TextView
+                    android:id="@+id/address_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/address_lebal" />
+
+                <Button
+                    android:id="@+id/address_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="invisible" />
+
+                <EditText
+                    android:id="@+id/address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:singleLine="true"
+                    android:maxLength="15"
+                    android:layout_toLeftOf="@id/address_right"
+                    android:layout_toRightOf="@id/address_lebal"
+                    android:background="@android:color/transparent"
+                    android:hint=""
+                    android:textColor="@color/text_color_normal_inverse" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6" />
+
+            <RelativeLayout
+                android:id="@+id/modify_password_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white" >
+
+                <TextView
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/modify_password" />
+
+                <Button
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6" />
+
+            <RelativeLayout
+                android:id="@+id/tel_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white" >
+
+                <TextView
+                    android:id="@+id/tel_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/tel_lebal" />
+
+                <Button
+                    android:id="@+id/tel_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/tel"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/tel_right"
+                    android:layout_toRightOf="@id/tel_lebal"
+                    android:text="12348569745"
+                    android:textSize="15dip" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6" />
+
+            <RelativeLayout
+                android:id="@+id/email_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white" >
+
+                <TextView
+                    android:id="@+id/email_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/mail_lebal" />
+
+                <Button
+                    android:id="@+id/email_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/email"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/email_right"
+                    android:layout_toRightOf="@id/email_lebal"
+                    android:textSize="15dip" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:id="@+id/wei_xin_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/wei_xin_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/wei_xin_lebal" />
+
+                <Button
+                    android:id="@+id/wei_xin_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow" />
+
+                <TextView
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dip"
+                    android:layout_toLeftOf="@id/wei_xin_right"
+                    android:layout_toRightOf="@id/wei_xin_lebal"
+                    android:gravity="right"
+                    android:text="@string/bond_wei_xin"
+                    android:textSize="15dip" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6" />
+
+            <RelativeLayout
+                android:id="@+id/wei_bo_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/wei_bo_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/wei_bo_lebal" />
+
+                <Button
+                    android:id="@+id/wei_bo_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow" />
+
+                <TextView
+                    android:id="@+id/wei_bo"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/wei_bo_right"
+                    android:layout_toRightOf="@id/wei_bo_lebal"
+                    android:textSize="15dip" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="#B6B6B6"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/userinfor_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/anim_black_loading"
+        android:contentDescription="@string/user_info"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+<!--     <CheckBox
+        android:id="@+id/addbubble_item_selector"
+        style="@style/EditCheckboxStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/addbubble_checkbox_marginright"
+        android:checked="false" /> -->
+
+    <ImageView
+        android:id="@+id/addbubble_item_icon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:maxWidth="35dp"
+        android:maxHeight="35dp"
+        android:background="@drawable/icon_equipment_light_group" />
+
+    <Button
+        android:id="@+id/addbubble_item_name"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/addbubble_name_marginleft"
+        android:layout_toRightOf="@id/addbubble_item_icon"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:background="@android:color/transparent"
+        android:textColor="@color/light_name_textcolor"
+        android:layout_height="40dp" />
+
+    <Button
+        android:id="@+id/addbubble_item_result"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/addbubble_loading_marginright"
+        android:textColor="@color/light_name_textcolor"
+        android:textSize="@dimen/addbubble_name_textsize"
+        android:visibility="gone" />
+
+<!--     <ImageView
+        android:id="@+id/addbubble_item_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:layout_marginRight="@dimen/addbubble_loading_marginright"
+        android:background="@drawable/anim_loading" /> -->
+
+</RelativeLayout>

@@ -1,0 +1,297 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/top"
+        style="@style/TitleLayoutStyle" >
+
+        <TextView
+            android:id="@+id/text_in_title"
+            style="@style/TextInTitleStyle"
+            android:gravity="center"
+            android:text="@string/wireless_security_mode_settings" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+
+    </RelativeLayout>
+    
+    <LinearLayout
+        android:id="@+id/wireless_security_mode_select_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="vertical" 
+        android:visibility="gone">
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_marginBottom="@dimen/edittext_padding_left_right"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:layout_marginTop="@dimen/edittext_padding_left_right"
+            android:text="@string/wireless_security_mode_settings" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:background="#B6B6B6" />
+
+        <RadioGroup
+            android:id="@+id/wireless_security_mode_radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/edittext_padding_left_right"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:layout_marginTop="@dimen/edittext_padding_left_right" >
+
+            <RadioButton
+                android:id="@+id/wireless_security_mode_none"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/wireless_security_mode_none" >
+            </RadioButton>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+                android:layout_marginRight="@dimen/advance_settings_marginLeft"
+                android:background="#B6B6B6" 
+                android:visibility="gone"/>
+
+            <RadioButton
+                android:id="@+id/wireless_security_mode_wep"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/wireless_security_mode_WEP"
+                android:visibility="gone" >
+            </RadioButton>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+                android:layout_marginRight="@dimen/advance_settings_marginLeft"
+                android:background="#B6B6B6" />
+
+            <RadioButton
+                android:id="@+id/wireless_security_mode_wpa"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/wireless_security_mode_WPA" >
+            </RadioButton>
+             <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+                android:layout_marginRight="@dimen/advance_settings_marginLeft"
+                android:background="#B6B6B6" />
+        </RadioGroup>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/wireless_WEP_encryption_mode_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="vertical" 
+        android:visibility="gone">
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_marginBottom="@dimen/edittext_padding_left_right"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:layout_marginTop="@dimen/edittext_padding_left_right"
+            android:text="@string/wireless_wep_encryption_mode_settings" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:background="#B6B6B6" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/edittext_padding_left_right"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:layout_marginTop="@dimen/edittext_padding_left_right" >
+
+            <RadioButton
+                android:id="@+id/wireless_wep_encryption_mode_open"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/wireless_wep_encryption_mode_open" >
+            </RadioButton>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+                android:layout_marginRight="@dimen/advance_settings_marginLeft"
+                android:background="#B6B6B6" />
+
+            <RadioButton
+                android:id="@+id/wireless_wep_encryption_mode_share"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/wireless_wep_encryption_mode_share" >
+            </RadioButton>
+        </RadioGroup>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/wireless_WPA_encryption_mode_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="vertical" 
+        android:visibility="gone">
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_marginBottom="@dimen/edittext_padding_left_right"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:layout_marginTop="@dimen/edittext_padding_left_right"
+            android:text="@string/wireless_wpa_encryption_mode_settings" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:background="#B6B6B6" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/edittext_padding_left_right"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:layout_marginTop="@dimen/edittext_padding_left_right" >
+
+            <RadioButton
+                android:id="@+id/wireless_wpa_encryption_mode_wpa"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/wireless_wpa_encryption_mode_wpa" >
+            </RadioButton>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+                android:layout_marginRight="@dimen/advance_settings_marginLeft"
+                android:background="#B6B6B6" />
+
+            <RadioButton
+                android:id="@+id/wireless_wpa_encryption_mode_wpa2"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/wireless_wpa_encryption_mode_wpa2" >
+            </RadioButton>
+        </RadioGroup>
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/wireless_WPA_key_algorithm_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="vertical" 
+        android:visibility="gone">
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:layout_marginBottom="@dimen/edittext_padding_left_right"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:layout_marginTop="@dimen/edittext_padding_left_right"
+            android:text="@string/wireless_WPA_key_algorithm_settings" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:background="#B6B6B6" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/edittext_padding_left_right"
+            android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+            android:layout_marginRight="@dimen/advance_settings_marginLeft"
+            android:layout_marginTop="@dimen/edittext_padding_left_right" >
+
+            <RadioButton
+                android:id="@+id/wireless_WPA_key_algorithm_TKIP"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/wireless_WPA_key_algorithm_TKIP" >
+            </RadioButton>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+                android:layout_marginRight="@dimen/advance_settings_marginLeft"
+                android:background="#B6B6B6" />
+
+            <RadioButton
+                android:id="@+id/wireless_WPA_key_algorithm_CCMP"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/wireless_WPA_key_algorithm_CCMP" >
+            </RadioButton>
+            
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="@dimen/advance_settings_marginLeft"
+                android:layout_marginRight="@dimen/advance_settings_marginLeft"
+                android:background="#B6B6B6" />
+            
+            <RadioButton
+                android:id="@+id/wireless_WPA_key_algorithm_TKIPCCMP"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:text="@string/wireless_WPA_key_algorithm_TKIP" >
+            </RadioButton>
+        </RadioGroup>
+    </LinearLayout>
+
+</LinearLayout>

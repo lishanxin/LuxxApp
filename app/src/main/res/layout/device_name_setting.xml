@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            style="@style/TextInTitleStyle"
+            android:text="@string/smart_device_manager" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+    </RelativeLayout>
+
+	<EditText 
+	    style="@style/EditStyle"
+	    android:id="@+id/edit_device_name"
+	    android:hint="@string/device_name_hint"
+	    />
+    <Button 
+        android:id="@+id/confirm_device_name"
+        style="@style/BtnStyle"
+        android:text="@android:string/ok"
+        />
+    
+</LinearLayout>

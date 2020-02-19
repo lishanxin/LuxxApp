@@ -1,0 +1,153 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/switch_detail_title"
+        layout="@layout/title_bar" />
+
+    <ScrollView
+        android:id="@+id/content_title_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/switch_detail_title" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/se_bei_manage"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white" >
+
+                <TextView
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/switch_state_lebal" />
+
+                <CheckBox
+                    android:id="@+id/registerd_device_switch"
+                    style="@style/MenuInTitleStyle"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center_vertical"
+                    android:button="@drawable/switch_btn_bg"
+                    android:focusable="false" />
+            </RelativeLayout>
+<View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/divider_bgcolor" />
+            <RelativeLayout
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white" >
+
+                <TextView
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/switch_lightbg_state_lebal" />
+
+                <CheckBox
+                    android:id="@+id/switch_detail_bglight_status"
+                    style="@style/MenuInTitleStyle"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center_vertical"
+                    android:button="@drawable/switch_btn_bg"
+                    android:focusable="false" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/divider_bgcolor" />
+
+            <RelativeLayout
+                android:id="@+id/address_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white" >
+
+                <TextView
+                    android:id="@+id/address_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/position" />
+
+                <Button
+                    android:id="@+id/address_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow" />
+
+                <TextView
+                    android:id="@+id/address_info"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dip"
+                    android:layout_toLeftOf="@id/address_right"
+                    android:layout_toRightOf="@id/address_lebal"
+                    android:gravity="right"
+                    android:textSize="15dip" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/divider_bgcolor" />
+
+            <RelativeLayout
+                android:id="@+id/name_area"
+                style="@style/TitleLayoutStyle"
+                android:background="@android:color/white" >
+
+                <TextView
+                    android:id="@+id/name_lebal"
+                    style="@style/TextStyleInverse"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/hide_device_name" />
+
+                <Button
+                    android:id="@+id/name_right"
+                    style="@style/MenuInTitleStyle"
+                    android:background="@drawable/icon_arrow" />
+
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/TextStyleInverse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dip"
+                    android:layout_toLeftOf="@id/name_right"
+                    android:layout_toRightOf="@id/name_lebal"
+                    android:gravity="right"
+                    android:text="@string/default_name_info"
+                    android:textSize="15dip" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider_bgcolor" />
+
+            <TextView
+                android:id="@+id/gong_lv"
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dip"
+                android:layout_marginTop="10dip"
+                android:gravity="center"
+                android:text="@string/current_power"
+                android:textSize="15dp" />
+
+            <net.senink.seninkapp.ui.view.CurveChartView
+                android:id="@+id/chart_view"
+                android:layout_width="wrap_content"
+                android:layout_height="250dip" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

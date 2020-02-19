@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/TextInTitleStyle"
+            android:text="@string/ppp_set" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/save"
+            style="@style/MenuInTitleStyle"
+            android:background="@null"
+            android:text="@string/save"
+            android:textColor="#ffffffff"
+            android:textSize="16dip" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="24dp"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/TextStyleInverse"
+            android:text="@string/enter_internet_account_info" />
+
+        <EditText
+            android:id="@+id/accu"
+            style="@style/EditStyle"
+            android:hint="@string/hint_internet_account" />
+
+        <EditText
+            android:id="@+id/password"
+            style="@style/EditStyle"
+            android:hint="@string/password_hint" />
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/mac_ke_long"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mac_copy"
+        android:textSize="16dip" />
+
+    <EditText
+        android:id="@+id/mac_address"
+        style="@style/EditStyle"
+        android:hint="@string/input_mac"
+        android:text="00-1E-68-F9-48-5F"
+        android:visibility="gone" />
+
+</LinearLayout>

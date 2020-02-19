@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_color">
+
+    <include
+        android:id="@+id/lightsetting_title"
+        layout="@layout/title_bar" />
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@android:color/transparent"
+            android:layout_below="@+id/lightsetting_title">
+
+            <RelativeLayout
+                android:id="@+id/lightsetting_name_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/lightsetting_item_height"
+                android:clickable="true"
+                android:paddingLeft="@dimen/lightsetting_item_paddingleft"
+                android:paddingRight="@dimen/lightsetting_item_paddingleft"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/name"
+                    android:textColor="@color/light_text_color"
+                    android:layout_alignBaseline="@+id/lightsetting_lightname"
+                    android:layout_alignBottom="@+id/lightsetting_lightname"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:id="@+id/lightsetting_lightname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/arrow_left"
+                    android:textColor="@color/light_text_color"
+                    android:textSize="10sp"
+                    android:textAlignment="viewStart"
+                    android:lines="1"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:drawablePadding="@dimen/lightsetting_drawable_marginright" />
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/lightsetting_line1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_divider_line_bg"
+                android:layout_below="@+id/lightsetting_name_layout"/>
+
+            <RelativeLayout
+                android:id="@+id/lightsetting_status_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/lightsetting_item_height"
+                android:paddingLeft="@dimen/lightsetting_item_paddingleft"
+                android:paddingRight="@dimen/lightsetting_item_paddingleft"
+                android:layout_below="@+id/lightsetting_name_layout"
+                android:layout_alignParentStart="true">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/status"
+                    android:textColor="@color/light_text_color"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true" />
+                <CheckBox
+                    android:id="@+id/lightsetting_switch"
+                    style="@style/MenuInTitleStyle"
+                    android:layout_gravity="center_vertical"
+                    android:button="@drawable/checkbox_switch_selector"
+                    android:layout_alignParentEnd="true"
+                    android:checked="true"
+                    android:layout_marginRight="0dp" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/lightsetting_line2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_divider_line_bg"
+                android:layout_below="@+id/lightsetting_status_layout" />
+
+            <RelativeLayout
+                android:id="@+id/lightsetting_groupinfor_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/lightsetting_item_height"
+                android:layout_below="@+id/lightsetting_line2"
+                android:paddingLeft="@dimen/lightsetting_item_paddingleft"
+                android:paddingRight="@dimen/lightsetting_item_paddingleft" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/lightsetting_locationin_group"
+                    android:textColor="@color/light_text_color"/>
+
+                <ImageButton
+                    android:id="@+id/lightsetting_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/arrow_left" />
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/lightsetting_line3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/light_divider_line_bg"
+                android:layout_below="@id/lightsetting_groupinfor_layout"/>
+
+            <net.senink.seninkapp.ui.view.listview.SwipeMenuListView
+                android:id="@+id/lightsetting_grouplist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lightsetting_line3"
+                android:background="@color/bg_color"
+                android:descendantFocusability="afterDescendants"
+                android:divider="@color/light_divider_line_bg"
+                android:dividerHeight="1dp"
+                android:headerDividersEnabled="false"
+                android:footerDividersEnabled="true"
+                android:layout_marginLeft="23dp" />
+
+            <!--<Button-->
+                <!--android:id="@+id/lightgroupsetting_delete"-->
+                <!--android:layout_width="180dp"-->
+                <!--android:layout_height="45dp"-->
+                <!--android:layout_below="@+id/lightsetting_grouplist"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginBottom="25dp"-->
+                <!--android:layout_marginTop="25dp"-->
+                <!--android:background="@android:color/holo_red_dark"-->
+                <!--android:paddingBottom="@dimen/lighteffects_okbtn_paddingBottom"-->
+                <!--android:paddingTop="@dimen/lighteffects_okbtn_paddingTop"-->
+                <!--android:text="@string/delete"-->
+                <!--android:textColor="@android:color/white"-->
+                <!--android:textSize="18sp" />-->
+
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lightsetting_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/lightsetting_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/anim_loading" />
+    </RelativeLayout>
+
+</RelativeLayout>

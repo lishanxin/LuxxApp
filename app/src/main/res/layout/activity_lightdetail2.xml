@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/light_title"
+        layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:id="@+id/light_selectcolor_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/light_title"
+        android:layout_marginTop="@dimen/light_switch_margintop"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/light_selectcolor_paddingleft"
+        android:paddingRight="@dimen/light_selectcolor_paddingleft" >
+
+        <ImageButton
+            android:id="@+id/light_select_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/set_up_blue_click" />
+
+        <ImageButton
+            android:id="@+id/light_select_red"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/light_colorbtn_margin"
+            android:layout_marginRight="@dimen/light_colorbtn_margin"
+            android:background="@drawable/set_up_red_click" />
+
+        <ImageButton
+            android:id="@+id/light_select_yellow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/set_up_yellow_click" />
+
+        <ImageButton
+            android:id="@+id/light_select_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/light_colorbtn_margin"
+            android:background="@drawable/set_up_white_click" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/light_circle_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/light_circle_layout_height"
+        android:layout_below="@id/light_selectcolor_layout"
+        android:layout_marginBottom="@dimen/light_item_paddingleft"
+        android:layout_marginTop="@dimen/light_circle_margintop" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/light_item_paddingleft"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/light_current"
+                android:layout_width="@dimen/light_currentcolor_width"
+                android:layout_height="@dimen/light_currentcolor_height"
+                android:layout_marginBottom="@dimen/light_currentcolor_margin"
+                android:background="@android:color/black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lightsetting_currentcolor"
+                android:textColor="@color/light_currentcolor_textcolor"
+                android:textSize="@dimen/lightsetting_seekbar_textsize" />
+        </LinearLayout>
+
+        <net.senink.seninkapp.ui.view.ColorCircle
+            android:id="@+id/light_colorcircle"
+            android:layout_width="@dimen/light_circle_width"
+            android:layout_height="@dimen/light_circle_height"
+            android:layout_centerInParent="true" />
+
+        <CheckBox
+            android:id="@+id/light_switch"
+            style="@style/MenuInTitleStyle"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/light_item_paddingleft"
+            android:button="@drawable/checkbox_light_selector"
+            android:focusable="false" />
+
+        <Button
+            android:id="@+id/light_effects"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/light_item_paddingleft"
+            android:layout_marginTop="@dimen/light_effects_margintop"
+            android:background="@drawable/light_special_efficacy" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/light_bright_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="@dimen/light_item_paddingleft"
+        android:layout_marginRight="@dimen/light_item_paddingleft" >
+
+        <ImageView
+            android:id="@+id/light_bright_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_dark1" />
+
+        <SeekBar
+            android:id="@+id/light_bright_seekbar"
+            android:layout_width="@dimen/lightsetting_seekbar_width"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:max="255"
+            android:maxHeight="4.0dp"
+            android:minHeight="4.0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:progress="255"
+            android:progressDrawable="@drawable/seekbar_bright"
+            android:thumb="@drawable/seekbar_thumb" />
+
+        <ImageView
+            android:id="@+id/light_bright_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_bright1" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lightdetail_led_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="@dimen/light_item_paddingleft"
+        android:layout_marginRight="@dimen/light_item_paddingleft" >
+
+        <ImageView
+            android:id="@+id/light_coldwarm_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_cold0" />
+
+        <SeekBar
+            android:id="@+id/light_coldwarm_seekbar"
+            android:layout_width="@dimen/lightsetting_seekbar_width"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:max="255"
+            android:maxHeight="4.0dp"
+            android:minHeight="4.0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:progress="127"
+            android:progressDrawable="@drawable/seekbar_coldwarm_progressdrawable"
+            android:thumb="@drawable/seekbar_thumb" />
+
+        <ImageView
+            android:id="@+id/light_coldwarm_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/icon_warm0" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/light_bluetooth_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/light_title" >
+
+        <include layout="@layout/bluetooth_disconnect_tip" />
+    </RelativeLayout>
+
+</RelativeLayout>

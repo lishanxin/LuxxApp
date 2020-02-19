@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color">
+
+    <include
+        android:id="@+id/light_title"
+        layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:id="@+id/light_rgb_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/light_title"
+        android:layout_marginLeft="@dimen/light_content_marginleft"
+        android:layout_marginRight="@dimen/light_content_marginright"
+        android:layout_marginTop="@dimen/light_switch_margintop"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/light_scene1_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/light_scene1_selected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_music_effect_spa_selector"
+                    android:contentDescription="@string/scene"
+                    android:padding="@dimen/light_item_padding"
+                    android:adjustViewBounds="false"
+                    android:layout_alignParentEnd="false"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:id="@+id/light_scene1_loadding"
+                    android:layout_width="@dimen/light_loading_width"
+                    android:layout_height="@dimen/light_loading_height"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/anim_loading"
+                    android:contentDescription="@string/scene"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/light_sceneName1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/light_scenename_margintop"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#9c9ea0"
+                android:textSize="10sp"
+                android:text="@string/effect_spa"
+                android:gravity="center_horizontal"
+                android:textColorHint="#9c9ea0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/light_scene2_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/light_scene2_selected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/btn_music_effect_sunlight_selector"
+                    android:contentDescription="@string/scene"
+                    android:padding="@dimen/light_item_padding" />
+
+                <ImageView
+                    android:id="@+id/light_scene2_loadding"
+                    android:layout_width="@dimen/light_loading_width"
+                    android:layout_height="@dimen/light_loading_height"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/anim_loading"
+                    android:contentDescription="@string/scene"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/light_sceneName2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/light_scenename_margintop"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#9c9ea0"
+                android:textSize="10sp"
+                android:text="@string/effect_sunrise"
+                android:gravity="center_horizontal"
+                android:textColorHint="#9c9ea0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/light_scene3_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/light_scene3_selected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/scene"
+                    android:padding="@dimen/light_item_padding"
+                    android:background="@drawable/btn_music_effect_breath_selector" />
+
+                <ImageView
+                    android:id="@+id/light_scene3_loadding"
+                    android:layout_width="@dimen/light_loading_width"
+                    android:layout_height="@dimen/light_loading_height"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/anim_loading"
+                    android:contentDescription="@string/scene"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/light_sceneName3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/light_scenename_margintop"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#9c9ea0"
+                android:textSize="10sp"
+                android:text="@string/effect_breath"
+                android:gravity="center_horizontal"
+                android:textColorHint="#9c9ea0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/light_scene4_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/light_scene4_selected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/btn_music_effect_random_selector"
+                    android:contentDescription="@string/scene"
+                    android:padding="@dimen/light_item_padding" />
+
+                <ImageView
+                    android:id="@+id/light_scene4_loadding"
+                    android:layout_width="@dimen/light_loading_width"
+                    android:layout_height="@dimen/light_loading_height"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/anim_loading"
+                    android:contentDescription="@string/scene"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/light_sceneName4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/light_scenename_margintop"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#9c9ea0"
+                android:textSize="10sp"
+                android:text="@string/effect_random"
+                android:gravity="center_horizontal"
+                android:textColorHint="#9c9ea0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/light_scene5_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/light_scene5_selected"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/btn_music_effect_night_selector"
+                    android:contentDescription="@string/scene"
+                    android:padding="@dimen/light_item_padding" />
+
+                <ImageView
+                    android:id="@+id/light_scene5_loadding"
+                    android:layout_width="@dimen/light_loading_width"
+                    android:layout_height="@dimen/light_loading_height"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/anim_loading"
+                    android:contentDescription="@string/scene"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/light_sceneName5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/light_scenename_margintop"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#9c9ea0"
+                android:textSize="10sp"
+                android:text="@string/timer"
+                android:gravity="center_horizontal"
+                android:textColorHint="#9c9ea0" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/light_circle_layout"
+        android:layout_width="match_parent"
+        android:layout_centerInParent="false"
+        android:layout_below="@+id/light_rgb_layout"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/light_bright_layout"
+        android:layout_marginTop="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/light_item_paddingleft"
+            android:orientation="vertical"
+            android:gravity="left">
+
+            <TextView
+                android:id="@+id/light_current"
+                android:layout_width="@dimen/light_currentcolor_width"
+                android:layout_height="@dimen/light_currentcolor_height"
+                android:background="@android:color/background_light"
+                android:layout_marginBottom="@dimen/light_currentcolor_margin"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/light_candle_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/light_candle_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_candle_selector"
+                android:contentDescription="@string/scene"
+                android:padding="@dimen/light_item_padding"
+                android:adjustViewBounds="false"
+                android:layout_alignParentEnd="false"
+                android:layout_centerInParent="true" />
+
+            <TextView
+                android:id="@+id/light_candle_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/light_scenename_margintop"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#9c9ea0"
+                android:textSize="10sp"
+                android:text="@string/candle"
+                android:gravity="center_horizontal"
+                android:textColorHint="#9c9ea0" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/light_effects"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/light_item_paddingleft"
+            android:background="@drawable/btn_music_play_selector"
+            android:visibility="visible"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="14dp" />
+
+        <Button
+            android:id="@+id/light_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="false"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="@dimen/light_effects_margintop"
+            android:background="@drawable/icon_btn_effect_normal"
+            android:layout_alignParentEnd="true" />
+
+        <CheckBox
+            android:id="@+id/light_switch"
+            android:layout_gravity="center_vertical"
+            android:button="@drawable/checkbox_light_selector"
+            android:focusable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="14dp" />
+
+        <net.senink.seninkapp.ui.view.ColorCircle
+            android:id="@+id/light_colorcircle"
+            android:layout_centerInParent="true"
+            android:layout_width="@dimen/light_circle_width"
+            android:layout_height="@dimen/light_circle_height" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/llColorSelector"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/light_colorSelector_height"
+        android:visibility="visible"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="30dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layoutMode="opticalBounds"
+            android:touchscreenBlocksFocus="true"
+            android:transitionGroup="true">
+
+            <ImageView
+                android:id="@+id/light_color1_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/light_red"/>
+
+            <ImageView
+                android:id="@+id/light_color1_loadding"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:alpha="0.1"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layoutMode="opticalBounds"
+            android:touchscreenBlocksFocus="true"
+            android:transitionGroup="true">
+
+            <ImageView
+                android:id="@+id/light_color2_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/light_orange"/>
+
+            <ImageView
+                android:id="@+id/light_color2_loadding"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:alpha="0.1"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layoutMode="opticalBounds"
+            android:theme="@style/TitleLayoutStyle"
+            android:touchscreenBlocksFocus="true"
+            android:transitionGroup="true">
+
+            <ImageView
+                android:id="@+id/light_color3_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/light_yellow"/>
+
+            <ImageView
+                android:id="@+id/light_color3_loadding"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:alpha="0.1"
+                android:background="@android:color/transparent" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layoutMode="opticalBounds"
+            android:touchscreenBlocksFocus="true"
+            android:transitionGroup="true">
+
+            <ImageView
+                android:id="@+id/light_color4_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/light_green"/>
+
+            <ImageView
+                android:id="@+id/light_color4_loadding"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:alpha="0.1"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layoutMode="opticalBounds"
+            android:theme="@style/TitleLayoutStyle"
+            android:touchscreenBlocksFocus="true"
+            android:transitionGroup="true">
+
+            <ImageView
+                android:id="@+id/light_color5_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/light_skyblue"/>
+
+            <ImageView
+                android:id="@+id/light_color5_loadding"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:alpha="0.1"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layoutMode="opticalBounds"
+            android:touchscreenBlocksFocus="true"
+            android:transitionGroup="true">
+
+            <ImageView
+                android:id="@+id/light_color6_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/light_deep_blue"/>
+
+            <ImageView
+                android:id="@+id/light_color6_loadding"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:alpha="0.1"
+                android:adjustViewBounds="false" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layoutMode="opticalBounds"
+            android:theme="@style/TitleLayoutStyle"
+            android:touchscreenBlocksFocus="true"
+            android:transitionGroup="true">
+
+            <ImageView
+                android:id="@+id/light_color7_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/light_violet"/>
+
+            <ImageView
+                android:id="@+id/light_color7_loadding"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:alpha="0.1"/>/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/light_bright_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/llColorSelector"
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:id="@+id/light_bright_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/seekbar_bright_right_selector"
+            android:contentDescription="@string/scene"
+            android:layout_centerVertical="true" />
+
+        <SeekBar
+            android:id="@+id/light_bright_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress="5"
+            android:thumb="@drawable/seekbar_thumb"
+            android:progressDrawable="@drawable/seekbar_bright"
+            android:layout_toStartOf="@+id/light_bright_right"
+            android:layout_toEndOf="@+id/light_bright_left"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:maxHeight="9dp"
+            android:minHeight="9dp"
+            android:max="100"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/light_bright_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/seekbar_bright_left_selector"
+            android:contentDescription="@string/scene" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/light_loadding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/anim_black_loading"
+        android:contentDescription="@string/scene"
+        android:visibility="gone"
+        android:duplicateParentState="false" />
+
+
+</RelativeLayout>

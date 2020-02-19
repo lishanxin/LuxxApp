@@ -1,0 +1,185 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lightlist_root"
+    android:layout_width="match_parent"
+    android:baselineAligned="false"
+    android:gravity="center"
+    android:layout_height="115dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="114dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/light_item_distance"
+        android:layout_marginRight="@dimen/light_item_distance">
+
+        <RelativeLayout
+            android:id="@+id/lightlist_item1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/light_item_margintop"
+            android:layout_marginTop="@dimen/light_item_margintop"
+            android:layout_weight="1"
+            android:descendantFocusability="afterDescendants">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/tv_name1"
+                android:textColor="@android:color/white"
+                android:textColorHighlight="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textColorLink="@android:color/white"
+                android:textSize="@dimen/home_item_name_textsize"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
+                android:layout_marginBottom="@dimen/light_item_padding" />
+
+            <ImageButton
+                android:id="@+id/lightlist_name1"
+                android:layout_width="74dp"
+                android:layout_height="74dp"
+                android:ellipsize="none"
+                android:maxLength="7"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/home_item_name_textsize"
+                android:layout_weight="1"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentStart="false"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lightlist_item2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/light_item_margintop"
+            android:layout_marginTop="@dimen/light_item_margintop"
+            android:layout_weight="1"
+            android:descendantFocusability="afterDescendants"
+            android:layout_gravity="center_vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/tv_name2"
+                android:textColor="@android:color/white"
+                android:textColorHighlight="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textColorLink="@android:color/white"
+                android:textSize="@dimen/home_item_name_textsize"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
+                android:layout_marginBottom="@dimen/light_item_padding" />
+
+            <ImageButton
+                android:id="@+id/lightlist_name2"
+                android:layout_width="74dp"
+                android:layout_height="74dp"
+                android:maxLength="7"
+                android:paddingBottom="@dimen/light_item_paddingbottom"
+                android:singleLine="false"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/home_item_name_textsize"
+                android:layout_weight="1"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentStart="false"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lightlist_item3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/light_item_margintop"
+            android:layout_marginTop="@dimen/light_item_margintop"
+            android:layout_weight="1"
+            android:descendantFocusability="afterDescendants"
+            android:layout_gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/lightlist_name3"
+                android:layout_width="74dp"
+                android:layout_height="74dp"
+                android:ellipsize="marquee"
+                android:maxLength="7"
+                android:paddingBottom="@dimen/light_item_paddingbottom"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/home_item_name_textsize"
+                android:layout_weight="1"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentTop="false"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/tv_name3"
+                android:textColor="@android:color/white"
+                android:textColorHighlight="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textColorLink="@android:color/white"
+                android:textSize="@dimen/home_item_name_textsize"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
+                android:layout_marginBottom="@dimen/light_item_padding" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/lightlist_item4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/light_item_margintop"
+            android:layout_marginTop="@dimen/light_item_margintop"
+            android:layout_weight="1"
+            android:descendantFocusability="afterDescendants"
+            android:layout_gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/lightlist_name4"
+                android:layout_width="74dp"
+                android:layout_height="74dp"
+                android:ellipsize="marquee"
+                android:maxLength="7"
+                android:paddingBottom="@dimen/light_item_paddingbottom"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/home_item_name_textsize"
+                android:layout_weight="1"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentTop="false"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:background="@android:color/transparent" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/tv_name4"
+                android:textColor="@android:color/white"
+                android:textColorHighlight="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textColorLink="@android:color/white"
+                android:textSize="@dimen/home_item_name_textsize"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
+                android:layout_marginBottom="@dimen/light_item_padding" />
+        </RelativeLayout>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#d2d2d7"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

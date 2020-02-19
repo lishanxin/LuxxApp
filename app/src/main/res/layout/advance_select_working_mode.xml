@@ -1,0 +1,70 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            android:id="@+id/text_in_title"
+            style="@style/TextInTitleStyle"
+            android:text="@string/select_working_mode_title" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/selecet_working_mode_next"
+            style="@style/MenuInTitleStyle"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center"
+            android:text="@string/next"
+            android:textColor="#ffffffff"
+            android:textSize="16dip"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/TextStyleInverse"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/please_select_working_mode" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp" >
+
+        <RadioButton
+            android:id="@+id/bo_hao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/radio_bg"
+            android:checked="true"
+            android:text="@string/dia_net" />
+
+        <RadioButton
+            android:id="@+id/wu_xian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/radio_bg"
+            android:text="@string/no_link" />
+
+        <RadioButton
+            android:id="@+id/you_xian"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/radio_bg"
+            android:text="@string/has_link" />
+    </RadioGroup>
+
+</LinearLayout>

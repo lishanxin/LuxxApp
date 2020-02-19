@@ -1,0 +1,145 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            style="@style/TextInTitleStyle"
+            android:text="@string/smart_device_manager" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/living_room"
+        style="@style/EditStyle"
+        android:layout_width="match_parent"
+        android:paddingLeft="12dp"
+        android:gravity="center_vertical"
+        android:text="@string/living_room"
+        android:background="@color/whiteColor" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
+        android:background="#B6B6B6" />
+    
+    <TextView
+        android:id="@+id/bed_room"
+        style="@style/EditStyle"
+        android:layout_width="match_parent"
+        android:paddingLeft="12dp"
+        android:gravity="center_vertical"
+        android:text="@string/bedroom"
+        android:background="@color/whiteColor" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
+        android:background="#B6B6B6" />
+    
+    <TextView
+        android:id="@+id/master_bedroom"
+        style="@style/EditStyle"
+        android:layout_width="match_parent"
+        android:paddingLeft="12dp"
+        android:gravity="center_vertical"
+        android:text="@string/master_bedroom"
+        android:background="@color/whiteColor" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
+        android:background="#B6B6B6" />
+    <TextView
+        android:id="@+id/guest_room_001"
+        style="@style/EditStyle"
+        android:layout_width="match_parent"
+        android:paddingLeft="12dp"
+        android:gravity="center_vertical"
+        android:text="@string/guest_room_001"
+        android:background="@color/whiteColor" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
+        android:background="#B6B6B6" />
+    <TextView
+        android:id="@+id/guest_room_002"
+        style="@style/EditStyle"
+        android:layout_width="match_parent"
+        android:paddingLeft="12dp"
+        android:gravity="center_vertical"
+        android:text="@string/guest_room_002"
+        android:background="@color/whiteColor" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
+        android:background="#B6B6B6" />
+    <TextView
+        android:id="@+id/dinning_hall"
+        style="@style/EditStyle"
+        android:layout_width="match_parent"
+        android:paddingLeft="12dp"
+        android:gravity="center_vertical"
+        android:text="@string/dining_hall"
+        android:background="@color/whiteColor" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
+        android:background="#B6B6B6" />
+    
+    <TextView
+        android:id="@+id/toy_room"
+        style="@style/EditStyle"
+        android:layout_width="match_parent"
+        android:paddingLeft="12dp"
+        android:gravity="center_vertical"
+        android:text="@string/toy_room"
+        android:background="@color/whiteColor" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
+        android:background="#B6B6B6" />
+    
+     <TextView
+        android:id="@+id/washing_room"
+        style="@style/EditStyle"
+        android:layout_width="match_parent"
+        android:paddingLeft="12dp"
+        android:gravity="center_vertical"
+        android:text="@string/lavatory"
+        android:background="@color/whiteColor" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
+        android:background="#B6B6B6" />
+
+</LinearLayout>

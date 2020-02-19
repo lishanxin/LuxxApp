@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/smartcelltimer_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:weightSum="4.5" >
+
+    <TextView
+        android:id="@+id/smartcelltimer_item_name"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/timer_item_height"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.15"
+        android:background="@android:color/white"
+        android:drawableTop="@drawable/icon_equipment_light_group"
+        android:gravity="center"
+        android:singleLine="true"
+        android:maxLength="5"
+        android:paddingTop="@dimen/timer_item_devicename_paddingtop"
+        android:textColor="@color/light_tip_textcolor"
+        android:textSize="@dimen/timer_item_devicename_textsize" />
+
+    <View
+        android:id="@+id/smartcelltimer_item_line1"
+        android:layout_width="@dimen/timer_item_margin"
+        android:layout_height="@dimen/timer_item_height"
+        android:background="@color/light_bg" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="@dimen/timer_item_height"
+        android:layout_weight="3.35"
+        android:orientation="vertical" >
+
+        <net.senink.seninkapp.ui.view.listview.SwipeMenuListView
+            android:id="@+id/smartcelltimer_item_listview"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/timer_item_height_half"
+            android:background="@android:color/white"
+            android:cacheColorHint="@android:color/transparent"
+            android:descendantFocusability="afterDescendants"
+            android:divider="@color/light_divider_line_bg"
+            android:dividerHeight="1dp"
+            android:paddingLeft="@dimen/timer_item_marinleft" />
+
+        <View
+            android:id="@+id/smartcelltimer_item_line2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/timer_item_margin"
+            android:background="@color/light_bg" />
+
+        <TextView
+            android:id="@+id/smartcelltimer_item_time"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/timer_item_height_half"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/timer_item_marinleft"
+            android:textColor="@color/light_tip_textcolor"
+            android:textSize="@dimen/timer_item_date_textsize" />
+    </LinearLayout>
+
+</LinearLayout>

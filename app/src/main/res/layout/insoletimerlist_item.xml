@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/insoletimer_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:baselineAligned="false"
+    android:orientation="vertical" >
+
+    <net.senink.seninkapp.ui.view.listview.SwipeMenuListView
+        android:id="@+id/insoletimer_item_listview"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/timer_item_height_half"
+        android:background="@android:color/white"
+        android:cacheColorHint="@android:color/transparent"
+        android:descendantFocusability="afterDescendants"
+        android:paddingLeft="@dimen/timer_item_marinleft" />
+
+    <View
+        android:id="@+id/insoletimer_item_line1"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/insoletimerlist_marginleft"
+        android:layout_height="@dimen/timer_item_margin"
+        android:background="@color/light_bg" />
+
+    <TextView
+        android:id="@+id/insoletimer_item_time"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/timer_item_height_half"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/insoletimerlist_marginleft"
+        android:textColor="@color/light_tip_textcolor"
+        android:textSize="@dimen/timer_item_date_textsize" />
+
+</LinearLayout>

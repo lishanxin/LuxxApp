@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wifi_bgcolor" >
+
+    <include
+        android:id="@+id/wifi_title"
+        layout="@layout/title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/wifi_title" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/wifi_infor_margintop" >
+
+            <RelativeLayout
+                android:id="@+id/wifi_infor_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/wifi_infor_height"
+                android:layout_alignParentTop="true"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/wifi_infor_paddingleft"
+                android:paddingRight="@dimen/wifi_infor_paddingleft" >
+
+                <TextView
+                    android:id="@+id/wifi_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:drawableLeft="@drawable/icon_circle"
+                    android:drawablePadding="@dimen/wifi_infor_icon_drawablepadding"
+                    android:gravity="center_vertical"
+                    android:text="@string/home_gateway"
+                    android:textColor="@color/wifi_name_textcolor"
+                    android:textSize="@dimen/wifi_textsize_large" />
+
+                <ImageView
+                    android:id="@+id/wifi_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="@dimen/wifi_icon_margintop"
+                    android:background="@drawable/wire_connect" />
+
+                <TextView
+                    android:id="@+id/wifi_net_ip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/wifi_name"
+                    android:drawableLeft="@drawable/icon_point"
+                    android:drawablePadding="@dimen/wifi_infor_drawablepadding"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/wifi_infor_textcolor"
+                    android:textSize="@dimen/wifi_textsize_small" />
+
+                <TextView
+                    android:id="@+id/wifi_gateway_ip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/wifi_net_ip"
+                    android:drawableLeft="@drawable/icon_point"
+                    android:drawablePadding="@dimen/wifi_infor_drawablepadding"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/wifi_infor_textcolor"
+                    android:textSize="@dimen/wifi_textsize_small" />
+
+                <TextView
+                    android:id="@+id/wifi_submask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/wifi_gateway_ip"
+                    android:drawableLeft="@drawable/icon_point"
+                    android:drawablePadding="@dimen/wifi_infor_drawablepadding"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/wifi_infor_textcolor"
+                    android:textSize="@dimen/wifi_textsize_small" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/wifi_select_network"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/wifi_select_height"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/wifi_infor_layout"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/wifi_infor_paddingleft"
+                android:gravity="center_vertical"
+                android:text="@string/wifi_select_network_tip"
+                android:textColor="@color/wifi_infor_textcolor"
+                android:textSize="@dimen/wifi_textsize_big" />
+
+            <net.senink.seninkapp.ui.view.BlueLinkerListView
+                android:id="@+id/wifi_listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/wifi_select_network"
+                android:cacheColorHint="@android:color/transparent"
+                android:divider="@color/divider_bgcolor"
+                android:dividerHeight="1dp" />
+
+            <Button
+                android:id="@+id/wifi_other_network"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/wifi_othernetwork_height"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/wifi_listview"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="@dimen/wifi_infor_margintop"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/wifi_other_network_marginleft"
+                android:text="@string/wifi_other_network"
+                android:textColor="@color/wifi_infor_textcolor"
+                android:textSize="@dimen/wifi_textsize_large" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/wifi_loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:alpha="0.3"
+        android:background="@android:color/black" >
+
+        <ImageView
+            android:id="@+id/wifi_loading_anima"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/anim_loading" />
+    </RelativeLayout>
+
+</RelativeLayout>

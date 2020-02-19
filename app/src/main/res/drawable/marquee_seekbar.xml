@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 全部能量图 -->
+    <item
+        android:id="@+id/SecondaryProgress"
+        android:drawable="@drawable/icon_marquee_seebar_bg"/>
+    <!-- 进和能量图 -->
+    <item
+        android:id="@+id/progress"
+        android:drawable="@drawable/icon_marquee_seebar_progress"/>
+
+</layer-list>

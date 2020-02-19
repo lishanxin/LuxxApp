@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/icon_insole_bg" >
+
+    <include
+        android:id="@+id/insole_title"
+        layout="@layout/title_bar" />
+
+    <TextView
+        android:id="@+id/insole_steps"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/insole_steplayout_height"
+        android:layout_below="@id/insole_title"
+        android:clickable="true"
+        android:drawableLeft="@drawable/icon_walk"
+        android:drawablePadding="@dimen/insole_steps_drawablepadding"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/insole_steps_paddingleft"
+        android:text="0"
+        android:textColor="@color/insole_steps_textcolor"
+        android:textSize="@dimen/insole_steps_textsize" />
+
+    <View
+        android:id="@+id/insole_line1"
+        style="@style/InsoleLineStyle"
+        android:layout_below="@id/insole_steps" />
+
+    <LinearLayout
+        android:id="@+id/insole_temperature_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/insole_line1"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/insole_steps_paddingleft"
+            android:paddingRight="@dimen/insole_steps_paddingleft" >
+
+            <RelativeLayout
+                android:id="@+id/insole_inforleft_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="@dimen/insole_heat_marginbottom"
+                android:layout_marginTop="@dimen/insole_heat_margintop" >
+
+                <ImageView
+                    android:id="@+id/insole_left_ele"
+                    style="@style/InsoleEleStyle"
+                    android:contentDescription="@string/insole_title" />
+
+                <ImageView
+                    style="@style/InsoleFootStyle"
+                    android:contentDescription="@string/insole_title"
+                    android:src="@drawable/icon_insole_left" />
+
+                <ImageView
+                    android:id="@+id/insole_left_heat"
+                    style="@style/InsoleHeatStyle"
+                    android:contentDescription="@string/insole_title" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/insole_temperature_left"
+                style="@style/InsoleTempStyle"
+                android:layout_below="@id/insole_inforleft_layout"
+                android:text="0℃" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/insole_line2"
+            style="@style/InsoleLineStyle"
+            android:layout_width="1dp"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/insole_steps_paddingleft"
+            android:paddingRight="@dimen/insole_steps_paddingleft" >
+
+            <RelativeLayout
+                android:id="@+id/insole_inforright_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="@dimen/insole_heat_marginbottom"
+                android:layout_marginTop="@dimen/insole_heat_margintop" >
+
+                <ImageView
+                    android:id="@+id/insole_right_ele"
+                    style="@style/InsoleEleStyle"
+                    android:contentDescription="@string/insole_title" />
+
+                <ImageView
+                    style="@style/InsoleFootStyle"
+                    android:contentDescription="@string/insole_title"
+                    android:src="@drawable/icon_insole_right" />
+
+                <ImageView
+                    android:id="@+id/insole_right_heat"
+                    style="@style/InsoleHeatStyle"
+                    android:contentDescription="@string/insole_title" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/insole_temperature_right"
+                style="@style/InsoleTempStyle"
+                android:layout_below="@id/insole_inforright_layout"
+                android:text="0℃" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/insole_line3"
+        style="@style/InsoleLineStyle"
+        android:layout_below="@id/insole_temperature_layout" />
+
+    <RelativeLayout
+        android:id="@+id/insole_mode_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/insole_line3"
+        android:layout_marginBottom="@dimen/insole_modelayout_marginbottom"
+        android:layout_marginLeft="@dimen/insole_steps_paddingleft"
+        android:layout_marginRight="@dimen/insole_steps_paddingleft"
+        android:layout_marginTop="@dimen/insole_modelayout_margintop" >
+
+        <Button
+            android:id="@+id/insole_mode_timer"
+            style="@style/InsoleModeStyle"
+            android:clickable="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/timer" />
+
+        <Button
+            android:id="@+id/insole_mode_temperature"
+            style="@style/InsoleModeStyle"
+            android:clickable="true"
+            android:text="@string/insole_temperature"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <CheckBox
+            android:id="@+id/insole_mode_heat"
+            style="@style/InsoleModeStyle"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/insole_heat_switch_textcolor"
+            android:background="@drawable/checkbox_insole_selector"
+            android:button="@android:color/transparent"
+            android:gravity="center"
+            android:text="@string/heat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/insole_operate_temperature_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/insole_mode_layout"
+        android:layout_marginBottom="@dimen/insole_modelayout_marginbottom"
+        android:layout_marginLeft="@dimen/insole_steps_paddingleft"
+        android:layout_marginRight="@dimen/insole_steps_paddingleft">
+
+        <TextView
+            android:id="@+id/insole_temperature_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/insole_temperature_magin"
+            android:layout_marginRight="@dimen/insole_temperature_magin"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/insole_mode_textsize" />
+
+        <ImageButton
+            android:id="@+id/insole_reduce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/insole_temperature_value"
+            android:background="@drawable/btn_insole_reduce_selector"
+            android:contentDescription="@string/insole_title" />
+
+        <ImageButton
+            android:id="@+id/insole_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/insole_temperature_value"
+            android:background="@drawable/btn_insole_add_selector"
+            android:contentDescription="@string/insole_title" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/insole_operate_temperature_layout"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal|bottom" >
+ 
+        <net.senink.seninkapp.ui.view.HalfCircleButton
+            android:id="@+id/insole_halfbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+</RelativeLayout>

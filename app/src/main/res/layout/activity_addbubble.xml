@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg" >
+
+    <include
+        android:id="@+id/addbubble_title"
+        layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/addbubble_title"
+        android:background="@color/bg_color">
+
+        <net.senink.seninkapp.ui.view.StepsView
+            android:id="@+id/addbubble_step"
+            android:layout_width="@dimen/addbubble_stepview_width"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/addbubble_stepview_marginleft"
+            android:layout_marginTop="@dimen/addbubble_content_margintop" />
+
+        <RelativeLayout
+            android:id="@+id/addbubble_content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/addbubble_content_margintop"
+            android:layout_toRightOf="@id/addbubble_step"
+            android:layout_marginLeft="40dp">
+
+            <RelativeLayout
+                android:id="@+id/addbubble_step1_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" >
+
+                <TextView
+                    android:id="@+id/addbubble_step1_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/addbubble_step1_height"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/addbubble_step1_tip"
+                    android:textColor="@color/addbubble_textcolor"
+                    android:textSize="@dimen/addbubble_step_textsize" />
+
+                <ImageView
+                    android:id="@+id/addbubble_anima1"
+                    android:layout_width="@dimen/addbubble_step1_height"
+                    android:layout_height="@dimen/addbubble_step1_height"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/addbubble_stepview_marginleft"
+                    android:layout_toRightOf="@id/addbubble_step1_tip"
+                    android:background="@drawable/anim_black_loading"
+                    android:contentDescription="@string/add"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <ListView
+                android:id="@+id/addbubble_list"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@id/addbubble_step1_layout"
+                android:layout_marginTop="@dimen/addbubble_listview_margintop"
+                android:cacheColorHint="@android:color/transparent"
+                android:descendantFocusability="blocksDescendants"
+                android:divider="@color/light_divider_line_bg"
+                android:dividerHeight="1dp"
+                android:visibility="gone"
+                android:headerDividersEnabled="false"
+                android:minHeight="@dimen/addbubble_listview_minheight" />
+
+            <View
+                android:id="@+id/addbubble_space"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/addbubble_space_height"
+                android:layout_below="@id/addbubble_list"
+                android:background="@android:color/transparent" />
+
+            <RelativeLayout
+                android:id="@+id/addbubble_step2_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/addbubble_space" >
+
+                <TextView
+                    android:id="@+id/addbubble_step2_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/addbubble_step_height"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/addbubble_step2_tip"
+                    android:textColor="@color/addbubble_textcolor"
+                    android:textSize="@dimen/addbubble_step_textsize" />
+
+                <ImageView
+                    android:id="@+id/addbubble_anima2"
+                    android:layout_width="@dimen/addbubble_step1_height"
+                    android:layout_height="@dimen/addbubble_step1_height"
+                    android:layout_marginLeft="@dimen/addbubble_stepview_marginleft"
+                    android:layout_toRightOf="@id/addbubble_step2_tip"
+                    android:background="@drawable/anim_black_loading"
+                    android:contentDescription="@string/add"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/addbubble_step3_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/addbubble_step2_layout" >
+
+                <TextView
+                    android:id="@+id/addbubble_step3_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/addbubble_step_height"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/addbubble_step3_tip"
+                    android:textColor="@color/addbubble_textcolor"
+                    android:textSize="@dimen/addbubble_step_textsize" />
+
+                <ImageView
+                    android:id="@+id/addbubble_anima3"
+                    android:layout_width="@dimen/addbubble_step1_height"
+                    android:layout_height="@dimen/addbubble_step1_height"
+                    android:layout_marginLeft="@dimen/addbubble_stepview_marginleft"
+                    android:layout_toRightOf="@id/addbubble_step3_tip"
+                    android:background="@drawable/anim_black_loading"
+                    android:contentDescription="@string/add"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/addbubble_step4_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/addbubble_step3_layout"
+                android:text="@string/addbubble_step4_tip"
+                android:textColor="@color/addbubble_textcolor"
+                android:textSize="@dimen/addbubble_step_textsize" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

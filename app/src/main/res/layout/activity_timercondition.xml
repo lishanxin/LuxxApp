@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/timercodition_bgcolor" >
+
+    <include
+        android:id="@+id/timercondition_title"
+        layout="@layout/title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/timercondition_switch_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/timer_item_default_height"
+        android:layout_below="@id/timercondition_title"
+        android:layout_marginBottom="@dimen/timer_divider_height"
+        android:background="@android:color/white"
+        android:paddingLeft="@dimen/timer_item_padding"
+        android:paddingRight="@dimen/timer_item_padding" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/timercondition_notrepeat"
+            android:textColor="@color/timer_switch_textcolor"
+            android:textSize="@dimen/timer_item_textsize" />
+
+        <CheckBox
+            android:id="@+id/timercondition_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:button="@drawable/checkbox_switch_selector" />
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/timercondition_time_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/timercondition_title_height"
+        android:layout_below="@id/timercondition_switch_layout"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/timercondition_title_padding"
+        android:paddingRight="@dimen/timercondition_title_padding" >
+
+        <RadioButton
+            android:id="@+id/timercondition_day"
+            style="@style/TimeRadioButtonStyle"
+            android:layout_marginRight="@dimen/timercondition_title_between"
+            android:text="@string/day" />
+
+        <RadioButton
+            android:id="@+id/timercondition_week"
+            style="@style/TimeRadioButtonStyle"
+            android:layout_marginRight="@dimen/timercondition_title_between"
+            android:text="@string/week" />
+
+        <RadioButton
+            android:id="@+id/timercondition_month"
+            style="@style/TimeRadioButtonStyle"
+            android:layout_marginRight="@dimen/timercondition_title_between"
+            android:text="@string/month" />
+
+        <RadioButton
+            android:id="@+id/timercondition_year"
+            style="@style/TimeRadioButtonStyle"
+            android:text="@string/year" />
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/timercondition_week_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/timercondition_weeklayout_height"
+        android:layout_below="@id/timercondition_time_layout"
+        android:background="@color/timercodition_item_bgcolor"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/timercondition_weeklayout_padding"
+        android:paddingRight="@dimen/timercondition_weeklayout_padding" >
+
+        <CheckBox
+            android:id="@+id/timercondition_sunday"
+            style="@style/WeekCheckboxStyle"
+            android:layout_marginRight="@dimen/timercondition_checkbox_between"
+            android:text="@string/seven" />
+
+        <CheckBox
+            android:id="@+id/timercondition_monday"
+            style="@style/WeekCheckboxStyle"
+            android:layout_marginRight="@dimen/timercondition_checkbox_between"
+            android:text="@string/one" />
+
+        <CheckBox
+            android:id="@+id/timercondition_tuesday"
+            style="@style/WeekCheckboxStyle"
+            android:layout_marginRight="@dimen/timercondition_checkbox_between"
+            android:text="@string/two" />
+
+        <CheckBox
+            android:id="@+id/timercondition_wednesday"
+            style="@style/WeekCheckboxStyle"
+            android:layout_marginRight="@dimen/timercondition_checkbox_between"
+            android:text="@string/three" />
+
+        <CheckBox
+            android:id="@+id/timercondition_thursday"
+            style="@style/WeekCheckboxStyle"
+            android:layout_marginRight="@dimen/timercondition_checkbox_between"
+            android:text="@string/four" />
+
+        <CheckBox
+            android:id="@+id/timercondition_friday"
+            style="@style/WeekCheckboxStyle"
+            android:layout_marginRight="@dimen/timercondition_checkbox_between"
+            android:text="@string/five" />
+
+        <CheckBox
+            android:id="@+id/timercondition_saturday"
+            style="@style/WeekCheckboxStyle"
+            android:button="@null"
+            android:text="@string/six" />
+    </LinearLayout>
+
+    <net.senink.seninkapp.ui.view.calendarview.MonthView
+        android:id="@+id/timercondition_monthCalendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timercondition_time_layout"
+        android:background="@color/timercodition_item_bgcolor"
+        android:padding="@dimen/timercondition_month_padding" />
+
+    <net.senink.seninkapp.ui.view.calendarview.ExtendedCalendarView
+        android:id="@+id/timercondition_yearCalendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timercondition_time_layout"
+        android:background="@color/timercodition_item_bgcolor"
+        android:paddingLeft="@dimen/timercondition_year_padding"
+        android:paddingRight="@dimen/timercondition_year_padding" />
+
+</RelativeLayout>

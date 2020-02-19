@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/wifi_bgcolor" >
+
+    <include
+        android:id="@+id/wifi_other_connect_title"
+        layout="@layout/wifi_title_bar" />
+
+    <RelativeLayout
+        android:id="@+id/wifi_other_connect_ssid_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/wifi_connect_item_height"
+        android:layout_below="@id/wifi_other_connect_title"
+        android:layout_marginTop="@dimen/wifi_connect_margintop"
+        android:background="@android:color/white" >
+
+        <TextView
+            android:id="@+id/wifi_other_connect_ssid_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/wifi_connect_item_marginleft"
+            android:gravity="center_vertical"
+            android:text="@string/ssid"
+            android:textColor="@color/wifi_name_textcolor"
+            android:textSize="@dimen/wifi_connect_textsize_large" />
+
+        <EditText
+            android:id="@+id/wifi_other_connect_ssid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/wifi_connect_pwd_margin"
+            android:layout_marginRight="@dimen/wifi_connect_pwd_margin"
+            android:layout_toRightOf="@id/wifi_other_connect_ssid_tip"
+            android:background="@android:color/transparent"
+            android:hint="@string/wifi_ssid_input"
+            android:singleLine="true"
+            android:textColor="@color/wifi_name_textcolor"
+            android:textSize="@dimen/wifi_connect_textsize_small" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/wifi_other_connect_pwd_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/wifi_connect_item_height"
+        android:layout_below="@id/wifi_other_connect_ssid_layout"
+        android:layout_marginTop="@dimen/wifi_connect_margintop"
+        android:background="@android:color/white" >
+
+        <TextView
+            android:id="@+id/wifi_other_connect_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/wifi_connect_item_marginleft"
+            android:gravity="center_vertical"
+            android:text="@string/pwd"
+            android:textColor="@color/wifi_name_textcolor"
+            android:textSize="@dimen/wifi_connect_textsize_large" />
+
+        <EditText
+            android:id="@+id/wifi_other_connect_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:inputType="textPassword"
+            android:layout_marginLeft="@dimen/wifi_connect_pwd_margin"
+            android:layout_marginRight="@dimen/wifi_connect_pwd_margin"
+            android:layout_toRightOf="@id/wifi_other_connect_tip"
+            android:background="@android:color/transparent"
+            android:hint="@string/password_hint"
+            android:singleLine="true"
+            android:textColor="@color/wifi_name_textcolor"
+            android:textSize="@dimen/wifi_connect_textsize_small" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,109 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_view_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout style="@style/TitleLayoutStyle" >
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/TextInTitleStyle"
+            android:text="@string/ju_yu_net_set" />
+
+        <ImageView
+            android:id="@+id/back"
+            style="@style/BackInTitleStyle"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/save"
+            style="@style/MenuInTitleStyle"
+            android:background="@null"
+            android:text="@string/save"
+            android:textColor="#ffffffff"
+            android:textSize="16dip" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/TextStyleInverse"
+        android:text="@string/ju_yu_net_set" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="#ffd1d1d1" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:background="#ffdddddd"
+                android:text="@string/ju_yu_net_address" />
+
+            <EditText
+                android:id="@+id/ip_address"
+                style="@style/EditStyle"
+                android:hint="@string/ip_address" />
+
+            <EditText
+                android:id="@+id/yan_ma"
+                style="@style/EditStyle"
+                android:layout_marginTop="1dp"
+                android:hint="@string/yan_ma" />
+
+            <TextView
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:background="#ffdddddd"
+                android:text="@string/dns_set" />
+
+            <EditText
+                android:id="@+id/main_dns"
+                style="@style/EditStyle"
+                android:hint="@string/zhu_dns" />
+
+            <EditText
+                android:id="@+id/backup_dns"
+                style="@style/EditStyle"
+                android:layout_marginTop="1dp"
+                android:hint="@string/backup_dns" />
+
+            <TextView
+                style="@style/TextStyleInverse"
+                android:layout_width="match_parent"
+                android:background="#ffdddddd"
+                android:text="@string/dhcp_set" />
+
+            <EditText
+                android:id="@+id/start_adress"
+                style="@style/EditStyle"
+                android:hint="@string/start_address" />
+
+            <EditText
+                android:id="@+id/end_adress"
+                style="@style/EditStyle"
+                android:layout_marginTop="1dp"
+                android:hint="@string/end_address" />
+
+            <EditText
+                android:id="@+id/during"
+                style="@style/EditStyle"
+                android:layout_marginTop="1dp"
+                android:hint="@string/xu_zhu_during" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

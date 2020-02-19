@@ -1,0 +1,144 @@
+apply plugin: 'com.android.application'
+
+android {
+    useLibrary('org.apache.http.legacy')
+    signingConfigs {
+        senink_release {
+            keyAlias 'senink'
+            keyPassword 'senink123'
+            storeFile file('/Users/nextapp/Android-prj/luxxApp/seninkkey')
+            storePassword 'senink123'
+        }
+    }
+    compileSdkVersion 26
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "net.senink.seninkapp"
+        minSdkVersion 23
+        targetSdkVersion 26
+        versionCode 1200
+        versionName "1.30"
+        multiDexEnabled true
+        buildConfigField "boolean", "Release", "false"
+
+        flavorDimensions "applicationId"
+//        flavorDimensions "manifestPlaceholders"
+    }
+    productFlavors {
+        senink {
+            // manifestPlaceholders中写到的『str』，『package_name』不支持用大写，否则Gradle编译会不通过。
+            // 这里所设置的变量可以直接使用在『AndroidManifest.xml』中，使用方式为：${package_name}
+            // android:label="${package_name}"
+            applicationId "net.senink.xLife"
+            manifestPlaceholders = [app_name: "xLife", app_icon: "@mipmap/senink_launcher", PGYER_APPID: "daff96a981c5c715b88d44f7ba5b8d74"]
+            // 这里的参数是为了在 java 代码中使用，具体的使用方式为：context.getResources().getString(R.string.strKey);
+            buildConfigField 'String', 'Manufacturer', '"senink"'
+            buildConfigField 'Integer', 'ManufacturerID', '0'
+            buildConfigField 'String', 'AboutURL', '"http://www.touchome.net/m/aboutus.php"'
+            buildConfigField 'Integer', 'Login_icon', 'R.drawable.senink_login_icon'
+            buildConfigField 'boolean', 'isSave_visible', "false"
+            buildConfigField 'boolean', 'isSave_default', "true"
+            buildConfigField 'boolean', 'isLocal_visible', "false"
+            buildConfigField 'boolean', 'isLocal_default', "true"
+        }
+//        xinColor{
+//            applicationId "net.senink.xinColor"
+//            manifestPlaceholders = [app_name:"xLife", app_icon:"@mipmap/senink_launcher", PGYER_APPID:"daff96a981c5c715b88d44f7ba5b8d74"]
+//            buildConfigField 'String','Manufacturer','"senink"'
+//            buildConfigField 'Integer','ManufacturerID', '1000'
+//            buildConfigField 'String','AboutURL','""'
+//            buildConfigField 'Integer','Login_icon','R.drawable.senink_login_icon'
+//            buildConfigField 'boolean','isSave_visible', "false"
+//            buildConfigField 'boolean','isSave_default', "true"
+//            buildConfigField 'boolean','isLocal_visible', "false"
+//            buildConfigField 'boolean','isLocal_default', "true"
+//        }
+//        sogood{
+//            applicationId "net.senink.sogood"
+//            manifestPlaceholders = [app_name:"SO GOOD", app_icon:"@mipmap/sogood_launcher", PGYER_APPID:"68383ae94cd9fd89a94c148ef09fcc20"]
+//            buildConfigField 'String','Manufacturer','"sogood"'
+//            buildConfigField 'Integer','ManufacturerID', '1'
+//            buildConfigField 'String','AboutURL','"http://www.touchome.net/view.php?menuId=58"'
+//            buildConfigField 'Integer','Login_icon','R.drawable.sogood_login_icon'
+//            buildConfigField 'boolean','isSave_visible', "false"
+//            buildConfigField 'boolean','isSave_default', "true"
+//            buildConfigField 'boolean','isLocal_visible', "false"
+//            buildConfigField 'boolean','isLocal_default', "true"
+//        }
+//
+//        ipwgroup{
+//            applicationId "net.senink.ipwgroup"
+//            manifestPlaceholders = [app_name:"IPWGroup", app_icon:"@mipmap/senink_launcher", PGYER_APPID:"b6a5f8a061df3eebc7ed9ed330af7561"]
+//            buildConfigField 'String','Manufacturer','"IPWGroup"'
+//            buildConfigField 'Integer','ManufacturerID', '2'
+//            buildConfigField 'String','AboutURL','"http://www.touchome.net/m/aboutus.php"'
+//            buildConfigField 'Integer','Login_icon','R.drawable.senink_login_icon'
+//            buildConfigField 'boolean','isSave_visible', "false"
+//            buildConfigField 'boolean','isSave_default', "true"
+//            buildConfigField 'boolean','isLocal_visible', "false"
+//            buildConfigField 'boolean','isLocal_default', "true"
+//        }
+        eureka {
+            applicationId "net.senink.eureka"
+            manifestPlaceholders = [app_name: "NORDIC DLUXX", app_icon: "@mipmap/luxx_launcher", PGYER_APPID: "b3ddb7c3b6205b34452b94a1998fa35b"]
+            buildConfigField 'String', 'Manufacturer', '"eureka"'
+            buildConfigField 'Integer', 'ManufacturerID', '5'
+            buildConfigField 'String', 'AboutURL', '""'
+            buildConfigField 'Integer', 'Login_icon', 'R.drawable.luxx_login_icon'
+            buildConfigField 'boolean', 'isSave_visible', "false"
+            buildConfigField 'boolean', 'isSave_default', "true"
+            buildConfigField 'boolean', 'isLocal_visible', "false"
+            buildConfigField 'boolean', 'isLocal_default', "true"
+            minSdkVersion 23
+        }
+//
+//        domin{
+//            applicationId "net.senink.domin"
+//            manifestPlaceholders = [app_name:"Domin", app_icon:"@mipmap/domin_launcher", PGYER_APPID:"310bf3e8b4c6c13dfb39c670f774546f"]
+//            buildConfigField 'String','Manufacturer','"domin"'
+//            buildConfigField 'Integer','ManufacturerID', '6'
+//            buildConfigField 'String','AboutURL','"http://www.touchome.net/view.php?menuId=80"'
+//            buildConfigField 'Integer','Login_icon','R.drawable.domin_login_icon'
+//            buildConfigField 'boolean','isSave_visible', "false"
+//            buildConfigField 'boolean','isSave_default', "true"
+//            buildConfigField 'boolean','isLocal_visible', "false"
+//            buildConfigField 'boolean','isLocal_default', "true"
+//        }
+    }
+
+    buildTypes {
+        debug {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.senink_release
+            minifyEnabled false
+            //            applicationIdSuffix ".debug"
+        }
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.senink_release
+            minifyEnabled false
+            zipAlignEnabled true
+//            applicationIdSuffix ".release"
+        }
+    }
+
+//    lintOptions {
+//        disable "ResourceType"
+//    }
+
+    dexOptions {
+//        incremental true
+        preDexLibraries = false
+        jumboMode true
+    }
+}
+repositories{ flatDir { dirs 'libs' }}
+dependencies {
+    implementation 'com.contrarywind:wheelview:4.0.8'
+    implementation 'com.contrarywind:Android-PickerView:4.1.6'
+//    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
+    implementation project(':piservice')
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    //        compile 'com.android.support:support-v4:25.4.0'
+}
