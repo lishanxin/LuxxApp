@@ -4,10 +4,10 @@ android {
     useLibrary('org.apache.http.legacy')
     signingConfigs {
         senink_release {
-            keyAlias 'senink'
-            keyPassword 'senink123'
-            storeFile file('/Users/nextapp/Android-prj/luxxApp/seninkkey')
-            storePassword 'senink123'
+            keyAlias 'key0'
+            keyPassword '123456'
+            storeFile file('./demo.jks')
+            storePassword '123456'
         }
     }
     compileSdkVersion 26
@@ -139,6 +139,8 @@ dependencies {
 //    implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
     implementation project(':piservice')
+    implementation project(':TelinkSigMeshLib')
     api fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.madgag.spongycastle:prov:1.58.0.0'
     //        compile 'com.android.support:support-v4:25.4.0'
 }

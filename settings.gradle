@@ -1,1 +1,1 @@
-include ':piservice', ':app'
+include ':piservice', ':app', ':TelinkSigMeshLib'
