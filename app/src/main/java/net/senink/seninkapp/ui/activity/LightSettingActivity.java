@@ -73,6 +73,7 @@ import net.senink.seninkapp.ui.view.listview.SwipeMenuCreator;
 import net.senink.seninkapp.ui.view.listview.SwipeMenuItem;
 import net.senink.seninkapp.ui.view.listview.SwipeMenuListView;
 
+// TODO LEE 灯组设置。灯的设置是否也进入这个界面，待验证
 public class LightSettingActivity extends BaseActivity implements
 		View.OnClickListener{
 	// 请求码

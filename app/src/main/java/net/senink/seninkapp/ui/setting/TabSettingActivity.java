@@ -35,7 +35,7 @@ import net.senink.seninkapp.ui.home.HomeActivity;
 import net.senink.seninkapp.ui.util.HttpUtils;
 import net.senink.seninkapp.ui.util.SDCardUtils;
 import net.senink.seninkapp.ui.util.SharePreferenceUtils;
-
+// TODO LEE 账号设置界面
 public class TabSettingActivity extends BaseActivity implements OnClickListener {
 	private TextView tvTitle;
 	private ImageView ivTitle;

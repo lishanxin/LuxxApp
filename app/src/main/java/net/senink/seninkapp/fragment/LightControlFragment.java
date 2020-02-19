@@ -222,6 +222,7 @@ public class LightControlFragment extends Fragment {
 
 
     public void refreshListView() {
+        // TODO LEE 灯组列表刷新
         if (deviceAdapter != null && mLights != null) {
             deviceAdapter.setList((ArrayList<PISBase[]>) mLights, false);
             deviceAdapter.notifyDataSetChanged();

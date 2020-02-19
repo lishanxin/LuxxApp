@@ -327,6 +327,7 @@ public class LightListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View view) {
+				// TODO 灯组列表点击跳转逻辑
 				View v = (View) view.getParent();
 				if (v.getTag() == null)
 					return;
@@ -388,6 +389,7 @@ public class LightListAdapter extends BaseAdapter {
 						LightLEDDetailActivity.class);
 				break;
 			case PISConstantDefine.PIS_MAJOR_LIGHT + (PISConstantDefine.PIS_LIGHT_COLOR << 8):
+				// TODO 跳转至这个界面进行灯控
 				intent = new Intent(context,
 						LightRGBDetailActivity.class);
 				break;

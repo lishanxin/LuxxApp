@@ -49,6 +49,7 @@ import java.util.List;
  * @author zhaojunfeng
  * @date 2015-07-15
  */
+// TODO LEE 灯控界面
 public class LightRGBDetailActivity extends BaseActivity implements
 		View.OnClickListener{
     public static final String LAYOUT_RESOURCEID = "rgblight_layout";
@@ -940,6 +941,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 save();
                 break;
             case R.id.title_setting:
+                // TODO LEE 灯控设置界面
                 if (infor != null) {
                     intent = new Intent(LightRGBDetailActivity.this,
                             LightSettingActivity.class);

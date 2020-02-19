@@ -1078,8 +1078,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 			break;
 		// 添加设备
 		case R.id.title_add:
+			// TODO LEE 添加设备按钮
 			startActivityForResult(new Intent(this, AddDevicesActivity.class), REQUEST_DEVICE_ADD);
-			//startActivity(new Intent(this, AddDevicesActivity.class));
 			overridePendingTransition(R.anim.anim_in_from_right,
 					R.anim.anim_out_to_left);
 			break;

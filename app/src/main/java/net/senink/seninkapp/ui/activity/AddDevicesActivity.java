@@ -139,7 +139,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-			case R.id.new_light: {
+			case R.id.new_light: {  // TODO LEE 添加灯
 				Intent intent = new Intent(AddDevicesActivity.this,
 						AddBlueToothDeviceActivity.class);
 				String[] classidFilter;
@@ -153,7 +153,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 				}
 			}
 				break;
-			case R.id.new_group:
+			case R.id.new_group:// TODO 添加灯组
 				addGroups(0x10, 0x03);
 				break;
 			default:
@@ -166,6 +166,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 
 	private void addGroups(int t1, int t2) {
 		try{
+			// TODO LEE 添加灯组->往sdk里面添加灯组，界面收到消息后，刷新灯组
 			mcm = PISManager.getInstance().getMCSObject();
 			PipaRequest req = mcm.addGroup(getString(R.string.default_group_name), t1, t2);
 			req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
