@@ -4,11 +4,16 @@ package net.senink.seninkapp;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.telink.sig.mesh.event.Event;
+import com.telink.sig.mesh.event.EventListener;
+import com.telink.sig.mesh.light.MeshController;
+import com.telink.sig.mesh.util.TelinkLog;
+
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.piservice.struct.PipaRequestData;
 import net.senink.seninkapp.ui.util.Utils;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends Activity  {
 	private final static String TAG = "BaseActivity";
 	static MyApplication application;
 
@@ -68,8 +73,9 @@ public class BaseActivity extends Activity {
 
 		return application.getLabel();
 	}
-	
-	
+
+
+
 //	 private BroadcastReceiver mHomeKeyEventReceiver = new BroadcastReceiver() {
 //	        String SYSTEM_REASON = "reason";
 //	        String SYSTEM_HOME_KEY = "homekey";

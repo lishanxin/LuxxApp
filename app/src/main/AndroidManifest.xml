@@ -451,6 +451,7 @@
             <!--android:name="UMENG_CHANNEL"-->
             <!--android:value="senink" >-->
         <!--</meta-data>-->
+        <service android:name="com.telink.sig.mesh.light.MeshService" />
     </application>
 
 </manifest>
