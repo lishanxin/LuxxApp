@@ -51,6 +51,7 @@ public class MyApplication extends TelinkApplication {
 //	public ArrayList<Activity> activities = new ArrayList<Activity>();
 	private int myUpdateLabel;
 	public static Context context;
+    private static MyApplication meshApplication;
     public static String company;
 
 	private Mesh mMesh;
@@ -59,12 +60,17 @@ public class MyApplication extends TelinkApplication {
 
 	private boolean logEnable = false;
 
+    public static MyApplication getInstance() {
+        return meshApplication;
+    }
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		PgyCrashManager.register(this);
 		Foreground.init(this);
 		context = this;
+        meshApplication = this;
 		company = getResources().getString(R.string.company);
 
 		CrashHandler.init(this);

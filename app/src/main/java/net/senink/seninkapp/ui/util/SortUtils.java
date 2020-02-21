@@ -17,6 +17,7 @@ import net.senink.piservice.services.PISXinLight;
 import net.senink.piservice.services.PISXinRemoter;
 import net.senink.piservice.services.PISXinSwitch;
 import net.senink.piservice.services.PISxinColor;
+import net.senink.seninkapp.GeneralDeviceModel;
 
 
 /**
@@ -81,6 +82,35 @@ public class SortUtils {
 		}
 		for (int i = 0; i < size; i++) {
 			PISBase[] array = new PISBase[4];
+			for (int k = 0; k < 4; k++) {
+				if (i * 4 + k >= list.size()) {
+					break;
+				}
+				array[k] = list.get(i * 4 + k);
+			}
+			mList.add(array);
+		}
+
+		return mList;
+	}
+
+	/**
+	 * 把灯的数据重新排序
+	 *
+	 * @param list
+	 * @return
+	 */
+	public static ArrayList<GeneralDeviceModel[]> sortGeneralServiceFor4(List<GeneralDeviceModel> list) {
+		ArrayList<GeneralDeviceModel[]> mList = new ArrayList<GeneralDeviceModel[]>();
+		if (list == null || list.size() == 0)
+			return mList;
+
+		int size = list.size() / 4;
+		if (list.size() % 4 > 0) {
+			size++;
+		}
+		for (int i = 0; i < size; i++) {
+			GeneralDeviceModel[] array = new GeneralDeviceModel[4];
 			for (int k = 0; k < 4; k++) {
 				if (i * 4 + k >= list.size()) {
 					break;

@@ -35,7 +35,7 @@ public class TelinkApiManager implements EventListener<String> {
         return instance;
     }
 
-    public void startMeshService(Activity activity){
+    public void startMeshService(Activity activity, EventListener<String> listener){
         Intent serviceIntent = new Intent(activity, MeshService.class);
         activity.startService(serviceIntent);
         MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);

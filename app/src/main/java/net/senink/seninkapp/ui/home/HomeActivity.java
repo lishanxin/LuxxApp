@@ -1,11 +1,14 @@
 package net.senink.seninkapp.ui.home;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -49,12 +52,17 @@ import net.senink.piservice.struct.UserInfo;
 import net.senink.seninkapp.BaseActivity;
 import net.senink.seninkapp.Foreground;
 
+import net.senink.seninkapp.GeneralDeviceModel;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 
 import net.senink.seninkapp.fragment.LightControlFragment;
 import net.senink.seninkapp.fragment.RemoterFragment;
 import net.senink.seninkapp.fragment.SwitchFragment;
 
+import net.senink.seninkapp.telink.AppSettings;
+import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.ui.activity.AddDevicesActivity;
 import net.senink.seninkapp.ui.activity.LoginActivity;
 import net.senink.seninkapp.ui.activity.MipcaCaptureActivity;
@@ -72,6 +80,20 @@ import net.senink.seninkapp.ui.view.ProductClassifyView;
 import com.pgyersdk.crash.PgyCrashManager;
 import com.pgyersdk.feedback.PgyFeedbackShakeManager;
 import com.pgyersdk.update.PgyUpdateManager;
+import com.telink.sig.mesh.event.CommandEvent;
+import com.telink.sig.mesh.event.Event;
+import com.telink.sig.mesh.event.EventBus;
+import com.telink.sig.mesh.event.EventListener;
+import com.telink.sig.mesh.event.MeshEvent;
+import com.telink.sig.mesh.event.NotificationEvent;
+import com.telink.sig.mesh.light.MeshController;
+import com.telink.sig.mesh.light.MeshService;
+import com.telink.sig.mesh.light.parameter.AutoConnectParameters;
+import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.Group;
+import com.telink.sig.mesh.util.MeshUtils;
+import com.telink.sig.mesh.util.TelinkLog;
+import com.telink.sig.mesh.util.UnitConvert;
 //import com.umeng.analytics.MobclickAgent;
 
 import net.senink.piservice.PISConstantDefine;
@@ -80,7 +102,7 @@ import net.senink.piservice.pinm.PinmInterface;
 import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISManager;
 
-public class HomeActivity extends BaseActivity implements OnClickListener{
+public class HomeActivity extends BaseActivity implements OnClickListener, EventListener<String> {
 	private static final String TAG = "HomeActivity";
 	private static final ArrayList<String[]> mProductClasses = null;
 	/**跳转至 Login Activity*/
@@ -152,6 +174,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 
 	// 检测升级的工具类
 	private ApkUpgradeUtils upgradeUtils = null;
+
+	private Handler handler = new Handler();
+	private boolean isServiceCreated = false;
+	private AlertDialog mWaitingDialog;
 
 	/**注册APPLICATION的前后台切换时间监听*/
 	static {
@@ -356,6 +382,9 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 		else{
 			requestAllPermission();
 		}
+
+		// 开启Telink的sdk
+		TelinkApiManager.getInstance().startMeshService(this, this);
 	}
 
 	@Override
@@ -444,6 +473,9 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 		PgyCrashManager.unregister();
 //		pm = null;
 //		System.exit(0);
+
+		MyApplication.getInstance().removeEventListener(this);
+		handler.removeCallbacksAndMessages(null);
 	}
 
 	@Override
@@ -1026,16 +1058,48 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 					break;
 			}
 
-			List<PISBase> srvs;
+			// TODO LEE 灯组及灯列表刷新
+			List<PISBase> srvsGroup = null;
+			List<PISBase> srvsDevice = null;
+			// 刷新灯组列表
 			for (Integer i : pistypes){
-				srvs = pm.PIServicesWithQuery(i, PISManager.EnumServicesQueryBaseonType);
-				if (srvs != null && srvs.size() > 0){
-					list.addAll(SortUtils.sortServiceFor4(srvs));
+				srvsDevice = pm.PIServicesWithQuery(i, PISManager.EnumServicesQueryBaseonType);
+				if (srvsDevice != null && srvsDevice.size() > 0){
+					list.addAll(SortUtils.sortServiceFor4(srvsDevice));
 				}
-				srvs = pm.PIGroupsWithQuery(i, PISManager.EnumGroupsQueryBaseonType);
-				if (srvs != null && srvs.size() > 0)
-					list.addAll(SortUtils.sortServiceFor4(srvs));
+				srvsGroup = pm.PIGroupsWithQuery(i, PISManager.EnumGroupsQueryBaseonType);
+				if (srvsGroup != null && srvsGroup.size() > 0)
+					list.addAll(SortUtils.sortServiceFor4(srvsGroup));
 			}
+
+			List<GeneralDeviceModel[]> generalDeviceModels = new ArrayList<>();
+			List<GeneralDeviceModel> generalDevice = new ArrayList<>();
+			List<GeneralDeviceModel> generalGroup = new ArrayList<>();
+			for (DeviceInfo device : MyApplication.getInstance().getMesh().devices) {
+				generalDevice.add(new GeneralDeviceModel(new TelinkBase(device)));
+			}
+			if (srvsDevice != null && srvsDevice.size() > 0){
+				for (PISBase pisBase : srvsDevice) {
+					generalDevice.add(new GeneralDeviceModel(pisBase));
+				}
+			}
+
+			for (Group group : MyApplication.getInstance().getMesh().groups) {
+				generalGroup.add(new GeneralDeviceModel(new TelinkBase(group)));
+			}
+			if (srvsGroup != null && srvsGroup.size() > 0){
+				for (PISBase pisBase : srvsGroup) {
+					generalGroup.add(new GeneralDeviceModel(pisBase));
+				}
+			}
+
+			if (generalDevice.size() > 0){
+				generalDeviceModels.addAll(SortUtils.sortGeneralServiceFor4(generalDevice));
+			}
+			if(generalGroup.size() > 0){
+				generalDeviceModels.addAll(SortUtils.sortGeneralServiceFor4(generalGroup));
+			}
+
 
 			Fragment fragment = fragments.get(curShowListType);
 			if (fragment == null){
@@ -1047,7 +1111,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 					((SwitchFragment) fragment).setSwitchAdapter(list);
 					break;
 				case PISManager.PISERVICE_CATEGORY_LIGHT:
-					((LightControlFragment) fragment).setLightAdapter(list);
+					((LightControlFragment) fragment).setLightAdapter(generalDeviceModels);
 					break;
 				case PISManager.PISERVICE_CATEGORY_BRIDGE:
 					break;
@@ -1088,73 +1152,110 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 		}
 
 	}
+
+
+	@Override
+	public void performed(Event<String> event) {
+		switch (event.getType()) {
+			case MeshEvent.EVENT_TYPE_MESH_EMPTY:
+				TelinkLog.d(TAG + "#EVENT_TYPE_MESH_EMPTY");
+				break;
+			case MeshEvent.EVENT_TYPE_DISCONNECTED:
+				handler.removeCallbacksAndMessages(null);
+				break;
+			case MeshEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN:
+				// get all device on off status when auto connect success
 //
-//	@Override
-//	public boolean onTouchEvent(MotionEvent event) {
-//		try {
-//			return detector.onTouchEvent(event);
-//		}catch (Exception e){
-//			PgyCrashManager.reportCaughtException(HomeActivity.this, e);
-//			return false;
+				AppSettings.ONLINE_STATUS_ENABLE = MeshService.getInstance().getOnlineStatus();
+				if (!AppSettings.ONLINE_STATUS_ENABLE) {
+					MeshService.getInstance().getOnOff(0xFFFF, 0, null);
+				}
+				sendTimeStatus();
+				break;
+			case MeshController.EVENT_TYPE_SERVICE_DESTROY:
+				TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_DESTROY");
+				break;
+			case MeshController.EVENT_TYPE_SERVICE_CREATE:
+				TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_CREATE");
+				autoConnect(false);
+				isServiceCreated = true;
+				break;
+			case CommandEvent.EVENT_TYPE_CMD_PROCESSING:
+//                showWaitingDialog("CMD processing");
+				break;
+			case CommandEvent.EVENT_TYPE_CMD_COMPLETE:
+				dismissWaitingDialog();
+				break;
+
+			case CommandEvent.EVENT_TYPE_CMD_ERROR_BUSY:
+				TelinkLog.w("CMD busy");
+                /*runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        toastMsg("CMD fail, Busy!");
+                    }
+                });*/
+				break;
+
+			case NotificationEvent.EVENT_TYPE_KICK_OUT_CONFIRM:
+				autoConnect(true);
+				break;
+		}
+	}
+	public void sendTimeStatus() {
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				long time = MeshUtils.getTaiTime();
+				int offset = UnitConvert.getZoneOffset();
+				final int eleAdr = 0xFFFF;
+				MeshService.getInstance().sendTimeStatus(eleAdr, 1, time, offset, null);
+			}
+		}, 1500);
+
+	}
+
+	private void autoConnect(boolean update) {
+		TelinkLog.d("main auto connect");
+		List<DeviceInfo> deviceInfoList = MyApplication.getInstance().getMesh().devices;
+
+		Set<String> targets = new HashSet<>();
+		if (deviceInfoList != null) {
+			for (DeviceInfo deviceInfo : deviceInfoList) {
+				targets.add(deviceInfo.macAddress);
+			}
+		}
+
+		AutoConnectParameters parameters = AutoConnectParameters.getDefault(targets);
+		parameters.setScanMinPeriod(0);
+		if (update) {
+			MeshService.getInstance().updateAutoConnectParams(parameters);
+		} else {
+			MeshService.getInstance().autoConnect(parameters);
+		}
+
+	}
+
+//	public void showWaitingDialog(String tip) {
+//		if (mWaitingDialog == null) {
+//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//			View dialogView = LayoutInflater.from(this).inflate(R.layout.view_dialog_waiting, null);
+//			waitingTip = dialogView.findViewById(R.id.waiting_tips);
+//			builder.setView(dialogView);
+//			builder.setCancelable(false);
+//			mWaitingDialog = builder.create();
 //		}
-//	}
-//
-//	@Override
-//	public boolean onDown(MotionEvent e) {
-//		return false;
-//	}
-//
-//	@Override
-//	public void onShowPress(MotionEvent e) {
-//
-//	}
-//
-//	@Override
-//	public boolean onSingleTapUp(MotionEvent e) {
-//		return false;
-//	}
-//
-//	@Override
-//	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-//			float distanceY) {
-//		return true;
-//	}
-//
-//	@Override
-//	public void onLongPress(MotionEvent e) {
-//
-//	}
-//
-//	@Override
-//	public boolean onFling(MotionEvent arg1, MotionEvent arg0, float velocityX,
-//			float velocityY) {
-//		if (MARK == 0) {
-//			if (arg1.getX() > arg0.getX() + DISTANT) {
-//				MARK = 1;
-//				if (classifyView != null) {
-//					classifyView.click(1);
-//				}
-//			}
+//		if (waitingTip != null) {
+//			waitingTip.setText(tip);
 //		}
-//		// 当是Fragment1的时候
-//		else if (MARK == 1) {
-//			if (arg1.getX() > arg0.getX() + DISTANT) {
-//				classifyView.click(2);
-//				MARK = 2;
-//			} else if (arg0.getX() > arg1.getX() + DISTANT) {
-//				classifyView.click(0);
-//				MARK = 0;
-//			}
-//		}
-//		// 当是Fragment2的时候
-//		else if (MARK == 2) {
-//			if (arg0.getX() > arg1.getX() + DISTANT) {
-//				classifyView.click(1);
-//				MARK = 1;
-//			}
-//		}
-//		return false;
+//		mWaitingDialog.show();
 //	}
+
+	public void dismissWaitingDialog() {
+		if (mWaitingDialog != null && mWaitingDialog.isShowing()) {
+			mWaitingDialog.dismiss();
+		}
+	}
 
 	/**
 	 * 设置添加设备或者分组的弹出框
@@ -1216,4 +1317,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener{
 		addDialog.setBackgroundDrawable(new BitmapDrawable());
 
 	}
+
+
 }
