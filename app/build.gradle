@@ -22,6 +22,7 @@ android {
         buildConfigField "boolean", "Release", "false"
 
         flavorDimensions "applicationId"
+        ndk { abiFilters  'armeabi-v7a' }
 //        flavorDimensions "manifestPlaceholders"
     }
     productFlavors {
