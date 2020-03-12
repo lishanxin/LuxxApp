@@ -4,10 +4,10 @@ android {
     useLibrary('org.apache.http.legacy')
     signingConfigs {
         senink_release {
-            keyAlias 'senink'
-            keyPassword 'senink123'
-            storeFile file('/Users/nextapp/Android-prj/luxxApp/seninkkey')
-            storePassword 'senink123'
+            keyAlias 'key0'
+            keyPassword '123456'
+            storeFile file('./demo.jks')
+            storePassword '123456'
         }
     }
     compileSdkVersion 26
