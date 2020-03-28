@@ -58,10 +58,12 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
+
+
             <ListView
                 android:id="@+id/addbubble_list"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/addbubble_step1_layout"
                 android:layout_marginTop="@dimen/addbubble_listview_margintop"
                 android:cacheColorHint="@android:color/transparent"
@@ -71,6 +73,11 @@
                 android:visibility="gone"
                 android:headerDividersEnabled="false"
                 android:minHeight="@dimen/addbubble_listview_minheight" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/telink_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <View
                 android:id="@+id/addbubble_space"

@@ -16,6 +16,8 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.View;
@@ -28,6 +30,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.ble.AdvertisingDevice;
+import com.telink.sig.mesh.ble.UnprovisionedDevice;
+import com.telink.sig.mesh.event.Event;
+import com.telink.sig.mesh.event.EventListener;
+import com.telink.sig.mesh.event.MeshEvent;
+import com.telink.sig.mesh.event.NotificationEvent;
+import com.telink.sig.mesh.event.ScanEvent;
+import com.telink.sig.mesh.light.MeshService;
+import com.telink.sig.mesh.light.ProvisionDataGenerator;
+import com.telink.sig.mesh.light.PublicationStatusParser;
+import com.telink.sig.mesh.light.ScanParameters;
+import com.telink.sig.mesh.light.parameter.ProvisionParameters;
+import com.telink.sig.mesh.model.NotificationInfo;
+import com.telink.sig.mesh.util.TelinkLog;
 
 import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.http.HttpDeviceInfo;
@@ -38,10 +54,15 @@ import net.senink.piservice.pinm.PINMoBLE.interfaces.BlueToothLightListener;
 import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.util.ByteUtilBigEndian;
 import net.senink.seninkapp.BaseActivity;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.adapter.BlueLightAdapter;
 
 //import net.senink.seninkapp.interfaces.AssociationListener;
+import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.model.Mesh;
+import net.senink.seninkapp.telink.model.ProvisioningDevice;
+import net.senink.seninkapp.telink.view.DeviceProvisionListAdapter;
 import net.senink.seninkapp.ui.entity.BlueToothBubble;
 import net.senink.seninkapp.ui.util.HttpUtils;
 import net.senink.seninkapp.ui.util.LogUtils;
@@ -55,12 +76,12 @@ import net.senink.piservice.pis.PipaRequest;
 
 /**
  * 用于添加不同类型的设备
- * 
+ * // TODO LEE 查找灯组操作
  * @author zhaojunfeng
  * @date 2015-09-29
  */
 public class AddBlueToothDeviceActivity extends BaseActivity implements
-		View.OnClickListener, AssociationListener {
+		View.OnClickListener, AssociationListener{
 	public final static String TAG = "AddBlueToothDeviceActivity";
 	public final static int MSG_START_BINDING = 10;
 	public final static int MSG_START_CONFIGING = 11;
@@ -112,6 +133,8 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
 	// 当前正在绑定的灯泡信息
 	private BlueToothBubble selectedBubble;
 	private List<String> classFilter;
+
+	private RecyclerView telinkListView;
 	/**
 	 * 添加设备的类型 1:led灯 2：网关 3:RGB灯 4：遥控器 6:智能鞋垫
 	 */
@@ -279,6 +302,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
 		}
 
 	};
+	private DeviceProvisionListAdapter telinkListAdapter;
 
 	private void configSuccess() {
 		if (adapter.getCount() == 1) {
@@ -311,7 +335,11 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
 		manger = PISManager.getInstance();
 //		threadPool = Executors.newFixedThreadPool(1);
 		mcm = manger.getMCSObject();
-
+		TelinkApiManager.getInstance().startScanTelink();
+//		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_SUCCESS, this);
+//		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_FAIL, this);
+//		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS, this);
+//		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_KEY_BIND_FAIL, this);
 		setData();
 		initView();
 		setListener();
@@ -415,6 +443,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
 		tvTitle = (TextView) findViewById(R.id.title_name);
 		ivTitle = (ImageView) findViewById(R.id.title_logo_center);
 		listView = (ListView) findViewById(R.id.addbubble_list);
+		telinkListView = (RecyclerView) findViewById(R.id.telink_list);
 		stepsView = (StepsView) findViewById(R.id.addbubble_step);
 		tvStep1 = (TextView) findViewById(R.id.addbubble_step1_tip);
 		tvStep2 = (TextView) findViewById(R.id.addbubble_step2_tip);
@@ -542,8 +571,14 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
 		if (blueToothDevices != null && blueToothDevices.size() > 0) {
 			listView.setVisibility(View.VISIBLE);
 		}
+		if(TelinkApiManager.getInstance().getFoundDevices().size() > 0){
+			telinkListView.setVisibility(View.VISIBLE);
+		}
 		adapter = new BlueLightAdapter(this, blueToothDevices, mHandler, type);
 		listView.setAdapter(adapter);
+		telinkListAdapter = TelinkApiManager.getInstance().getFoundDevicesAdapter(this);
+		telinkListView.setLayoutManager(new LinearLayoutManager(this));
+		telinkListView.setAdapter(telinkListAdapter);
 	}
 
 	/*

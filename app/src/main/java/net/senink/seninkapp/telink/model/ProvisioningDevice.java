@@ -21,6 +21,7 @@
  *******************************************************************************************************/
 package net.senink.seninkapp.telink.model;
 
+import com.telink.sig.mesh.ble.AdvertisingDevice;
 import com.telink.sig.mesh.model.NodeInfo;
 
 /**
@@ -69,6 +70,8 @@ public class ProvisioningDevice {
     public NodeInfo nodeInfo;
 
     public boolean didRemoteScan = false;
+
+    public AdvertisingDevice advertisingDevice;
 
 //    public int retryCnt = 0;
 
