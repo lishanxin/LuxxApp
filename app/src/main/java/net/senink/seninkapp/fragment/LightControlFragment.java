@@ -19,9 +19,11 @@ import android.widget.ListView;
 import com.pgyersdk.crash.PgyCrashManager;
 
 import net.senink.piservice.pis.PipaRequest;
+import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.adapter.LightListAdapter;
 
+import net.senink.seninkapp.adapter.MixLightListAdapter;
 import net.senink.seninkapp.ui.home.HomeActivity;
 import net.senink.seninkapp.ui.util.LogUtils;
 import net.senink.seninkapp.ui.util.SortUtils;
@@ -48,13 +50,13 @@ public class LightControlFragment extends Fragment {
     // 显示插排列表的组件
     private PullToRefreshListView mRefreshListView;
     // 列表组件的适配器
-    private LightListAdapter deviceAdapter;
+    private MixLightListAdapter deviceAdapter;
     private PISManager manager;
     private Handler mHandler = null;
 
     private int isRefersh = 0;
     // 灯列表
-    private List<PISBase[]> mLights;
+    private List<GeneralDeviceModel[]> mLights;
 
     public LightControlFragment() {
         super();
@@ -72,7 +74,7 @@ public class LightControlFragment extends Fragment {
             deviceListView = mRefreshListView.getRefreshableView();
         }
         if (null == deviceAdapter) {
-            deviceAdapter = new LightListAdapter((HomeActivity) getActivity(), null);
+            deviceAdapter = new MixLightListAdapter((HomeActivity) getActivity(), null);
             deviceListView.setAdapter(deviceAdapter);
         }
 
@@ -167,9 +169,12 @@ public class LightControlFragment extends Fragment {
 
                             if (mLights == null)
                                 return;
-                            for (PISBase[] srvs : mLights) {
-                                for (PISBase srv : srvs) {
-                                    if (srv != null && srv.ServiceType != PISBase.SERVICE_TYPE_GROUP) {
+                            for (GeneralDeviceModel[] srvs : mLights) {
+                                for (GeneralDeviceModel generalSrv : srvs) {
+                                    PISBase srv = generalSrv.getPisBase();
+                                    if(generalSrv.isTelink()){
+
+                                    }else if (srv != null && srv.ServiceType != PISBase.SERVICE_TYPE_GROUP) {
                                         srv.request(srv.updatePISInfo());
                                         List<PISBase> grps = srv.getGroupObjects();
                                         if (grps == null || grps.size() == 0) {
@@ -209,7 +214,7 @@ public class LightControlFragment extends Fragment {
      *
      * @param deviceList
      */
-    public void setLightAdapter(ArrayList<PISBase[]> deviceList) {
+    public void setLightAdapter(List<GeneralDeviceModel[]> deviceList) {
         if (null == manager) {
             manager = PISManager.getInstance();
         }
@@ -224,7 +229,7 @@ public class LightControlFragment extends Fragment {
     public void refreshListView() {
         // TODO LEE 灯组列表刷新
         if (deviceAdapter != null && mLights != null) {
-            deviceAdapter.setList((ArrayList<PISBase[]>) mLights, false);
+            deviceAdapter.setList((ArrayList<GeneralDeviceModel[]>) mLights, false);
             deviceAdapter.notifyDataSetChanged();
         }
     }
