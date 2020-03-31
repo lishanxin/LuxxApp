@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.model.DeviceInfo;
 
 import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pis.PISBase;
@@ -25,6 +26,8 @@ import net.senink.piservice.pis.PipaRequest;
 import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.R;
+import net.senink.seninkapp.telink.model.TelinkBase;
+import net.senink.seninkapp.telink.view.IconGenerator;
 import net.senink.seninkapp.ui.activity.LightLEDDetailActivity;
 import net.senink.seninkapp.ui.activity.LightRGBDetailActivity;
 import net.senink.seninkapp.ui.constant.ProductClassifyInfo;
@@ -212,11 +215,44 @@ public class MixLightListAdapter extends BaseAdapter {
 			return;
 		}
 		if(generalData.isTelink()){
-
+            setLightView(layout, nameBtn, nametv, generalData.getTelinkBase(), pos, index);
 		}else{
 			setLightView(layout, nameBtn, nametv, generalData.getPisBase(), pos, index);
 		}
 	}
+
+    /**
+     * 灯泡列表中 设置一行中的item
+     *
+     * @param layout
+     * @param nameBtn
+     * @param infor
+     * @param pos
+     * @param index
+     */
+    private void setLightView(RelativeLayout layout, ImageButton nameBtn, TextView nametv, TelinkBase infor, int pos, int index) {
+        if(infor.isDevice()){
+            DeviceInfo device = infor.getDevice();
+            final int deviceType = device.nodeInfo != null && device.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
+            nameBtn.setImageResource(IconGenerator.getIcon(deviceType, device.getOnOff()));
+            nametv.setText(device.macAddress);
+            nameBtn.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context,
+                            LightRGBDetailActivity.class);
+                    intent.putExtra("TelinkString");
+                    context.startActivity(intent);
+                    context.overridePendingTransition(
+                            R.anim.anim_in_from_right,
+                            R.anim.anim_out_to_left);
+                }
+            });
+        }else{
+
+        }
+    }
 
     /**
      * 灯泡列表中 设置一行中的item
