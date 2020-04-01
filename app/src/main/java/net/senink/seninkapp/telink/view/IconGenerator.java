@@ -49,6 +49,7 @@ public class IconGenerator {
         }
     }
 
+
     public static int generateDeviceIconRes(int onOff) {
         if (onOff == -1) {
             return R.drawable.candle_offline;
@@ -59,4 +60,12 @@ public class IconGenerator {
         }
     }
 
+
+    public static int getGroupIconRes(boolean isOn) {
+        if(isOn){
+            return R.drawable.grp_000508000108_normal;
+        }else{
+            return R.drawable.grp_000508000108_off_normal;
+        }
+    }
 }

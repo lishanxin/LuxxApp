@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -22,6 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.SigMeshModel;
+
 import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pinm.PINMoBLE.MeshController;
 import net.senink.piservice.pis.PISBase;
@@ -30,6 +34,7 @@ import net.senink.piservice.pis.PipaRequest;
 import net.senink.piservice.services.LuxxMusicColor;
 import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.BaseActivity;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.sqlite.SceneDao;
 import net.senink.seninkapp.ui.constant.Constant;
@@ -157,7 +162,18 @@ public class LightRGBDetailActivity extends BaseActivity implements
     //传值的pisbase对象的piskeystring字符串
     protected String key = null;
     boolean candle_onoff = false;
-	
+
+    private boolean isTelink = false;
+    private boolean isTelinkGroup = false;
+    private int telinkAddress = 0;
+    private DeviceInfo deviceInfo;
+    private SparseBooleanArray lumEleInfo;
+    private SparseBooleanArray tempEleInfo;
+    private int hslEleAdr;
+    private List<Integer> onOffEleAdrList;
+
+
+
 	@SuppressLint("HandlerLeak")
 	protected Handler mHandler = new Handler() {
 		@Override
@@ -217,6 +233,12 @@ public class LightRGBDetailActivity extends BaseActivity implements
 	private void setData() {
 		if (getIntent() != null) {
 			Intent intent = getIntent();
+			Bundle bundle = intent.getExtras();
+			if(bundle != null){
+			    isTelink = bundle.getBoolean("isTelink", false);
+			    isTelinkGroup = bundle.getBoolean("isGroup", false);
+			    telinkAddress = bundle.getInt("address", 0);
+            }
 			String key = intent.getStringExtra("keystring");
             activityMode = intent.getIntExtra(MessageModel.ACTIVITY_MODE, 0);
 			if (key != null){
@@ -257,6 +279,19 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     }
                 }
 			}
+			// TODO LEE 新增sdk
+			if(isTelink){
+                if(isTelinkGroup){
+                    deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+                    lumEleInfo = deviceInfo.getLumEleInfo();
+                    tempEleInfo = deviceInfo.getTempEleInfo();
+                    hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
+                    onOffEleAdrList = deviceInfo.getOnOffEleAdrList();
+                }else{
+
+                }
+            }
+
 		}
 	}
 

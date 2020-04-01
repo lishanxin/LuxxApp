@@ -6,6 +6,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.Group;
 
 import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pis.PISBase;
@@ -231,8 +234,9 @@ public class MixLightListAdapter extends BaseAdapter {
      * @param index
      */
     private void setLightView(RelativeLayout layout, ImageButton nameBtn, TextView nametv, TelinkBase infor, int pos, int index) {
+
         if(infor.isDevice()){
-            DeviceInfo device = infor.getDevice();
+            final DeviceInfo device = infor.getDevice();
             final int deviceType = device.nodeInfo != null && device.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
             nameBtn.setImageResource(IconGenerator.getIcon(deviceType, device.getOnOff()));
             nametv.setText(device.macAddress);
@@ -242,7 +246,11 @@ public class MixLightListAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     Intent intent = new Intent(context,
                             LightRGBDetailActivity.class);
-                    intent.putExtra("TelinkString");
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("address", device.meshAddress);
+                    bundle.putBoolean("isTelink", true);
+                    bundle.putBoolean("isGroup", false);
+                    intent.putExtras(bundle);
                     context.startActivity(intent);
                     context.overridePendingTransition(
                             R.anim.anim_in_from_right,
@@ -250,7 +258,27 @@ public class MixLightListAdapter extends BaseAdapter {
                 }
             });
         }else{
+            final Group group = infor.getGroup();
+            boolean isOn = MeshService.getInstance().getOnOff(group.address, 0,  null);
+            nameBtn.setImageResource(IconGenerator.getGroupIconRes(isOn));
+            nametv.setText(group.name);
+            nameBtn.setOnClickListener(new OnClickListener() {
 
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context,
+                            LightRGBDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("address", group.address);
+                    bundle.putBoolean("isTelink", true);
+                    bundle.putBoolean("isGroup", true);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+                    context.overridePendingTransition(
+                            R.anim.anim_in_from_right,
+                            R.anim.anim_out_to_left);
+                }
+            });
         }
     }
 
