@@ -73,6 +73,8 @@ public class MyApplication extends TelinkApplication {
 		context = this;
         meshApplication = this;
 		company = getResources().getString(R.string.company);
+		TelinkApiManager.getInstance().init(this);
+
 
 		CrashHandler.init(this);
 		TelinkLog.d("app create");
@@ -82,7 +84,6 @@ public class MyApplication extends TelinkApplication {
 		logs = new ArrayList<>();
 		this.setLogEnable(SharedPreferenceHelper.isLogEnable(this));
 		closePErrorDialog();
-		TelinkApiManager.getInstance().init(this);
 	}
 	private void closePErrorDialog() {
 		if (Build.VERSION.SDK_INT <= 27) {

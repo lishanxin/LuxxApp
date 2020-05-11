@@ -259,7 +259,7 @@ public class MixLightListAdapter extends BaseAdapter {
             });
         }else{
             final Group group = infor.getGroup();
-            boolean isOn = MeshService.getInstance().getOnOff(group.address, 0,  null);
+            boolean isOn = MeshService.getInstance() != null && MeshService.getInstance().getOnOff(group.address, 0, null);
             nameBtn.setImageResource(IconGenerator.getGroupIconRes(isOn));
             nametv.setText(group.name);
             nameBtn.setOnClickListener(new OnClickListener() {

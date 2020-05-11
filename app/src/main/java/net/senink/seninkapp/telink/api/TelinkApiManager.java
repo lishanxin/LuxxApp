@@ -86,6 +86,11 @@ public class TelinkApiManager implements EventListener<String> {
     public void startMeshService(Activity activity, EventListener<String> listener){
         Intent serviceIntent = new Intent(activity, MeshService.class);
         activity.startService(serviceIntent);
+
+        addEventListener();
+    }
+
+    public void addEventListener(){
         MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
         MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_DEVICE_ON_OFF_STATUS, this);
         MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_MESH_EMPTY, this);
@@ -155,6 +160,9 @@ public class TelinkApiManager implements EventListener<String> {
 
 
     private void onDeviceFound(AdvertisingDevice device) {
+        if(mesh == null){
+            mesh = MyApplication.getInstance().getMesh();
+        }
         int address = mesh.pvIndex + 1;
 
 //        int address = 0x6666;
@@ -172,6 +180,11 @@ public class TelinkApiManager implements EventListener<String> {
         if(mListAdapter != null) {
             mListAdapter.notifyDataSetChanged();
         }
+        targetDevice = new UnprovisionedDevice(device, address);
+//        devices.add(targetDevice);
+        byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
+        ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, targetDevice);
+        MeshService.getInstance().startProvision(parameters);
     }
 
 

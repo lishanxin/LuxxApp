@@ -28,6 +28,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -86,6 +88,7 @@ import com.telink.sig.mesh.event.EventBus;
 import com.telink.sig.mesh.event.EventListener;
 import com.telink.sig.mesh.event.MeshEvent;
 import com.telink.sig.mesh.event.NotificationEvent;
+import com.telink.sig.mesh.light.LeBluetooth;
 import com.telink.sig.mesh.light.MeshController;
 import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.light.parameter.AutoConnectParameters;
@@ -109,7 +112,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	public static final int REQUEST_CODE_LOGIN = 1;
 	public static final int REQUEST_DEVICE_ADD = 2;
 	public static final int REQUEST_QRCODE_SCAN = 3;
-
+	private static final int PERMISSIONS_REQUEST_ALL = 0x1231;
+	private Handler delayHandler = new Handler();
 	private View btnAddDevice;
 	// 返回按钮
 	private Button backBtn;
@@ -312,6 +316,19 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 				}
 			}
 				break;
+			case PERMISSIONS_REQUEST_ALL:
+				boolean isGranted = true;
+				for (int result : grantResults) {
+					if (result != PackageManager.PERMISSION_GRANTED){
+						isGranted = false;
+						break;
+					}
+				}
+				if(isGranted){
+					onPermissionChecked();
+				}else{
+					finish();
+				}
 			default:
 				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
@@ -383,8 +400,49 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 			requestAllPermission();
 		}
 
+
+		if (!LeBluetooth.getInstance().isSupport(getApplicationContext())) {
+			finish();
+		}
+
+
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
 		// 开启Telink的sdk
-		TelinkApiManager.getInstance().startMeshService(this, this);
+		TelinkApiManager.getInstance().startMeshService(HomeActivity.this, HomeActivity.this);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+					&&
+					ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+					&&
+					ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+				onPermissionChecked();
+			} else {
+				requestPermissions(new String[]{
+								Manifest.permission.ACCESS_FINE_LOCATION,
+								Manifest.permission.READ_EXTERNAL_STORAGE,
+								Manifest.permission.WRITE_EXTERNAL_STORAGE},
+						PERMISSIONS_REQUEST_ALL);
+			}
+		} else {
+			onPermissionChecked();
+		}
+	}
+
+	private void onPermissionChecked() {
+		TelinkLog.d("permission check pass");
+		delayHandler.removeCallbacksAndMessages(null);
+		delayHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// 开启Telink的sdk
+				TelinkApiManager.getInstance().startMeshService(HomeActivity.this, HomeActivity.this);
+			}
+		}, 1000);
+
 	}
 
 	@Override
