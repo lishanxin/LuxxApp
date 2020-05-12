@@ -118,7 +118,7 @@ public class MyApplication extends TelinkApplication {
 			mMesh.appKey = MeshUtils.generateRandom(16);
 			List<Group> groups = new ArrayList<>();
 			String[] groupNames = getResources().getStringArray(R.array.group_name);
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < groupNames.length; i++) {
 				Group group = new Group();
 				group.address = i | 0xC000;
 				group.name = groupNames[i];

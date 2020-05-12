@@ -113,6 +113,11 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	public static final int REQUEST_DEVICE_ADD = 2;
 	public static final int REQUEST_QRCODE_SCAN = 3;
 	private static final int PERMISSIONS_REQUEST_ALL = 0x1231;
+	String[] permissionsOfBlueTooth = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+			Manifest.permission.READ_EXTERNAL_STORAGE,
+			Manifest.permission.WRITE_EXTERNAL_STORAGE,
+			Manifest.permission.ACCESS_COARSE_LOCATION,
+			Manifest.permission.BLUETOOTH_ADMIN};
 	private Handler delayHandler = new Handler();
 	private View btnAddDevice;
 	// 返回按钮
@@ -278,6 +283,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 					initObject(null);
 
 					try {
+						startTelinkService();
 						PinmInterface pif = PISManager.getInstance().getPinmObjectWithType(PinmInterface.TYPE_CSRMESH);
 						if (pif != null && pif.getStatus() != PinmInterface.PINM_CONNECT_STATUS_CONNECTED) {
 							setVisibilityOnTip(true, R.string.home_connect_ble_tip);
@@ -316,24 +322,16 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 				}
 			}
 				break;
-			case PERMISSIONS_REQUEST_ALL:
-				boolean isGranted = true;
-				for (int result : grantResults) {
-					if (result != PackageManager.PERMISSION_GRANTED){
-						isGranted = false;
-						break;
-					}
-				}
-				if(isGranted){
-					onPermissionChecked();
-				}else{
-					finish();
-				}
+
 			default:
 				super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		}
 	}
 
+	private void startTelinkService(){
+		// 开启Telink的sdk
+		TelinkApiManager.getInstance().startMeshService(HomeActivity.this, HomeActivity.this);
+	}
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -395,6 +393,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		if (checkAllPermission()) {
 			//初始化相关数据
 			initObject(uInfo);
+			startTelinkService();
 		}
 		else{
 			requestAllPermission();
@@ -411,25 +410,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	@Override
 	protected void onStart() {
 		super.onStart();
-		// 开启Telink的sdk
-		TelinkApiManager.getInstance().startMeshService(HomeActivity.this, HomeActivity.this);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-					&&
-					ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-					&&
-					ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-				onPermissionChecked();
-			} else {
-				requestPermissions(new String[]{
-								Manifest.permission.ACCESS_FINE_LOCATION,
-								Manifest.permission.READ_EXTERNAL_STORAGE,
-								Manifest.permission.WRITE_EXTERNAL_STORAGE},
-						PERMISSIONS_REQUEST_ALL);
-			}
-		} else {
-			onPermissionChecked();
-		}
+
 	}
 
 	private void onPermissionChecked() {
@@ -474,6 +455,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		}catch (Exception e){
 			PgyCrashManager.reportCaughtException(HomeActivity.this, e);
 		}
+		TelinkApiManager.getInstance().refreshDevicesState(this);
 //		MobclickAgent.onResume(this);
 	}
 
@@ -992,10 +974,14 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		return true;
 	}
 
+
+
+
+
 	private boolean checkAllPermission(){
 //		String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
 //				Manifest.permission.READ_PHONE_STATE};
-		String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH_ADMIN};
+		String[] permissions = permissionsOfBlueTooth;
 		for (String permission : permissions){
 			if (!checkPermission(permission))
 				return false;
@@ -1013,7 +999,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //			String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION
 //			, Manifest.permission.READ_PHONE_STATE}
- 			String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.BLUETOOTH_ADMIN};
+ 			String[] permissions = permissionsOfBlueTooth;
 			requestPermissions(permissions, REQUEST_CODE_ASK_BLUETOOTH);
 		}
 	}
@@ -1117,17 +1103,18 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 			}
 
 			// TODO LEE 灯组及灯列表刷新
-			List<PISBase> srvsGroup = null;
-			List<PISBase> srvsDevice = null;
+			List<PISBase> srvsGroup = new ArrayList<>();
+			List<PISBase> srvsDevice = new ArrayList<>();
 			// 刷新灯组列表
 			for (Integer i : pistypes){
-				srvsDevice = pm.PIServicesWithQuery(i, PISManager.EnumServicesQueryBaseonType);
-				if (srvsDevice != null && srvsDevice.size() > 0){
-					list.addAll(SortUtils.sortServiceFor4(srvsDevice));
+				List<PISBase> devicesPis = pm.PIServicesWithQuery(i, PISManager.EnumServicesQueryBaseonType);
+				if (devicesPis != null && devicesPis.size() > 0){
+					srvsDevice.addAll(devicesPis);
 				}
-				srvsGroup = pm.PIGroupsWithQuery(i, PISManager.EnumGroupsQueryBaseonType);
-				if (srvsGroup != null && srvsGroup.size() > 0)
-					list.addAll(SortUtils.sortServiceFor4(srvsGroup));
+				List<PISBase> groupsPis = pm.PIGroupsWithQuery(i, PISManager.EnumGroupsQueryBaseonType);
+				if (groupsPis != null && groupsPis.size() > 0){
+					srvsGroup.addAll(groupsPis);
+				}
 			}
 
 			List<GeneralDeviceModel[]> generalDeviceModels = new ArrayList<>();
@@ -1136,7 +1123,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 			for (DeviceInfo device : MyApplication.getInstance().getMesh().devices) {
 				generalDevice.add(new GeneralDeviceModel(new TelinkBase(device)));
 			}
-			if (srvsDevice != null && srvsDevice.size() > 0){
+			if (srvsDevice.size() > 0){
 				for (PISBase pisBase : srvsDevice) {
 					generalDevice.add(new GeneralDeviceModel(pisBase));
 				}
@@ -1145,7 +1132,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 			for (Group group : MyApplication.getInstance().getMesh().groups) {
 				generalGroup.add(new GeneralDeviceModel(new TelinkBase(group)));
 			}
-			if (srvsGroup != null && srvsGroup.size() > 0){
+			if (srvsGroup.size() > 0){
 				for (PISBase pisBase : srvsGroup) {
 					generalGroup.add(new GeneralDeviceModel(pisBase));
 				}

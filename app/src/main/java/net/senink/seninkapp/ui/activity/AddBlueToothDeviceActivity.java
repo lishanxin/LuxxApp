@@ -640,6 +640,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
 	 * 清理缓存数据
 	 */
 	private void clearData() {
+		MeshService.getInstance().idle(true);
 		if (mAppearances != null) {
 			mAppearances.clear();
 			mAppearances = null;

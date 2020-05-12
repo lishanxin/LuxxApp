@@ -43,6 +43,7 @@ import java.util.List;
 /**
  * 主页中的插排和灯泡，网关的适配器  Piservice + Telink
  *
+ * // TODO LEE 灯列表适配器
  * @author zhaojunfeng
  * @date 2015-06-29
  */
@@ -226,7 +227,7 @@ public class MixLightListAdapter extends BaseAdapter {
 
     /**
      * 灯泡列表中 设置一行中的item
-     *
+     *  Telink灯具列表展示
      * @param layout
      * @param nameBtn
      * @param infor
@@ -284,7 +285,7 @@ public class MixLightListAdapter extends BaseAdapter {
 
     /**
      * 灯泡列表中 设置一行中的item
-     *
+     * Pis灯具列表
      * @param layout
      * @param nameBtn
      * @param infor
@@ -446,7 +447,7 @@ public class MixLightListAdapter extends BaseAdapter {
                         LightLEDDetailActivity.class);
                 break;
             case PISConstantDefine.PIS_MAJOR_LIGHT + (PISConstantDefine.PIS_LIGHT_COLOR << 8):
-                // TODO 跳转至这个界面进行灯控
+                // TODO LEE 跳转至这个界面进行灯控
                 intent = new Intent(context,
                         LightRGBDetailActivity.class);
                 break;

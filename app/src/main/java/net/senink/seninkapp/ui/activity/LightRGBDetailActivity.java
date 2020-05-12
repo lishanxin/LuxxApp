@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.SigMeshModel;
 
@@ -37,6 +38,7 @@ import net.senink.seninkapp.BaseActivity;
 import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.sqlite.SceneDao;
+import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.ui.constant.Constant;
 import net.senink.seninkapp.ui.constant.MessageModel;
 import net.senink.seninkapp.ui.entity.SceneBean;
@@ -225,6 +227,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
 		setData();
 		setView();
 		setListener();
+		if(isTelink){
+            getNodeStatus();
+        }
 	}
 
 	/**
@@ -281,15 +286,11 @@ public class LightRGBDetailActivity extends BaseActivity implements
 			}
 			// TODO LEE 新增sdk
 			if(isTelink){
-                if(isTelinkGroup){
-                    deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
-                    lumEleInfo = deviceInfo.getLumEleInfo();
-                    tempEleInfo = deviceInfo.getTempEleInfo();
-                    hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
-                    onOffEleAdrList = deviceInfo.getOnOffEleAdrList();
-                }else{
-
-                }
+                deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+                lumEleInfo = deviceInfo.getLumEleInfo();
+                tempEleInfo = deviceInfo.getTempEleInfo();
+                hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
+                onOffEleAdrList = deviceInfo.getOnOffEleAdrList();
             }
 
 		}
@@ -345,36 +346,75 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //        {
 //            setCandle(false);
 //        }
+        if(isTelink){
+            TelinkApiManager.getInstance().setDevicesColor(hslEleAdr, colors);
+        }else{
+            PipaRequest req = infor.commitLightColor(colors[0], colors[1], colors[2],
+                    (int)currentWhite, true);
+            if (isScened){
+                req.setRetry(1);
+                req.NeedAck = true;
+                req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                    @Override
+                    public void onRequestStart(PipaRequest req) {
 
-        PipaRequest req = infor.commitLightColor(colors[0], colors[1], colors[2],
-                (int)currentWhite, true);
-        if (isScened){
-            req.setRetry(1);
-            req.NeedAck = true;
-            req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-                @Override
-                public void onRequestStart(PipaRequest req) {
+                    }
 
-                }
+                    @Override
+                    public void onRequestResult(PipaRequest req) {
+                        setEnable(true);
+                        if (req.errorCode != PipaRequest.REQUEST_RESULT_SUCCESSED){
+                            stopLoadding(false);
+                        }else
+                            stopLoadding(true);
+                    }
+                });
+            }
+            if (activityMode == Constant.REQUEST_CODE_TIMER_ACTION) {
+                saveBtn.setVisibility(View.VISIBLE);
+                lastRequest = req;
+            }
+            infor.request(req);
 
-                @Override
-                public void onRequestResult(PipaRequest req) {
-                    setEnable(true);
-                    if (req.errorCode != PipaRequest.REQUEST_RESULT_SUCCESSED){
-                        stopLoadding(false);
-                    }else
-                        stopLoadding(true);
-                }
-            });
+            candle_onoff = false;
+            mHandler.sendEmptyMessage(MessageModel.MSG_SEND_CANDLE);
         }
-        if (activityMode == Constant.REQUEST_CODE_TIMER_ACTION) {
-            saveBtn.setVisibility(View.VISIBLE);
-            lastRequest = req;
-        }
-        infor.request(req);
 
-        candle_onoff = false;
-        mHandler.sendEmptyMessage(MessageModel.MSG_SEND_CANDLE);
+    }
+
+    private void getNodeStatus() {
+        if (deviceInfo.nodeInfo.cpsData.lowPowerSupport()) {
+            //skip lpn
+            return;
+        }
+        int modelId = SigMeshModel.SIG_MD_LIGHT_CTL_S.modelId;
+        int modelEleAdr = deviceInfo.getTargetEleAdr(modelId);
+        String desc = null;
+
+        if (modelEleAdr != -1) {
+            MeshService.getInstance().getCtl(modelEleAdr, 1, null);
+            return;
+        }
+
+        modelId = SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId;
+        modelEleAdr = deviceInfo.getTargetEleAdr(modelId);
+        if (modelEleAdr != -1) {
+            MeshService.getInstance().getHSL(modelEleAdr, 1, null);
+            return;
+        }
+
+        modelId = SigMeshModel.SIG_MD_LIGHTNESS_S.modelId;
+        modelEleAdr = deviceInfo.getTargetEleAdr(modelId);
+        if (modelEleAdr != -1) {
+            MeshService.getInstance().getLightness(modelEleAdr, 1, null);
+            return;
+        }
+
+        modelId = SigMeshModel.SIG_MD_G_ONOFF_S.modelId;
+        modelEleAdr = deviceInfo.getTargetEleAdr(modelId);
+        if (modelEleAdr != -1) {
+            MeshService.getInstance().getOnOff(modelEleAdr, 1, null);
+        }
     }
 
     private void setAnimaDrawable() {
@@ -604,6 +644,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView,
                                          boolean isChecked) {
+                if(isTelink){
+                    TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
+                    return;
+                }
                 if (buttonView.isPressed()) {
 //                    PipaRequest req = infor.commitCandleLight(isChecked);
                     PipaRequest req = infor.commitLightOnOff(isChecked);
@@ -732,6 +776,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
             }
         });
     }
+
+
 
     /**
      * 初始化组件
@@ -1331,7 +1377,16 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //		setScenes();
 
         updateView();
-        //从设备更新数据
+       if(!isTelink){
+           pisUpdateDataFromDevice();
+       }
+    }
+
+    /**
+     * Pis从设备更新数据
+     */
+    private void pisUpdateDataFromDevice(){
+
         PipaRequest req = infor.updateLightStatus();
         req.setRetry(2);
         req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {

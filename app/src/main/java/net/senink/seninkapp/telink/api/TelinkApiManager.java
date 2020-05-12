@@ -15,12 +15,14 @@ import com.telink.sig.mesh.event.EventListener;
 import com.telink.sig.mesh.event.MeshEvent;
 import com.telink.sig.mesh.event.NotificationEvent;
 import com.telink.sig.mesh.event.ScanEvent;
+import com.telink.sig.mesh.light.LeBluetooth;
 import com.telink.sig.mesh.light.MeshController;
 import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.light.ProvisionDataGenerator;
 import com.telink.sig.mesh.light.PublicationStatusParser;
 import com.telink.sig.mesh.light.ScanParameters;
 import com.telink.sig.mesh.light.UuidInfo;
+import com.telink.sig.mesh.light.parameter.AutoConnectParameters;
 import com.telink.sig.mesh.light.parameter.KeyBindParameters;
 import com.telink.sig.mesh.light.parameter.ProvisionParameters;
 import com.telink.sig.mesh.model.DeviceBindState;
@@ -30,9 +32,12 @@ import com.telink.sig.mesh.model.NotificationInfo;
 import com.telink.sig.mesh.model.PublishModel;
 import com.telink.sig.mesh.model.SigMeshModel;
 import com.telink.sig.mesh.model.message.config.PubSetMessage;
+import com.telink.sig.mesh.util.MeshUtils;
 import com.telink.sig.mesh.util.TelinkLog;
+import com.telink.sig.mesh.util.UnitConvert;
 
 import net.senink.seninkapp.MyApplication;
+import net.senink.seninkapp.telink.AppSettings;
 import net.senink.seninkapp.telink.SharedPreferenceHelper;
 import net.senink.seninkapp.telink.model.Mesh;
 import net.senink.seninkapp.telink.model.PrivateDevice;
@@ -42,7 +47,9 @@ import net.senink.seninkapp.telink.view.DeviceProvisionListAdapter;
 import net.senink.seninkapp.ui.activity.AddBlueToothDeviceActivity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author: Li Shanxin
@@ -115,6 +122,7 @@ public class TelinkApiManager implements EventListener<String> {
             case MeshController.EVENT_TYPE_SERVICE_CREATE:
                 TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_CREATE");
                 isServiceCreated = true;
+                autoConnect(false);
                 break;
             case MeshController.EVENT_TYPE_SERVICE_DESTROY:
                 TelinkLog.d(TAG + "-- service destroyed event");
@@ -155,7 +163,32 @@ public class TelinkApiManager implements EventListener<String> {
                     startScanTelink();
                 }
                 break;
+            case NotificationEvent.EVENT_TYPE_KICK_OUT_CONFIRM:
+                autoConnect(true);
+                break;
+            case MeshEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN:
+                // get all device on off status when auto connect success
+//
+                AppSettings.ONLINE_STATUS_ENABLE = MeshService.getInstance().getOnlineStatus();
+                if (!AppSettings.ONLINE_STATUS_ENABLE) {
+                    MeshService.getInstance().getOnOff(0xFFFF, 0, null);
+                }
+                sendTimeStatus();
+                break;
         }
+    }
+
+    public void sendTimeStatus() {
+        MyApplication.getInstance().getOfflineCheckHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                long time = MeshUtils.getTaiTime();
+                int offset = UnitConvert.getZoneOffset();
+                final int eleAdr = 0xFFFF;
+                MeshService.getInstance().sendTimeStatus(eleAdr, 1, time, offset, null);
+            }
+        }, 1500);
+
     }
 
 
@@ -393,5 +426,63 @@ public class TelinkApiManager implements EventListener<String> {
                 return deviceInfo;
         }
         return null;
+    }
+
+    // 设置设备颜色
+    public void setDevicesColor(int hslEleAdr, int[] hslValue){
+        MeshService.getInstance().setHSL(hslEleAdr, (int) (hslValue[0] * 65535 / 360),
+                (int) (hslValue[1] * 65535),
+                (int) (hslValue[2] * 65535),
+                false, 0, 0, (byte) 0, null);
+    }
+
+    // 设置亮度
+    public void setProgress(){
+
+    }
+
+    // 灯具开关
+    public void setSwitchLightOnOff(int hslEleAdr, boolean isOn){
+        List<DeviceInfo> mDevices =  MyApplication.getInstance().getMesh().devices;
+        int position = 0;
+        if (mDevices.get(position).getOnOff() == -1) return;
+
+        byte onOff = 0;
+        if (mDevices.get(position).getOnOff() == 0) {
+            onOff = 1;
+        }
+        MeshService.getInstance().setOnOff(mDevices.get(position).meshAddress, onOff, !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
+//        MeshService.getInstance().setOnOff(hslEleAdr, (byte) (isOn ? 1 : 0), !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
+    }
+
+    private void autoConnect(boolean update) {
+        TelinkLog.d("main auto connect");
+        List<DeviceInfo> deviceInfoList = MyApplication.getInstance().getMesh().devices;
+
+        Set<String> targets = new HashSet<>();
+        if (deviceInfoList != null) {
+            for (DeviceInfo deviceInfo : deviceInfoList) {
+                targets.add(deviceInfo.macAddress);
+            }
+        }
+
+        AutoConnectParameters parameters = AutoConnectParameters.getDefault(targets);
+        parameters.setScanMinPeriod(0);
+        if (update) {
+            MeshService.getInstance().updateAutoConnectParams(parameters);
+        } else {
+            MeshService.getInstance().autoConnect(parameters);
+        }
+
+    }
+
+    public void refreshDevicesState(Context context) {
+        if (!LeBluetooth.getInstance().isEnabled()) {
+            LeBluetooth.getInstance().enable(context);
+        } else {
+            if (isServiceCreated) {
+                autoConnect(false);
+            }
+        }
     }
 }
