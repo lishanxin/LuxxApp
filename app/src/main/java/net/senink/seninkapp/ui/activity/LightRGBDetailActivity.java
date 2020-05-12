@@ -307,7 +307,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
     private int mCurrentRGBWMode = LIGHT_MODE_WHITE;
     private void sendRGBOrder(boolean isScened) {
         countOnRGBW = 0;
-        if (infor == null) {
+        if (infor == null && !isTelink) {
 //            isFirst = false;
             return;
         }

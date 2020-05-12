@@ -24,6 +24,7 @@ import net.senink.seninkapp.R;
 import net.senink.seninkapp.adapter.LightListAdapter;
 
 import net.senink.seninkapp.adapter.MixLightListAdapter;
+import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.ui.home.HomeActivity;
 import net.senink.seninkapp.ui.util.LogUtils;
 import net.senink.seninkapp.ui.util.SortUtils;
@@ -183,7 +184,6 @@ public class LightControlFragment extends Fragment {
                                     }
                                 }
                             }
-
 
                         } catch (Exception e) {
                             PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);

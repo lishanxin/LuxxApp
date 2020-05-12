@@ -3,8 +3,10 @@ package net.senink.seninkapp.telink.api;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.ParcelUuid;
+import android.support.v4.graphics.ColorUtils;
 
 import com.telink.sig.mesh.ble.AdvertisingDevice;
 import com.telink.sig.mesh.ble.MeshScanRecord;
@@ -429,7 +431,14 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
     // 设置设备颜色
-    public void setDevicesColor(int hslEleAdr, int[] hslValue){
+    public void setDevicesColor(int hslEleAdr, int[] rgbColor){
+        int red = rgbColor[0];
+        int green = rgbColor[1];
+        int blue = rgbColor[2];
+        int color = 0xFF000000 | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
+
+        float[] hslValue = new float[3];
+        ColorUtils.colorToHSL(color, hslValue);
         MeshService.getInstance().setHSL(hslEleAdr, (int) (hslValue[0] * 65535 / 360),
                 (int) (hslValue[1] * 65535),
                 (int) (hslValue[2] * 65535),
@@ -443,16 +452,7 @@ public class TelinkApiManager implements EventListener<String> {
 
     // 灯具开关
     public void setSwitchLightOnOff(int hslEleAdr, boolean isOn){
-        List<DeviceInfo> mDevices =  MyApplication.getInstance().getMesh().devices;
-        int position = 0;
-        if (mDevices.get(position).getOnOff() == -1) return;
-
-        byte onOff = 0;
-        if (mDevices.get(position).getOnOff() == 0) {
-            onOff = 1;
-        }
-        MeshService.getInstance().setOnOff(mDevices.get(position).meshAddress, onOff, !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
-//        MeshService.getInstance().setOnOff(hslEleAdr, (byte) (isOn ? 1 : 0), !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
+        MeshService.getInstance().setOnOff(hslEleAdr,(byte) (isOn ? 1: 0), !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
     }
 
     private void autoConnect(boolean update) {
@@ -476,7 +476,11 @@ public class TelinkApiManager implements EventListener<String> {
 
     }
 
-    public void refreshDevicesState(Context context) {
+    /**
+     * 灯具连接状态刷新，刷新灯具连接状态，并进行连接后，才可进行命令操作。
+     * @param context
+     */
+    public void autoConnectToDevices(Context context) {
         if (!LeBluetooth.getInstance().isEnabled()) {
             LeBluetooth.getInstance().enable(context);
         } else {

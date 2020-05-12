@@ -8,7 +8,6 @@ import java.util.Set;
 import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.Manifest;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -28,8 +27,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -84,7 +81,6 @@ import com.pgyersdk.feedback.PgyFeedbackShakeManager;
 import com.pgyersdk.update.PgyUpdateManager;
 import com.telink.sig.mesh.event.CommandEvent;
 import com.telink.sig.mesh.event.Event;
-import com.telink.sig.mesh.event.EventBus;
 import com.telink.sig.mesh.event.EventListener;
 import com.telink.sig.mesh.event.MeshEvent;
 import com.telink.sig.mesh.event.NotificationEvent;
@@ -455,7 +451,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		}catch (Exception e){
 			PgyCrashManager.reportCaughtException(HomeActivity.this, e);
 		}
-		TelinkApiManager.getInstance().refreshDevicesState(this);
+		TelinkApiManager.getInstance().autoConnectToDevices(this);
 //		MobclickAgent.onResume(this);
 	}
 
