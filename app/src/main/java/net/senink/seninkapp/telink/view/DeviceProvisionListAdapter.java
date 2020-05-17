@@ -21,17 +21,29 @@
  *******************************************************************************************************/
 package net.senink.seninkapp.telink.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.light.MeshService;
+import com.telink.sig.mesh.light.ProvisionDataGenerator;
+import com.telink.sig.mesh.light.parameter.ProvisionParameters;
+import com.telink.sig.mesh.model.DeviceInfo;
+
+import net.senink.piservice.pis.PISManager;
 import net.senink.seninkapp.R;
+import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.model.ProvisioningDevice;
+import net.senink.seninkapp.ui.activity.AddBlueToothDeviceActivity;
 
 import java.util.List;
 
@@ -42,20 +54,25 @@ import java.util.List;
 public class DeviceProvisionListAdapter extends BaseRecyclerViewAdapter<DeviceProvisionListAdapter.ViewHolder> {
     List<ProvisioningDevice> mDevices;
     Context mContext;
+    Handler mHandler;
 
-    public DeviceProvisionListAdapter(Context context, List<ProvisioningDevice> devices) {
+    public DeviceProvisionListAdapter(Context context, List<ProvisioningDevice> devices, Handler handler) {
         mContext = context;
         mDevices = devices;
+        mHandler = handler;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_device_provision, parent, false);
+        View itemView = LayoutInflater.from(mContext).inflate(R.layout.addbubble_item, parent, false);
         ViewHolder holder = new ViewHolder(itemView);
-        holder.tv_device_info = itemView.findViewById(R.id.tv_device_info);
-        holder.tv_state = itemView.findViewById(R.id.tv_state);
-        holder.iv_device = itemView.findViewById(R.id.iv_device);
-        holder.pb_provision = itemView.findViewById(R.id.pb_provision);
+        holder.tvResult = (TextView) itemView
+                .findViewById(R.id.addbubble_item_result);
+        holder.tvName = (Button) itemView
+                .findViewById(R.id.addbubble_item_name);
+        holder.ivIcon = (ImageView) itemView
+                .findViewById(R.id.addbubble_item_icon);
+
         return holder;
     }
 
@@ -68,32 +85,12 @@ public class DeviceProvisionListAdapter extends BaseRecyclerViewAdapter<DevicePr
     public void onBindViewHolder(ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         ProvisioningDevice device = mDevices.get(position);
-        int iconRes = R.drawable.ic_bulb_on;
-        if (device.nodeInfo != null && device.nodeInfo.cpsData.lowPowerSupport()) {
-            iconRes = R.drawable.ic_low_power;
-        }
-        holder.iv_device.setImageResource(iconRes);
+        final int deviceType = device.nodeInfo != null && device.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
 
-//        holder.tv_name.setText(mDevices.get(position).getAddress());
-        holder.tv_device_info.setText(mContext.getString(R.string.device_prov_desc, String.format("%04X", device.unicastAddress), device.macAddress));
-        holder.tv_state.setText(device.getStateDesc());
-
-        if (device.state == ProvisioningDevice.STATE_PROVISIONING || device.state == ProvisioningDevice.STATE_BINDING) {
-            holder.pb_provision.setIndeterminate(true);
-        } else {
-            holder.pb_provision.setIndeterminate(false);
-            if (device.state == ProvisioningDevice.STATE_PROVISION_FAIL) {
-                holder.pb_provision.setSecondaryProgress(100);
-                holder.pb_provision.setProgress(0);
-            } else if (device.state >= ProvisioningDevice.STATE_BIND_SUCCESS) {
-                holder.pb_provision.setProgress(100);
-                holder.pb_provision.setSecondaryProgress(0);
-            } else {
-                holder.pb_provision.setProgress(50);
-                holder.pb_provision.setSecondaryProgress(100);
-            }
-        }
-
+        holder.ivIcon.setBackgroundResource(IconGenerator.getIcon(deviceType, 1));
+        holder.tvName.setText(device.macAddress);
+//        holder.tvName.setText(mContext.getString(R.string.device_prov_desc, String.format("%04X", device.unicastAddress), device.macAddress));
+        setListener(holder.tvName, position);
         /*if (device.bindState == DeviceBindState.BINDING) {
 //            holder.pb_binding.setVisibility(View.VISIBLE);
             holder.pb_binding.setIndeterminate(true);
@@ -109,13 +106,48 @@ public class DeviceProvisionListAdapter extends BaseRecyclerViewAdapter<DevicePr
 //        holder.tv_device_info.setText(Integer.toHexString(device.meshAddress).toUpperCase() + " - \n" + device.macAddress + " - \n" + (device.bindState));
     }
 
+    /**
+     * 设置名称的监听器
+     *
+     * @param btn
+     * @param pos
+     */
+    private void setListener(Button btn, final int pos) {
+        btn.setTag(pos);
+        btn.setOnClickListener(new View.OnClickListener() {
+
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void onClick(View v) {
+                try {
+                    int position = (Integer) v.getTag();
+                    View tvResult = ((View) v.getParent()).findViewById(R.id.addbubble_item_result);
+
+                    mHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_LINE_INIT);
+                    ProvisioningDevice provisioningDevice = mDevices.get(position);
+                    MeshService.getInstance().startProvision(
+                            TelinkApiManager.getInstance()
+                                    .getProvisionParameters(provisioningDevice.advertisingDevice, provisioningDevice.unicastAddress));
+
+                } catch (Exception e) {
+                    PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+                }
+
+            }
+        });
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        // device icon
-        public ImageView iv_device;
-        // device mac, provisioning state
-        public TextView tv_device_info, tv_state;
-        ProgressBar pb_provision;
+//        // device icon
+//        public ImageView iv_device;
+//        // device mac, provisioning state
+//        public TextView tv_device_info, tv_state;
+//        ProgressBar pb_provision;
+
+        public Button tvName;
+        @SuppressWarnings("unused")
+        public TextView tvResult;
+        public ImageView ivIcon;
 
         public ViewHolder(View itemView) {
             super(itemView);

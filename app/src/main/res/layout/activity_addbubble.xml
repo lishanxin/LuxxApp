@@ -74,8 +74,11 @@
                 android:headerDividersEnabled="false"
                 android:minHeight="@dimen/addbubble_listview_minheight" />
 
+
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/telink_list"
+                android:layout_marginTop="@dimen/addbubble_listview_margintop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

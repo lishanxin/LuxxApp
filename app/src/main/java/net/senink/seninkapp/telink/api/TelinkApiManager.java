@@ -219,7 +219,14 @@ public class TelinkApiManager implements EventListener<String> {
 //        devices.add(targetDevice);
         byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
         ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, targetDevice);
-        MeshService.getInstance().startProvision(parameters);
+//        MeshService.getInstance().startProvision(parameters);
+    }
+
+    public ProvisionParameters getProvisionParameters(AdvertisingDevice device, int address){
+        UnprovisionedDevice targetDevice = new UnprovisionedDevice(device, address);
+        byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
+        ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, targetDevice);
+        return parameters;
     }
 
 
@@ -236,8 +243,8 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
 
-    public DeviceProvisionListAdapter getFoundDevicesAdapter(AddBlueToothDeviceActivity context) {
-        this.mListAdapter = new DeviceProvisionListAdapter(context, devices);
+    public DeviceProvisionListAdapter getFoundDevicesAdapter(AddBlueToothDeviceActivity context, Handler handler) {
+        this.mListAdapter = new DeviceProvisionListAdapter(context, devices, handler);
         this.mListAdapter.setOnItemClickListener(new BaseRecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {

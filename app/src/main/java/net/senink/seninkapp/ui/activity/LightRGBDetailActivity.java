@@ -229,8 +229,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
 		setListener();
 		if(isTelink){
             getNodeStatus();
+            initTelinkView();
         }
-	}
+    }
 
 	/**
 	 * 获取传值
@@ -331,16 +332,21 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
         int tempColor = Color.rgb(colors[0],colors[1],colors[2]);
         tvCurrentColor.setBackgroundColor(tempColor);
-        switch(mCurrentRGBWMode){
-            case LIGHT_MODE_RGB:
-                currentWhite = 0;
-                break;
-            case LIGHT_MODE_WHITE:
-                colors[0] = 0;
-                colors[1] = 0;
-                colors[2] = 0;
-                break;
+        if(isTelink){
+
+        }else{
+            switch(mCurrentRGBWMode){
+                case LIGHT_MODE_RGB:
+                    currentWhite = 0;
+                    break;
+                case LIGHT_MODE_WHITE:
+                    colors[0] = 0;
+                    colors[1] = 0;
+                    colors[2] = 0;
+                    break;
+            }
         }
+
 
 //        if (candle_onoff == true )
 //        {
@@ -883,7 +889,17 @@ public class LightRGBDetailActivity extends BaseActivity implements
         }
 
 		setWhiteBar();
+
 	}
+	private void initTelinkView(){
+        if(deviceInfo != null){
+            int onOff =  deviceInfo.getOnOff();
+            switcher.setChecked(onOff == 1);
+        }
+
+        whiteBar.setProgress((int)(RGBConfigUtils.MAX_VALUE * 0.68));
+    }
+
 
 	/**
 	 * 设置白光滚动轴的最大值
@@ -1088,6 +1104,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //                    rgbwBtn.setBackgroundResource(R.drawable.icon_btn_effect_normal_nocolor);
 //                }
 
+                currentColor = 0xf5b94d;
                 mCurrentRGBWMode = LIGHT_MODE_WHITE;
                 sendRGBOrder(false);
                 break;
