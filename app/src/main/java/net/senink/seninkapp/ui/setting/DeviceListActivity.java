@@ -18,7 +18,6 @@ import net.senink.seninkapp.ui.entity.DeviceInfo;
 import net.senink.seninkapp.ui.util.HttpUtils;
 import net.senink.seninkapp.ui.util.PictureUtils;
 import net.senink.seninkapp.ui.view.listview.SwipeMenuListView;
-import net.tsz.afinal.FinalBitmap;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -86,7 +85,6 @@ public class DeviceListActivity extends BaseActivity implements
 	private List<PISDevice> list;
 	private AnimationDrawable anima;
 
-	private FinalBitmap mFinal;
 	private PISDevice mSelectedDev;
 	// 线程池
 	private ExecutorService threadPool;
@@ -183,7 +181,6 @@ public class DeviceListActivity extends BaseActivity implements
 //		controller = MeshController.getInstance(this);
 
 		mHandler.sendEmptyMessage(MSG_REFRESH_VIEWS);
-		mFinal = FinalBitmap.create(this);
 		initView();
 		setListener();
 	}
@@ -206,7 +203,6 @@ public class DeviceListActivity extends BaseActivity implements
 		if (adapter != null) {
 			adapter.notifyDataSetChanged();
 		}
-		mFinal.onResume();
 	}
 
 	@Override
@@ -226,7 +222,6 @@ public class DeviceListActivity extends BaseActivity implements
 //		controller.setonFeedbackListener(null);
 //		pm.setOnPISChangedListener(null);
 //		pm.setOnPipaRequestStatusListener(null);
-		mFinal.onPause();
 //		saveMacs(macs);
 	}
 
@@ -465,20 +460,7 @@ public class DeviceListActivity extends BaseActivity implements
 		});
 	}
 
-	/**
-	 * 根据imageview的tag获取到imageview的图片
-	 * @param view
-	 * @return
-	 */
-	protected Bitmap getBitmapFromImageView(View view) {
-		View v = view.findViewById(R.id.icon);
-		Bitmap bm = null;
-		if (v != null && v.getTag() != null && mFinal != null) {
-			String path = (String)v.getTag();
-			bm = mFinal.getBitmapFromCache(path);
-		}
-		return bm;
-	}
+
 
 	/**
 	 * 删除加载框
@@ -814,7 +796,6 @@ public class DeviceListActivity extends BaseActivity implements
 		super.onDestroy();
 		threadPool.shutdown();
 		threadPool = null;
-		mFinal.clearCache();
 		if (list != null) {
 			list.clear();
 		}

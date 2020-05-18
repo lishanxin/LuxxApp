@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="group_name">
-        <item>Living room</item>
+<!--        <item>Living room</item>-->
 <!--        <item>Kitchen</item>-->
 <!--        <item>Master bedroom</item>-->
 <!--        <item>Secondary bedroom</item>-->
