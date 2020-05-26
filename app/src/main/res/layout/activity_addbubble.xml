@@ -78,6 +78,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/telink_list"
+                android:layout_below="@id/addbubble_list"
                 android:layout_marginTop="@dimen/addbubble_listview_margintop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -86,7 +87,7 @@
                 android:id="@+id/addbubble_space"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/addbubble_space_height"
-                android:layout_below="@id/addbubble_list"
+                android:layout_below="@id/telink_list"
                 android:background="@android:color/transparent" />
 
             <RelativeLayout

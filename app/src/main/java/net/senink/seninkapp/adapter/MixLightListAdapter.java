@@ -245,6 +245,7 @@ public class MixLightListAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View view) {
+                    if(device.getOnOff() == -1) return;
                     Intent intent = new Intent(context,
                             LightRGBDetailActivity.class);
                     Bundle bundle = new Bundle();

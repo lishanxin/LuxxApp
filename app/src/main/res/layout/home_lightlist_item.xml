@@ -82,9 +82,8 @@
                 android:id="@+id/lightlist_name2"
                 android:layout_width="74dp"
                 android:layout_height="74dp"
+                android:ellipsize="none"
                 android:maxLength="7"
-                android:paddingBottom="@dimen/light_item_paddingbottom"
-                android:singleLine="false"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/home_item_name_textsize"
                 android:layout_weight="1"
@@ -92,7 +91,7 @@
                 android:layout_alignParentStart="false"
                 android:layout_gravity="center"
                 android:layout_centerHorizontal="true"
-                android:background="@android:color/transparent" />
+                android:background="@android:color/transparent"  />
         </RelativeLayout>
 
         <RelativeLayout
@@ -109,18 +108,16 @@
                 android:id="@+id/lightlist_name3"
                 android:layout_width="74dp"
                 android:layout_height="74dp"
-                android:ellipsize="marquee"
+                android:ellipsize="none"
                 android:maxLength="7"
-                android:paddingBottom="@dimen/light_item_paddingbottom"
-                android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/home_item_name_textsize"
                 android:layout_weight="1"
-                android:layout_alignParentStart="false"
                 android:layout_alignParentTop="false"
+                android:layout_alignParentStart="false"
                 android:layout_gravity="center"
                 android:layout_centerHorizontal="true"
-                android:background="@android:color/transparent" />
+                android:background="@android:color/transparent"  />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -150,18 +147,16 @@
                 android:id="@+id/lightlist_name4"
                 android:layout_width="74dp"
                 android:layout_height="74dp"
-                android:ellipsize="marquee"
+                android:ellipsize="none"
                 android:maxLength="7"
-                android:paddingBottom="@dimen/light_item_paddingbottom"
-                android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/home_item_name_textsize"
                 android:layout_weight="1"
-                android:layout_alignParentStart="false"
                 android:layout_alignParentTop="false"
+                android:layout_alignParentStart="false"
                 android:layout_gravity="center"
                 android:layout_centerHorizontal="true"
-                android:background="@android:color/transparent" />
+                android:background="@android:color/transparent"  />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -262,7 +262,7 @@ public class TelinkApiManager implements EventListener<String> {
     public void startScanTelink() {
         ScanParameters parameters = ScanParameters.getDefault(false, true);
         parameters.setScanTimeout(20 * 1000);
-
+        List<DeviceInfo> devices = MyApplication.getInstance().getMesh().devices;
         if (devices.size() != 0) {
             String[] excludeMacs = new String[devices.size()];
             for (int i = 0; i < devices.size(); i++) {
@@ -272,6 +272,12 @@ public class TelinkApiManager implements EventListener<String> {
         }
 //        parameters.setIncludeMacs(new String[]{"FF:FF:BB:CC:DD:53"});
         MeshService.getInstance().startScan(parameters);
+    }
+
+    public void clearFoundDevice() {
+        if(devices != null){
+            devices.clear();
+        }
     }
 
     private void onProvisionSuccess(MeshEvent event) {

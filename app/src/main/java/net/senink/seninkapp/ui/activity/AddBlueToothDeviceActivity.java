@@ -403,6 +403,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         manger = PISManager.getInstance();
 //		threadPool = Executors.newFixedThreadPool(1);
         mcm = manger.getMCSObject();
+        TelinkApiManager.getInstance().clearFoundDevice();
         TelinkApiManager.getInstance().startScanTelink();
 //		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_SUCCESS, this);
 //		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_FAIL, this);

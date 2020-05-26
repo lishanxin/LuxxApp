@@ -1,7 +1,6 @@
 package net.senink.seninkapp;
 
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -39,6 +38,9 @@ import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.model.AddressRange;
 import net.senink.seninkapp.telink.model.LogInfo;
 import net.senink.seninkapp.telink.model.Mesh;
+import net.senink.seninkapp.ui.home.TelinkDataRefreshEntry;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -275,6 +277,7 @@ public class MyApplication extends TelinkApplication {
 							break;
 						}
 					}
+					EventBus.getDefault().post(new TelinkDataRefreshEntry(true));
 
 					break;
 

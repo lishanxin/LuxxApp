@@ -2,7 +2,6 @@ package net.senink.seninkapp.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 //import android.annotation.SuppressLint;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -10,7 +9,6 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,18 +27,14 @@ import net.senink.piservice.pis.PipaRequest;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
-import net.senink.seninkapp.adapter.LightListAdapter;
 
 import net.senink.seninkapp.adapter.MixLightListAdapter;
-import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.ui.home.HomeActivity;
-import net.senink.seninkapp.ui.home.RefreshLightListView;
+import net.senink.seninkapp.ui.home.TelinkDataRefreshEntry;
 import net.senink.seninkapp.ui.util.LogUtils;
-import net.senink.seninkapp.ui.util.SortUtils;
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase;
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshListView;
 
-import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISMCSManager;
 import net.senink.piservice.pis.PISManager;
@@ -287,7 +281,7 @@ public class LightControlFragment extends Fragment implements  EventListener<Str
         MyApplication.getInstance().saveLog(" --test-- " + action);
     }
     private void refreshUI() {
-        EventBus.getDefault().post(new RefreshLightListView());
+        EventBus.getDefault().post(new TelinkDataRefreshEntry());
     }
 
     /**

@@ -559,8 +559,11 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	}
 
 	@Subscribe
-	public void refreshLightListView(RefreshLightListView opr){
+	public void refreshLightListView(TelinkDataRefreshEntry opr){
 		refreshListView();
+		if(opr.isGotLightStatus()){
+			setVisibilityOnTip(false, 0);
+		}
 	}
 
 	@Override
