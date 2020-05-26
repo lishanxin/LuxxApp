@@ -48,6 +48,7 @@ import net.senink.piservice.http.PISHttpManager;
 import net.senink.piservice.pinm.PINMoMC.PinmOverMC;
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.piservice.struct.UserInfo;
+import net.senink.seninkapp.ActivityManager;
 import net.senink.seninkapp.BaseActivity;
 import net.senink.seninkapp.Foreground;
 
@@ -61,6 +62,7 @@ import net.senink.seninkapp.fragment.SwitchFragment;
 
 import net.senink.seninkapp.telink.AppSettings;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.model.Mesh;
 import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.ui.activity.AddDevicesActivity;
 import net.senink.seninkapp.ui.activity.LoginActivity;
@@ -100,6 +102,9 @@ import net.senink.piservice.pinm.PINMoBLE.PinmOverBLE;
 import net.senink.piservice.pinm.PinmInterface;
 import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISManager;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class HomeActivity extends BaseActivity implements OnClickListener, EventListener<String> {
 	private static final String TAG = "HomeActivity";
@@ -332,7 +337,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		EventBus.getDefault().register(this);
 		/**初始化蒲公英SDK*/
 		pgyerInit();
 
@@ -400,6 +405,27 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 			finish();
 		}
 
+		Mesh mesh = MyApplication.getInstance().getMesh();
+		if (mesh.devices != null) {
+			for (DeviceInfo deviceInfo : mesh.devices) {
+				deviceInfo.setOnOff(-1);
+				deviceInfo.lum = 0;
+				deviceInfo.temp = 0;
+			}
+		}
+
+		Intent serviceIntent = new Intent(this, MeshService.class);
+		startService(serviceIntent);
+		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
+		MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_DEVICE_ON_OFF_STATUS, this);
+		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_MESH_EMPTY, this);
+		MyApplication.getInstance().addEventListener(MeshController.EVENT_TYPE_SERVICE_CREATE, this);
+		MyApplication.getInstance().addEventListener(MeshController.EVENT_TYPE_SERVICE_DESTROY, this);
+		MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_PROCESSING, this);
+		MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_COMPLETE, this);
+		MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_ERROR_BUSY, this);
+		MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_KICK_OUT_CONFIRM, this);
+		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN, this);
 
 	}
 
@@ -452,7 +478,41 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 			PgyCrashManager.reportCaughtException(HomeActivity.this, e);
 		}
 		TelinkApiManager.getInstance().autoConnectToDevices(this);
+		TelinkLog.d("main resume -- service created: " + isServiceCreated);
+		if (!LeBluetooth.getInstance().isEnabled()) {
+			showBleOpenDialog();
+		} else {
+			if (isServiceCreated) {
+//                MeshService.getInstance().getOnOff(0xFFFF, 0, null);
+				this.autoConnect(false);
+			}
+		}
+
 //		MobclickAgent.onResume(this);
+	}
+
+	android.support.v7.app.AlertDialog.Builder mDialogBuilder;
+
+	private void showBleOpenDialog() {
+		if (mDialogBuilder == null) {
+			mDialogBuilder = new android.support.v7.app.AlertDialog.Builder(this);
+			mDialogBuilder.setCancelable(false);
+			mDialogBuilder.setMessage("Enable Bluetooth!");
+			mDialogBuilder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					finish();
+				}
+			});
+			mDialogBuilder.setPositiveButton("enable", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					LeBluetooth.getInstance().enable(HomeActivity.this);
+				}
+			});
+		}
+
+		mDialogBuilder.show();
 	}
 
 	long preTime = 0;
@@ -498,9 +558,15 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		}
 	}
 
+	@Subscribe
+	public void refreshLightListView(RefreshLightListView opr){
+		refreshListView();
+	}
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		EventBus.getDefault().unregister(this);
 		unregisterAllReceiver();
 		PISManager.getInstance().Stop();
 		PgyUpdateManager.unregister();
@@ -512,6 +578,13 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 
 		MyApplication.getInstance().removeEventListener(this);
 		handler.removeCallbacksAndMessages(null);
+
+		MyApplication.getInstance().removeEventListener(this);
+		handler.removeCallbacksAndMessages(null);
+		if (!ActivityManager.getInstance().isApplicationForeground()){
+			Intent serviceIntent = new Intent(this, MeshService.class);
+			stopService(serviceIntent);
+		}
 	}
 
 	@Override
@@ -1195,67 +1268,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	}
 
 
-	@Override
-	public void performed(Event<String> event) {
-		switch (event.getType()) {
-			case MeshEvent.EVENT_TYPE_MESH_EMPTY:
-				TelinkLog.d(TAG + "#EVENT_TYPE_MESH_EMPTY");
-				break;
-			case MeshEvent.EVENT_TYPE_DISCONNECTED:
-				handler.removeCallbacksAndMessages(null);
-				break;
-			case MeshEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN:
-				// get all device on off status when auto connect success
-//
-				AppSettings.ONLINE_STATUS_ENABLE = MeshService.getInstance().getOnlineStatus();
-				if (!AppSettings.ONLINE_STATUS_ENABLE) {
-					MeshService.getInstance().getOnOff(0xFFFF, 0, null);
-				}
-				sendTimeStatus();
-				break;
-			case MeshController.EVENT_TYPE_SERVICE_DESTROY:
-				TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_DESTROY");
-				break;
-			case MeshController.EVENT_TYPE_SERVICE_CREATE:
-				TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_CREATE");
-				autoConnect(false);
-				isServiceCreated = true;
-				break;
-			case CommandEvent.EVENT_TYPE_CMD_PROCESSING:
-//                showWaitingDialog("CMD processing");
-				break;
-			case CommandEvent.EVENT_TYPE_CMD_COMPLETE:
-				dismissWaitingDialog();
-				break;
-
-			case CommandEvent.EVENT_TYPE_CMD_ERROR_BUSY:
-				TelinkLog.w("CMD busy");
-                /*runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        toastMsg("CMD fail, Busy!");
-                    }
-                });*/
-				break;
-
-			case NotificationEvent.EVENT_TYPE_KICK_OUT_CONFIRM:
-				autoConnect(true);
-				break;
-		}
-	}
-	public void sendTimeStatus() {
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				long time = MeshUtils.getTaiTime();
-				int offset = UnitConvert.getZoneOffset();
-				final int eleAdr = 0xFFFF;
-				MeshService.getInstance().sendTimeStatus(eleAdr, 1, time, offset, null);
-			}
-		}, 1500);
-
-	}
-
 	private void autoConnect(boolean update) {
 		TelinkLog.d("main auto connect");
 		List<DeviceInfo> deviceInfoList = MyApplication.getInstance().getMesh().devices;
@@ -1359,5 +1371,66 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 
 	}
 
+	@Override
+	public void performed(Event<String> event) {
+		switch (event.getType()) {
+			case MeshEvent.EVENT_TYPE_MESH_EMPTY:
+				TelinkLog.d(TAG + "#EVENT_TYPE_MESH_EMPTY");
+				break;
+			case MeshEvent.EVENT_TYPE_DISCONNECTED:
+				handler.removeCallbacksAndMessages(null);
+				break;
+			case MeshEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN:
+				// get all device on off status when auto connect success
+//
+				AppSettings.ONLINE_STATUS_ENABLE = MeshService.getInstance().getOnlineStatus();
+				if (!AppSettings.ONLINE_STATUS_ENABLE) {
+					MeshService.getInstance().getOnOff(0xFFFF, 0, null);
+				}
+				sendTimeStatus();
+				break;
+			case MeshController.EVENT_TYPE_SERVICE_DESTROY:
+				TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_DESTROY");
+				break;
+			case MeshController.EVENT_TYPE_SERVICE_CREATE:
+				TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_CREATE");
+				autoConnect(false);
+				isServiceCreated = true;
+				break;
+			case CommandEvent.EVENT_TYPE_CMD_PROCESSING:
+//                showWaitingDialog("CMD processing");
+				break;
+			case CommandEvent.EVENT_TYPE_CMD_COMPLETE:
+				dismissWaitingDialog();
+				break;
 
+			case CommandEvent.EVENT_TYPE_CMD_ERROR_BUSY:
+				TelinkLog.w("CMD busy");
+                /*runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        toastMsg("CMD fail, Busy!");
+                    }
+                });*/
+				break;
+
+			case NotificationEvent.EVENT_TYPE_KICK_OUT_CONFIRM:
+				autoConnect(true);
+				break;
+		}
+	}
+
+
+	public void sendTimeStatus() {
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				long time = MeshUtils.getTaiTime();
+				int offset = UnitConvert.getZoneOffset();
+				final int eleAdr = 0xFFFF;
+				MeshService.getInstance().sendTimeStatus(eleAdr, 1, time, offset, null);
+			}
+		}, 1500);
+
+	}
 }

@@ -17,15 +17,24 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.event.CommandEvent;
+import com.telink.sig.mesh.event.Event;
+import com.telink.sig.mesh.event.EventListener;
+import com.telink.sig.mesh.event.MeshEvent;
+import com.telink.sig.mesh.event.NotificationEvent;
+import com.telink.sig.mesh.event.OnlineStatusEvent;
+import com.telink.sig.mesh.light.MeshService;
 
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.seninkapp.GeneralDeviceModel;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.adapter.LightListAdapter;
 
 import net.senink.seninkapp.adapter.MixLightListAdapter;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.ui.home.HomeActivity;
+import net.senink.seninkapp.ui.home.RefreshLightListView;
 import net.senink.seninkapp.ui.util.LogUtils;
 import net.senink.seninkapp.ui.util.SortUtils;
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase;
@@ -36,13 +45,15 @@ import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISMCSManager;
 import net.senink.piservice.pis.PISManager;
 
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * 蓝牙灯列表的界面
  *
  * @author zhaojunfeng
  * @date 2015-07-09
  */
-public class LightControlFragment extends Fragment {
+public class LightControlFragment extends Fragment implements  EventListener<String> {
     public static final String TAG = "LightControlFragment";
 
     private View mRootView;
@@ -54,6 +65,7 @@ public class LightControlFragment extends Fragment {
     private MixLightListAdapter deviceAdapter;
     private PISManager manager;
     private Handler mHandler = null;
+    private Handler mCycleHandler = new Handler();
 
     private int isRefersh = 0;
     // 灯列表
@@ -194,6 +206,17 @@ public class LightControlFragment extends Fragment {
                     }
 
                 });
+
+        MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_DEVICE_ON_OFF_STATUS, this);
+        MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_CTL_STATUS_NOTIFY, this);
+        MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_LIGHTNESS_STATUS_NOTIFY, this);
+        MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_DEVICE_LEVEL_STATUS, this);
+        MyApplication.getInstance().addEventListener(OnlineStatusEvent.ONLINE_STATUS_NOTIFY, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DEVICE_OFFLINE, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_MESH_RESET, this);
+
+        MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_COMPLETE, this);
     }
 
     @Override
@@ -207,6 +230,64 @@ public class LightControlFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement DeviceController callback interface.");
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        deviceAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MyApplication.getInstance().removeEventListener(this);
+        mCycleHandler.removeCallbacksAndMessages(null);
+    }
+
+    int index = 0;
+    boolean cycleTestStarted = false;
+    private Runnable cycleTask = new Runnable() {
+        @Override
+        public void run() {
+//            MeshService.getInstance().cmdOnOff(index % 2 == 0 ? 3 : 4, (byte) 1, (byte) ((index / 2) % 2), 1);
+            MeshService.getInstance().setOnOff(index % 2 == 0 ? 3 : 4, (byte) ((index / 2) % 2), true, 1, 0, (byte) 0, null);
+            index++;
+            mCycleHandler.postDelayed(this, 2 * 1000);
+        }
+    };
+    private static final String TAG_ALL_ON = "ALL_ON";
+    private static final String TAG_ALL_OFF = "ALL_OFF";
+    private long startTime;
+    @Override
+    public void performed(Event<String> event) {
+        if (event.getType().equals(MeshEvent.EVENT_TYPE_DISCONNECTED) || event.getType().equals(MeshEvent.EVENT_TYPE_DEVICE_OFFLINE)
+                || event.getType().equals(MeshEvent.EVENT_TYPE_MESH_RESET)
+                || event.getType().equals(NotificationEvent.EVENT_TYPE_DEVICE_LEVEL_STATUS)) {
+            refreshUI();
+        } else if (event.getType().equals(CommandEvent.EVENT_TYPE_CMD_COMPLETE)) {
+            CommandEvent commandEvent = (CommandEvent) event;
+            long during = System.currentTimeMillis() - startTime;
+            if (TAG_ALL_ON.equals(commandEvent.getMeshCommand().tag)) {
+                saveLog("All On during:" + during + "ms");
+            } else if (TAG_ALL_OFF.equals(commandEvent.getMeshCommand().tag)) {
+                saveLog("All Off during:" + during + "ms");
+            }
+        } else {
+            if (event instanceof NotificationEvent) {
+                if (((NotificationEvent) event).isStatusChanged()) {
+                    refreshUI();
+                }
+            } else if (event instanceof OnlineStatusEvent) {
+                refreshUI();
+            }
+        }
+    }
+    private void saveLog(String action) {
+        MyApplication.getInstance().saveLog(" --test-- " + action);
+    }
+    private void refreshUI() {
+        EventBus.getDefault().post(new RefreshLightListView());
     }
 
     /**

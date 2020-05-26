@@ -52,7 +52,6 @@ public class MyApplication extends TelinkApplication {
 //	public ArrayList<Activity> activities = new ArrayList<Activity>();
 	private int myUpdateLabel;
 	public static Context context;
-    private static MyApplication meshApplication;
     public static String company;
 
 	private Mesh mMesh;
@@ -64,6 +63,9 @@ public class MyApplication extends TelinkApplication {
     public static MyApplication getInstance() {
         return meshApplication;
     }
+
+	private static final String TAG = "TelinkMeshApplication";
+	private static MyApplication meshApplication;
 
 	@Override
 	public void onCreate() {
@@ -84,6 +86,7 @@ public class MyApplication extends TelinkApplication {
 		logs = new ArrayList<>();
 		this.setLogEnable(SharedPreferenceHelper.isLogEnable(this));
 		closePErrorDialog();
+
 	}
 	private void closePErrorDialog() {
 		if (Build.VERSION.SDK_INT <= 27) {
@@ -108,7 +111,6 @@ public class MyApplication extends TelinkApplication {
 			e.printStackTrace();
 		}
 	}
-
 	private void initMesh() {
 		Object object = FileSystem.readAsObject(this, Mesh.STORAGE_NAME);
 		if (object == null) {
@@ -150,6 +152,7 @@ public class MyApplication extends TelinkApplication {
 	}
 
 
+
 	public Mesh getMesh() {
 		return mMesh;
 	}
@@ -160,9 +163,9 @@ public class MyApplication extends TelinkApplication {
 		dispatchEvent(new MeshEvent(this, MeshEvent.EVENT_TYPE_MESH_RESET, null));
 //        }
 	}
-
 	@Override
 	protected void onServiceCreated() {
+
 		byte[] pvData = ProvisionDataGenerator.getProvisionData(mMesh.networkKey, mMesh.netKeyIndex, mMesh.ivUpdateFlag, mMesh.ivIndex, mMesh.localAddress);
 		MeshService.getInstance().meshProvisionParSetDir(pvData, pvData.length);
 //        mMesh.saveOrUpdate(getApplicationContext());
@@ -182,7 +185,6 @@ public class MyApplication extends TelinkApplication {
 		super.onServiceCreated();
 	}
 
-
 	@Override
 	protected void onMeshEvent(Intent intent) {
 		switch (intent.getStringExtra(MeshController.EXTRA_EVENT_TYPE)) {
@@ -197,6 +199,7 @@ public class MyApplication extends TelinkApplication {
 		super.onMeshEvent(intent);
 	}
 
+
 	@Override
 	protected void onSettingEvent(Intent intent) {
 //        super.onSettingEvent(intent);
@@ -209,6 +212,7 @@ public class MyApplication extends TelinkApplication {
 			}
 		}
 	}
+
 
 	@Override
 	protected void onOnlineStatusNotify(Intent intent) {
@@ -513,7 +517,6 @@ public class MyApplication extends TelinkApplication {
 		return ConfigModelStorage.getDefault(commonModelStorage);
 	}
 
-
 	public MeshOTAModelStorage getMeshOTAModelInfo() {
 		return MeshOTAModelStorage.getDefault(mMesh.localAddress, mMesh.appKeyIndex);
 	}
@@ -545,6 +548,14 @@ public class MyApplication extends TelinkApplication {
 	}
 
 
+	public List<LogInfo> getLogInfo() {
+		return logs;
+	}
+
+	public void clearLogInfo() {
+		logs.clear();
+	}
+
 	public byte[] createSimpleVCNodeInfo(int nodeAdr, int elementCnt, byte[] deviceKey) {
 		byte[] result = new byte[404];
 		for (int i = 0; i < result.length; i++) {
@@ -561,15 +572,6 @@ public class MyApplication extends TelinkApplication {
 		int keyLen = 16;
 		System.arraycopy(deviceKey, 0, result, index, keyLen);
 		return result;
-	}
-
-
-	public List<LogInfo> getLogInfo() {
-		return logs;
-	}
-
-	public void clearLogInfo() {
-		logs.clear();
 	}
 
 

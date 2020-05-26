@@ -36,6 +36,11 @@ public class BaseActivity extends Activity  {
 		Utils.printMemoryInfor("MAT", getClass().getName() + ":onResume()");
 //		POSTsubmitUtil.networkStateusOK(this);
 	}
+	@Override
+	protected void onStart() {
+		super.onStart();
+		ActivityManager.getInstance().onActivityStart();
+	}
 
 	@Override
 	protected void onRestart() {
@@ -54,6 +59,7 @@ public class BaseActivity extends Activity  {
 	protected void onStop() {
 		Utils.printMemoryInfor("MAT", getClass().getName() + ":onStop()");
 		super.onStop();
+		ActivityManager.getInstance().onActivityStop();
 	}
 	
 	@Override
