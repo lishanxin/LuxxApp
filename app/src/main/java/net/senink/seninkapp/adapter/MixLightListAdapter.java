@@ -27,6 +27,7 @@ import net.senink.piservice.pis.PISDevice;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.piservice.services.PISxinColor;
+import net.senink.seninkapp.BuildConfig;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.telink.model.TelinkBase;
@@ -213,9 +214,7 @@ public class MixLightListAdapter extends BaseAdapter {
 	private void setGeneralLightView(RelativeLayout layout, ImageButton nameBtn, TextView nametv, GeneralDeviceModel generalData, int pos, int index) {
 		if (generalData == null) {
 			layout.setVisibility(View.INVISIBLE);
-			nameBtn.setBackgroundResource(R.drawable.pro_default_selector);
 			nametv.setText("");
-
 			return;
 		}
 		if(generalData.isTelink()){
@@ -235,7 +234,14 @@ public class MixLightListAdapter extends BaseAdapter {
      * @param index
      */
     private void setLightView(RelativeLayout layout, ImageButton nameBtn, TextView nametv, TelinkBase infor, int pos, int index) {
+        if (infor == null) {
+            layout.setVisibility(View.INVISIBLE);
+            nametv.setText("");
 
+            return;
+        }
+        // 获取该组中所有服务的信息
+        layout.setVisibility(View.VISIBLE);
         if(infor.isDevice()){
             final DeviceInfo device = infor.getDevice();
             final int deviceType = device.nodeInfo != null && device.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
@@ -245,7 +251,7 @@ public class MixLightListAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View view) {
-                    if(device.getOnOff() == -1) return;
+                    if(device.getOnOff() == -1 && !BuildConfig.DEBUG) return;
                     Intent intent = new Intent(context,
                             LightRGBDetailActivity.class);
                     Bundle bundle = new Bundle();

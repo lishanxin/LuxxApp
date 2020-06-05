@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 
 import com.telink.sig.mesh.light.MeshService;
+import com.telink.sig.mesh.model.CommonMeshCommand;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.SigMeshModel;
 
@@ -73,7 +74,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
     protected final static int LOADING_MAX_TIME = 10000;
 	// 界面跳转到场景模式设置界面时的请求码
 	public final static int REQUEST_SCENE_CODE = 2001;
-
+    boolean isVoiceOn = false;
 	public int gpx = 0;
 	// 延迟发送冷暖色命令
     protected final static int DELEY_TIME = 300;
@@ -801,6 +802,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
         colorCircle = (ColorCircle) findViewById(R.id.light_colorcircle);
         tvCurrentColor = (TextView) findViewById(R.id.light_current);
         effectsBtn = (Button) findViewById(R.id.light_effects);
+
         rgbwBtn = (Button) findViewById(R.id.light_mode);
 //        settingBtn = (Button) findViewById(R.id.title_setting);
 //        ledLayout = (RelativeLayout) findViewById(R.id.lightdetail_led_layout);
@@ -887,7 +889,11 @@ public class LightRGBDetailActivity extends BaseActivity implements
         else{
             effectsBtn.setVisibility(View.GONE);
         }
-
+        if(isTelink){
+            effectsBtn.setVisibility(View.VISIBLE);
+        }else{
+            effectsBtn.setVisibility(View.GONE);
+        }
 		setWhiteBar();
 
 	}
@@ -1023,6 +1029,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 }
                 break;
             case R.id.light_candle_layout:
+                if(isTelink){
+                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getCandleCommand());
+                    return;
+                }
                 if (switcher.isChecked()==true)
                 {
                     PipaRequest req = infor.commitLightOnOff(false);
@@ -1051,6 +1061,11 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
                 break;
             case R.id.light_effects:
+                if(isTelink){
+                    isVoiceOn = !isVoiceOn;
+                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getVoiceOnOffCommand(isVoiceOn));
+                    return;
+                }
 //                intent = new Intent(LightRGBDetailActivity.this,
 //                        LightEffectsActivity.class);
 //                intent.putExtra(MessageModel.PISBASE_KEYSTR,
@@ -1103,7 +1118,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //                    mCurrentRGBWMode = LIGHT_MODE_WHITE;
 //                    rgbwBtn.setBackgroundResource(R.drawable.icon_btn_effect_normal_nocolor);
 //                }
-
+                if(isTelink){
+                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getYellowCommand());
+                    return;
+                }
                 currentColor = 0xf5b94d;
                 mCurrentRGBWMode = LIGHT_MODE_WHITE;
                 sendRGBOrder(false);

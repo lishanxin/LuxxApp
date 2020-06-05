@@ -32,6 +32,7 @@ import com.telink.sig.mesh.light.parameter.GattOtaParameters;
 import com.telink.sig.mesh.light.parameter.KeyBindParameters;
 import com.telink.sig.mesh.light.parameter.ProvisionParameters;
 import com.telink.sig.mesh.light.parameter.RemoteProvisionParameters;
+import com.telink.sig.mesh.model.CommonMeshCommand;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.MeshCommand;
 import com.telink.sig.mesh.model.NodeInfo;
@@ -441,6 +442,26 @@ public class MeshService extends Service {
 
         command.params = message.toBytes();
         command.tag = tag;
+        return this.sendMeshCommand(command);
+    }
+
+    /**
+     * 自定义命令输入
+     * @param adr
+     * @param ack
+     * @param commonCommand
+     * @return
+     */
+    public boolean setCommonCommand(int adr, boolean ack, byte[] commonCommand){
+        MeshCommand command = MeshCommand.newInstance(
+                this.netKeyIndex,
+                this.appKeyIndex,
+                0,
+                adr,
+                0xE6);
+
+        command.params = commonCommand;
+        command.tag = null;
         return this.sendMeshCommand(command);
     }
 

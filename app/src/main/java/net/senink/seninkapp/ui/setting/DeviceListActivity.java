@@ -11,6 +11,9 @@ import net.senink.piservice.pis.PISMCSManager;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.seninkapp.BaseActivity;
+import net.senink.seninkapp.GeneralDeviceModel;
+import net.senink.seninkapp.MyApplication;
+import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.ui.cache.CacheManager;
 import net.senink.seninkapp.ui.constant.MessageModel;
 import net.senink.seninkapp.ui.constant.ProductClassifyInfo;
@@ -44,6 +47,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.light.MeshService;
 
 import net.senink.seninkapp.R;
 
@@ -82,10 +86,10 @@ public class DeviceListActivity extends BaseActivity implements
 	private PISManager pm;
 	private PISMCSManager mcm;
 	private DeviceListsAdater adapter;
-	private List<PISDevice> list;
+	private List<GeneralDeviceModel> list;
 	private AnimationDrawable anima;
 
-	private PISDevice mSelectedDev;
+	private GeneralDeviceModel mSelectedDev;
 	// 线程池
 	private ExecutorService threadPool;
 //	private onFeedbackListener listener = new onFeedbackListener() {
@@ -115,7 +119,7 @@ public class DeviceListActivity extends BaseActivity implements
 				if (msg.arg1 != 1) {
 					mHandler.removeMessages(MSG_TIMEOUT);
 				}
-				list = pm.AllDevices();
+				list = getAllGeneralDevices();
 				if (adapter == null) {
 					adapter = new DeviceListsAdater();
 					listView.setAdapter(adapter);
@@ -160,6 +164,7 @@ public class DeviceListActivity extends BaseActivity implements
 				mHandler.removeMessages(MSG_TIMEOUT);
 				break;
 			case MSG_REFRESH_IMAGEURL:
+				list = getAllGeneralDevices();
 				if (null != adapter) {
 					adapter.notifyDataSetChanged();
 				} else {
@@ -170,6 +175,24 @@ public class DeviceListActivity extends BaseActivity implements
 			}
 		}
 	};
+
+	// Todo lee
+	private List<GeneralDeviceModel> getAllGeneralDevices(){
+		List<com.telink.sig.mesh.model.DeviceInfo> telinkDevices = MyApplication.getInstance().getMesh().devices;
+		List<PISDevice> pisDevices = pm.AllDevices();
+		List<GeneralDeviceModel> generalDeviceModels = new ArrayList<>();
+		if(telinkDevices != null){
+			for(int i = 0; i< telinkDevices.size(); i++){
+				generalDeviceModels.add(new GeneralDeviceModel(new TelinkBase(telinkDevices.get(i))));
+			}
+		}
+		if(pisDevices != null){
+			for(int i = 0; i< pisDevices.size(); i++){
+				generalDeviceModels.add(new GeneralDeviceModel(pisDevices.get(i)));
+			}
+		}
+		return generalDeviceModels;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -347,14 +370,19 @@ public class DeviceListActivity extends BaseActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int arg2,
 					long arg3) {
-				PISDevice device = list.get(arg2);
-				Intent intent = new Intent(DeviceListActivity.this,
-						DeviceInfoActivity.class);
-				intent.putExtra(MessageModel.PISBASE_KEYSTR,
-						device.getPISKeyString());
-				startActivityForResult(intent, REQUEST_CODE_DEVICEINFO);
-				overridePendingTransition(R.anim.anim_in_from_right,
-						R.anim.anim_out_to_left);
+				GeneralDeviceModel device = list.get(arg2);
+				if(device.isTelink()){
+
+				}else{
+					Intent intent = new Intent(DeviceListActivity.this,
+							DeviceInfoActivity.class);
+					intent.putExtra(MessageModel.PISBASE_KEYSTR,
+							device.getPisBase().getPISKeyString());
+					startActivityForResult(intent, REQUEST_CODE_DEVICEINFO);
+					overridePendingTransition(R.anim.anim_in_from_right,
+							R.anim.anim_out_to_left);
+				}
+
 
 //				PISManager.cacheMap.put(device.getMacAddr(), device);
 //				Intent it = new Intent(DeviceListActivity.this,
@@ -408,37 +436,44 @@ public class DeviceListActivity extends BaseActivity implements
 						mHandler.sendEmptyMessage(MSG_DEVUNBIND_SUCCESS);
 						return false;
 					}
-					pm = PISManager.getInstance();
-					mcm = pm.getMCSObject();
-					if (mSelectedDev == null || pm == null || mcm == null)
-						ToastUtils.showToast(DeviceListActivity.this,
-								R.string.devicelist_error_unknow);
-					showDeleteDialog();
+					if(mSelectedDev.isTelink()){
+						com.telink.sig.mesh.model.DeviceInfo telinkDeviceInfo = mSelectedDev.getTelinkBase().getDevice();
+						telinkKickOut(telinkDeviceInfo);
+					}else{
+						PISDevice selectPisDevice = (PISDevice) mSelectedDev.getPisBase();
+						pm = PISManager.getInstance();
+						mcm = pm.getMCSObject();
+						if (selectPisDevice == null || pm == null || mcm == null)
+							ToastUtils.showToast(DeviceListActivity.this,
+									R.string.devicelist_error_unknow);
+						showDeleteDialog();
 
-					PipaRequest resetReq = mcm.unbindDevice(mSelectedDev.getMacByte());
-					resetReq.setRetry(3);
-					resetReq.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-						@Override
-						public void onRequestStart(PipaRequest req) {
+						PipaRequest resetReq = mcm.unbindDevice(selectPisDevice.getMacByte());
+						resetReq.setRetry(3);
+						resetReq.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+							@Override
+							public void onRequestStart(PipaRequest req) {
 
+							}
+
+							@Override
+							public void onRequestResult(PipaRequest req) {
+								if(req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED)
+									mHandler.sendEmptyMessage(MSG_DEVUNBIND_SUCCESS);
+								else
+									mHandler.sendEmptyMessage(MSG_DEVUNBIND_FAILED);
+							}
+						});
+						selectPisDevice.request(resetReq);
+
+						if (selectPisDevice.getStatus() == PISBase.SERVICE_STATUS_ONLINE){
+							//reset the device
+							PipaRequest ubReq = selectPisDevice.reset(); // mcm.unbindDevice(mSelectedDev.getMacByte());
+							ubReq.setRetry(2);
+							mcm.request(ubReq);
 						}
-
-						@Override
-						public void onRequestResult(PipaRequest req) {
-							if(req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED)
-								mHandler.sendEmptyMessage(MSG_DEVUNBIND_SUCCESS);
-							else
-								mHandler.sendEmptyMessage(MSG_DEVUNBIND_FAILED);
-						}
-					});
-					mSelectedDev.request(resetReq);
-
-					if (mSelectedDev.getStatus() == PISBase.SERVICE_STATUS_ONLINE){
-						//reset the device
-						PipaRequest ubReq = mSelectedDev.reset(); // mcm.unbindDevice(mSelectedDev.getMacByte());
-						ubReq.setRetry(2);
-						mcm.request(ubReq);
 					}
+
 					break;
 				}
 				return false;
@@ -460,7 +495,28 @@ public class DeviceListActivity extends BaseActivity implements
 		});
 	}
 
+	Handler delayHandler = new Handler();
 
+	private void telinkKickOut(final com.telink.sig.mesh.model.DeviceInfo deviceInfo) {
+//        if (MeshService.getInstance().kickOut(deviceInfo))
+		list.remove(mSelectedDev);
+		adapter.notifyDataSetChanged();
+		boolean kickDirect = deviceInfo.macAddress.equals(MeshService.getInstance().getCurDeviceMac());
+		boolean kickSent = MeshService.getInstance().resetNode(deviceInfo.meshAddress, null);
+		delayHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					onKickOutFinish(deviceInfo);
+				}
+			}, 2 * 1000);
+	}
+	private void onKickOutFinish(com.telink.sig.mesh.model.DeviceInfo deviceInfo) {
+		delayHandler.removeCallbacksAndMessages(null);
+		MeshService.getInstance().removeNodeInfo(deviceInfo.meshAddress);
+		MyApplication.getInstance().getMesh().removeDeviceByMeshAddress(deviceInfo.meshAddress);
+		MyApplication.getInstance().getMesh().saveOrUpdate(getApplicationContext());
+		mHandler.sendEmptyMessage(MSG_REFRESH_IMAGEURL);
+	}
 
 	/**
 	 * 删除加载框
@@ -519,13 +575,13 @@ public class DeviceListActivity extends BaseActivity implements
 		@Override
 		public int getCount() {
 			if (null == list) {
-				list = new ArrayList<PISDevice>();
+				list = new ArrayList<GeneralDeviceModel>();
 			}
 			return list.size();
 		}
 
 		@Override
-		public PISDevice getItem(int position) {
+		public GeneralDeviceModel getItem(int position) {
 			return list.get(position);
 		}
 
@@ -534,7 +590,7 @@ public class DeviceListActivity extends BaseActivity implements
 			return position;
 		}
 
-		public void removeItem(PISDevice deviceInfo) {
+		public void removeItem(GeneralDeviceModel deviceInfo) {
 //			pm.removePISObject(deviceInfo);
 			list.remove(deviceInfo);
 			notifyDataSetChanged();
@@ -544,7 +600,7 @@ public class DeviceListActivity extends BaseActivity implements
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Holder holder = null;
-			PISDevice deviceInfo = getItem(position);
+			GeneralDeviceModel generalDeviceModel = getItem(position);
 			if (convertView == null) {
 				holder = new Holder();
 				convertView = LayoutInflater.from(DeviceListActivity.this)
@@ -554,74 +610,49 @@ public class DeviceListActivity extends BaseActivity implements
 						.findViewById(R.id.position);
 				holder.macTv = (TextView) convertView.findViewById(R.id.mac);
 				holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-				holder.deviceInfo = deviceInfo;
+				holder.deviceInfo = generalDeviceModel;
 				convertView.setTag(holder);
 			} else {
 				holder = (Holder) convertView.getTag();
 			}
-			try {
-//				if (!TextUtils.isEmpty(deviceInfo.getClassString())
-//						&& deviceInfo.getClassString().equals(
-//						ProduceModel.SWITCH_CLASSID)) {
-//					holder.nameTv.setText(R.string.home_insert);
-//				} else {
-//					holder.nameTv.setText(deviceInfo.getName());
-//				}
-				List<PISBase> srvs = deviceInfo.getPIServices();
-				if (srvs != null && srvs.size()>0){
-					holder.nameTv.setText(srvs.get(0).getName());
-				}
-				else
-					holder.nameTv.setText(deviceInfo.getName());
-				String location = SharePreferenceUtils.getLocationValue(
-						DeviceListActivity.this, "" + deviceInfo.getLocation());
-				if (TextUtils.isEmpty(location)) {
-					location = DeviceListActivity.this.getResources().getString(
+			if(generalDeviceModel.isTelink()){
+				com.telink.sig.mesh.model.DeviceInfo telinkDeviceInfo = generalDeviceModel.getTelinkBase().getDevice();
+				holder.macTv.setText(telinkDeviceInfo.macAddress);
+			}else{
+				PISDevice deviceInfo = (PISDevice) generalDeviceModel.getPisBase();
+				try {
+					List<PISBase> srvs = deviceInfo.getPIServices();
+					if (srvs != null && srvs.size()>0){
+						holder.nameTv.setText(srvs.get(0).getName());
+					}
+					else
+						holder.nameTv.setText(deviceInfo.getName());
+					String location = SharePreferenceUtils.getLocationValue(
+							DeviceListActivity.this, "" + deviceInfo.getLocation());
+					if (TextUtils.isEmpty(location)) {
+						location = DeviceListActivity.this.getResources().getString(
+								R.string.no_know);
+					}
+					holder.positionTv.setText(location);
+					String macTemp = DeviceListActivity.this.getResources().getString(
 							R.string.no_know);
-				}
-				holder.positionTv.setText(location);
-				String macTemp = DeviceListActivity.this.getResources().getString(
-						R.string.no_know);
-				if (!TextUtils.isEmpty(deviceInfo.getMacString())) {
-					macTemp = deviceInfo.getMacString().replaceAll(":", "-");
-				}
-				holder.macTv.setText(macTemp);
-				holder.icon.setImageResource(
-						ProductClassifyInfo.getProductResourceId(deviceInfo.getClassString()));
-				if (deviceInfo.getStatus() != PISBase.SERVICE_STATUS_ONLINE) {
-					setGrayOnBackgroud(holder.icon, 0);
-				} else {
-					setGrayOnBackgroud(holder.icon, 1);
-				}
+					if (!TextUtils.isEmpty(deviceInfo.getMacString())) {
+						macTemp = deviceInfo.getMacString().replaceAll(":", "-");
+					}
+					holder.macTv.setText(macTemp);
+					holder.icon.setImageResource(
+							ProductClassifyInfo.getProductResourceId(deviceInfo.getClassString()));
+					if (deviceInfo.getStatus() != PISBase.SERVICE_STATUS_ONLINE) {
+						setGrayOnBackgroud(holder.icon, 0);
+					} else {
+						setGrayOnBackgroud(holder.icon, 1);
+					}
 
-//				holder.icon.setImageResource(R.drawable.icon_device_default);
-//				if (!TextUtils.isEmpty(deviceInfo.getClassString())
-//						&& !TextUtils.isEmpty(CacheManager.imageUrls.get(deviceInfo
-//						.getClassString()))) {
-//					String path = CacheManager.imageUrls.get(deviceInfo
-//							.getClassString());
-//					if (StringUtils.isPicture(path)) {
-//						LogUtils.i("dddddd", "name = " + deviceInfo.getName()
-//								+ ",classId = " + deviceInfo.getClassString()
-//								+ ",path = " + path);
-//						try {
-//							if (bm == null) {
-//								bm = BitmapFactory.decodeResource(
-//										getResources(), R.drawable.icon_device_default);
-//								bm = PictureUtils.scalePicture(bm, bm.getWidth(), bm.getHeight());
-//							}
-//							holder.icon.setTag(path);
-//							mFinal.display(holder.icon, path, bm);
-//						} catch (Exception E) {
-//							E.printStackTrace();
-//						}
-//					} else {
-//						CacheManager.imageUrls.remove(deviceInfo.getClassString());
-//					}
-//				}
-			}catch (Exception e){
-				PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+				}catch (Exception e){
+					PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+				}
 			}
+
 			return convertView;
 		}
 
@@ -629,7 +660,8 @@ public class DeviceListActivity extends BaseActivity implements
 			TextView nameTv;
 			TextView positionTv;
 			ImageView icon;
-			PISDevice deviceInfo;
+//			PISDevice deviceInfo;
+			GeneralDeviceModel deviceInfo;
 			TextView macTv;
 		}
 	}

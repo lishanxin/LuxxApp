@@ -647,6 +647,11 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 					setVisibilityOnTip(true, R.string.home_connect_ble_tip);
 					myHandler.sendEmptyMessageDelayed(MSG_UPDATE_VIEW, 0);
 				}
+			}else if(intent.getAction().equals(TelinkApiManager.REFRESH_DEVICES)){
+				if (myHandler != null) {
+					myHandler.removeMessages(MSG_UPDATE_VIEW);
+					myHandler.sendEmptyMessageDelayed(MSG_UPDATE_VIEW, 800);
+				}
 			}
 
 		}

@@ -20,6 +20,7 @@ import com.telink.sig.mesh.event.ScanEvent;
 import com.telink.sig.mesh.light.LeBluetooth;
 import com.telink.sig.mesh.light.MeshController;
 import com.telink.sig.mesh.light.MeshService;
+import com.telink.sig.mesh.light.Opcode;
 import com.telink.sig.mesh.light.ProvisionDataGenerator;
 import com.telink.sig.mesh.light.PublicationStatusParser;
 import com.telink.sig.mesh.light.ScanParameters;
@@ -29,15 +30,19 @@ import com.telink.sig.mesh.light.parameter.KeyBindParameters;
 import com.telink.sig.mesh.light.parameter.ProvisionParameters;
 import com.telink.sig.mesh.model.DeviceBindState;
 import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.MeshCommand;
 import com.telink.sig.mesh.model.NodeInfo;
 import com.telink.sig.mesh.model.NotificationInfo;
 import com.telink.sig.mesh.model.PublishModel;
 import com.telink.sig.mesh.model.SigMeshModel;
+import com.telink.sig.mesh.model.message.HSLMessage;
+import com.telink.sig.mesh.model.message.TransitionTime;
 import com.telink.sig.mesh.model.message.config.PubSetMessage;
 import com.telink.sig.mesh.util.MeshUtils;
 import com.telink.sig.mesh.util.TelinkLog;
 import com.telink.sig.mesh.util.UnitConvert;
 
+import net.senink.piservice.pinm.PinmInterface;
 import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.telink.AppSettings;
 import net.senink.seninkapp.telink.SharedPreferenceHelper;
@@ -59,6 +64,7 @@ import java.util.Set;
  * @description:
  */
 public class TelinkApiManager implements EventListener<String> {
+    public static final String REFRESH_DEVICES = "TELINK_REFRESH_DEVICES";
     private static final String TAG = TelinkApiManager.class.getSimpleName();
     private static TelinkApiManager instance;
     private boolean isServiceCreated = false;
@@ -141,6 +147,8 @@ public class TelinkApiManager implements EventListener<String> {
                 startScanTelink();
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS:
+                Intent intent = new Intent(REFRESH_DEVICES);
+                mContext.sendBroadcast(intent);
                 if (onKeyBindSuccess((MeshEvent) event)) {
                     TelinkLog.d("set device time publish");
                     // waiting for publication status
@@ -264,11 +272,16 @@ public class TelinkApiManager implements EventListener<String> {
         parameters.setScanTimeout(20 * 1000);
         List<DeviceInfo> devices = MyApplication.getInstance().getMesh().devices;
         if (devices.size() != 0) {
-            String[] excludeMacs = new String[devices.size()];
+            List<String> excludeList = new ArrayList<>();
             for (int i = 0; i < devices.size(); i++) {
-                excludeMacs[i] = devices.get(i).macAddress;
+                if(devices.get(i).getOnOff() != -1){
+                    excludeList.add(devices.get(i).macAddress);
+                }
             }
-            parameters.setExcludeMacs(excludeMacs);
+            String[] excludeMacs = excludeList.toArray(new String[0]);
+            if(excludeList.size() > 0){
+                parameters.setExcludeMacs(excludeMacs);
+            }
         }
 //        parameters.setIncludeMacs(new String[]{"FF:FF:BB:CC:DD:53"});
         MeshService.getInstance().startScan(parameters);
@@ -456,6 +469,11 @@ public class TelinkApiManager implements EventListener<String> {
                 (int) (hslValue[1] * 65535),
                 (int) (hslValue[2] * 65535),
                 false, 0, 0, (byte) 0, null);
+    }
+
+    public void setCommonCommand(int hslEleAdr, byte[] command){
+        MeshService.getInstance().setCommonCommand(hslEleAdr,
+                false,command);
     }
 
     // 设置亮度

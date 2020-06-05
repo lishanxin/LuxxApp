@@ -189,6 +189,7 @@ public class Mesh implements Serializable, Cloneable {
     public void saveOrUpdate(Context context) {
 //        MeshStorageService.getInstance().saveFromLocalMesh(this, context);
         FileSystem.writeAsObject(context, STORAGE_NAME, this);
+
     }
 
     // 获取所有在线的设备个数
