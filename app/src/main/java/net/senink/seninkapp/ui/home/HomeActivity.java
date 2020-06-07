@@ -52,6 +52,7 @@ import net.senink.seninkapp.ActivityManager;
 import net.senink.seninkapp.BaseActivity;
 import net.senink.seninkapp.Foreground;
 
+import net.senink.seninkapp.GeneralDataManager;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
@@ -376,6 +377,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 				startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE_LOGIN);
 				return;
 			}
+			GeneralDataManager.getInstance().init(this, pm);
 		}catch (Exception e){
 			PgyCrashManager.reportCaughtException(HomeActivity.this, e);
 			startActivityForResult(new Intent(this, LoginActivity.class), REQUEST_CODE_LOGIN);
@@ -451,6 +453,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	@Override
 	protected void onResume() {
 		super.onResume();
+		getTelinkOnOff();
 		try {
 			if (!checkAllPermission()) {
 				return;
@@ -576,6 +579,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		myHandler.removeMessages(MSG_GET_BLEINFOR_FAILED);
 //		myHandler.removeMessages(MSG_GET_BLEINFOR_SUCCESS);
 		PgyCrashManager.unregister();
+		GeneralDataManager.getInstance().unInit();
 //		pm = null;
 //		System.exit(0);
 
@@ -1154,74 +1158,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 
 			//更新Fragments状态
 			ArrayList<PISBase[]> list = new ArrayList<PISBase[]>();
-			ArrayList<Integer> pistypes = new ArrayList<Integer>();
 
-			switch (curShowListType){
-				case PISManager.PISERVICE_CATEGORY_SOCKET:
-					pistypes.add(PISConstantDefine.PIS_MAJOR_ELECTRICIAN | (PISConstantDefine.PIS_ELECTRICIAN_SWITCH_POWER<<8));
-					pistypes.add(PISConstantDefine.PIS_MAJOR_ELECTRICIAN | (PISConstantDefine.PIS_ELECTRICIAN_NORMAL<<8));
-					break;
-				case PISManager.PISERVICE_CATEGORY_LIGHT:
-					pistypes.add(PISConstantDefine.PIS_MAJOR_LIGHT | (PISConstantDefine.PIS_LIGHT_COLOR<<8));
-					pistypes.add(PISConstantDefine.PIS_MAJOR_LIGHT | (PISConstantDefine.PIS_LIGHT_LIGHT<<8));
-					pistypes.add(PISConstantDefine.PIS_MAJOR_LIGHT | (PISConstantDefine.PIS_LIGHT_COLORLIGHT<<8));		// NextApp.tw
-
-					pistypes.add(PISConstantDefine.PIS_MAJOR_MULTIMEDIA | (PISConstantDefine.PIS_MULTIMEDIA_COLOR<<8));
-					break;
-				case PISManager.PISERVICE_CATEGORY_BRIDGE:
-					pistypes.add(PISConstantDefine.PIS_MAJOR_NETWORK | (PISConstantDefine.PIS_NETWORK_CSRMESH<<8));
-					break;
-				case PISManager.PISERVICE_CATEGORY_REMOTER:
-					pistypes.add(PISConstantDefine.PIS_MAJOR_REMOTER | (PISConstantDefine.PIS_REMOTER_KEY16<<8));
-					break;
-				case PISManager.PISERVICE_CATEGORY_WEAR:
-					pistypes.add(PISConstantDefine.PIS_MAJOR_WEARABLE | (PISConstantDefine.PIS_WEARABLE_INSOLE<<8));
-					break;
-			}
-
-			// TODO LEE 灯组及灯列表刷新
-			List<PISBase> srvsGroup = new ArrayList<>();
-			List<PISBase> srvsDevice = new ArrayList<>();
-			// 刷新灯组列表
-			for (Integer i : pistypes){
-				List<PISBase> devicesPis = pm.PIServicesWithQuery(i, PISManager.EnumServicesQueryBaseonType);
-				if (devicesPis != null && devicesPis.size() > 0){
-					srvsDevice.addAll(devicesPis);
-				}
-				List<PISBase> groupsPis = pm.PIGroupsWithQuery(i, PISManager.EnumGroupsQueryBaseonType);
-				if (groupsPis != null && groupsPis.size() > 0){
-					srvsGroup.addAll(groupsPis);
-				}
-			}
-
-			List<GeneralDeviceModel[]> generalDeviceModels = new ArrayList<>();
-			List<GeneralDeviceModel> generalDevice = new ArrayList<>();
-			List<GeneralDeviceModel> generalGroup = new ArrayList<>();
-			for (DeviceInfo device : MyApplication.getInstance().getMesh().devices) {
-				generalDevice.add(new GeneralDeviceModel(new TelinkBase(device)));
-			}
-			if (srvsDevice.size() > 0){
-				for (PISBase pisBase : srvsDevice) {
-					generalDevice.add(new GeneralDeviceModel(pisBase));
-				}
-			}
-
-			for (Group group : MyApplication.getInstance().getMesh().groups) {
-				generalGroup.add(new GeneralDeviceModel(new TelinkBase(group)));
-			}
-			if (srvsGroup.size() > 0){
-				for (PISBase pisBase : srvsGroup) {
-					generalGroup.add(new GeneralDeviceModel(pisBase));
-				}
-			}
-
-			if (generalDevice.size() > 0){
-				generalDeviceModels.addAll(SortUtils.sortGeneralServiceFor4(generalDevice));
-			}
-			if(generalGroup.size() > 0){
-				generalDeviceModels.addAll(SortUtils.sortGeneralServiceFor4(generalGroup));
-			}
-
+			List<GeneralDeviceModel[]> generalDeviceModels = GeneralDataManager.getInstance().getGeneralDeviceAndGroups(curShowListType);
 
 			Fragment fragment = fragments.get(curShowListType);
 			if (fragment == null){
@@ -1391,11 +1329,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 			case MeshEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN:
 				// get all device on off status when auto connect success
 //
-				AppSettings.ONLINE_STATUS_ENABLE = MeshService.getInstance().getOnlineStatus();
-				if (!AppSettings.ONLINE_STATUS_ENABLE) {
-					MeshService.getInstance().getOnOff(0xFFFF, 0, null);
-				}
-				sendTimeStatus();
+				getTelinkOnOff();
 				break;
 			case MeshController.EVENT_TYPE_SERVICE_DESTROY:
 				TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_DESTROY");
@@ -1426,6 +1360,15 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 				autoConnect(true);
 				break;
 		}
+	}
+
+	public void getTelinkOnOff(){
+		if(MeshService.getInstance() == null)return;
+		AppSettings.ONLINE_STATUS_ENABLE = MeshService.getInstance().getOnlineStatus();
+		if (!AppSettings.ONLINE_STATUS_ENABLE) {
+			MeshService.getInstance().getOnOff(0xFFFF, 0, null);
+		}
+		sendTimeStatus();
 	}
 
 

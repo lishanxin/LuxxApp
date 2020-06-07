@@ -5,6 +5,7 @@ import net.senink.piservice.pis.PISDevice;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.piservice.services.PISxinColor;
+import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.R;
 //import com.senink.seninkapp.core.PISBase;
 //import com.senink.seninkapp.core.PISConstantDefine;
@@ -27,8 +28,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.Group;
 
 import net.senink.piservice.pis.PISBase;
+import net.senink.seninkapp.telink.model.TelinkBase;
+import net.senink.seninkapp.telink.view.IconGenerator;
 import net.senink.seninkapp.ui.constant.ProductClassifyInfo;
 
 import java.util.List;
@@ -43,7 +48,8 @@ public class LightDetailAdapter extends BaseAdapter {
 
 	private LayoutInflater inflater;
 
-	private SparseArray<PISBase> list = new SparseArray<PISBase>();
+//	private SparseArray<PISBase> list = new SparseArray<PISBase>();
+	private SparseArray<GeneralDeviceModel> list =  new SparseArray<>();
 	// 灯的信息
 	private PISBase mPISBase = null;
 
@@ -58,7 +64,7 @@ public class LightDetailAdapter extends BaseAdapter {
 	}
 
 	public LightDetailAdapter(Context context,
-			SparseArray<PISBase> infors, PISBase base) {
+			SparseArray<GeneralDeviceModel> infors, PISBase base) {
 		this.inflater = LayoutInflater.from(context);
 		manager = PISManager.getInstance();
 		this.mPISBase = base;
@@ -68,8 +74,12 @@ public class LightDetailAdapter extends BaseAdapter {
 	/**
 	 * 增加信息
 	 */
-	public void addInfor(PISBase group) {
-		this.list.append(group.getShortAddr(), group);
+	public void addInfor(GeneralDeviceModel group) {
+//		if(group.isTelink() && group.getTelinkBase().isDevice()){
+//			this.list.append(group.getPisBase().getShortAddr(), group);
+//		}else{
+//			this.list.append(group.getPisBase().getShortAddr(), group);
+//		}
 	}
 
 	/**
@@ -90,9 +100,9 @@ public class LightDetailAdapter extends BaseAdapter {
 	 * 
 	 * @param infors
 	 */
-	public void setList(SparseArray<PISBase> infors) {
+	public void setList(SparseArray<GeneralDeviceModel> infors) {
 		if (null == infors) {
-			this.list = new SparseArray<PISBase>();
+			this.list = new SparseArray<>();
 		} else {
 			this.list = infors;
 		}
@@ -114,7 +124,7 @@ public class LightDetailAdapter extends BaseAdapter {
 	/**
 	 * 获取对应的PISBase对象
 	 */
-	public PISBase getGroupObject(int position){
+	public GeneralDeviceModel getGroupObject(int position){
 		if (position >= 0 & position < list.size())
 			return list.valueAt(position);
 		else
@@ -152,61 +162,76 @@ public class LightDetailAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		PISBase base = list.valueAt(position);
-		if (base != null) {
-			holder.tvName.setText(base.getName() == null ? "" : base.getName());
+		GeneralDeviceModel generalBase = list.valueAt(position);
+		if (generalBase != null) {
+			if(generalBase.isTelink()){
+				TelinkBase telinkBase = generalBase.getTelinkBase();
+				String name = "";
+				if(telinkBase.isDevice()){
+					DeviceInfo deviceInfo = telinkBase.getDevice();
+					name = deviceInfo.getDeviceName();
+					final int deviceType = deviceInfo.nodeInfo != null && deviceInfo.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
+					holder.ivIcon.setBackgroundResource(IconGenerator.getIcon(deviceType, deviceInfo.getOnOff()));
+				}else{
+					Group group = telinkBase.getGroup();
+					name = group.name;
+				}
+				holder.tvName.setText(name);
+			}else{
+				PISBase base = generalBase.getPisBase();
+				holder.tvName.setText(base.getName() == null ? "" : base.getName());
 
-			int resourceId = 0;
-			PISDevice dev;
-			StateListDrawable sld = null;
-			PISxinColor light = (PISxinColor)base;
-			if (base.ServiceType != PISBase.SERVICE_TYPE_GROUP){
-				dev = base.getDeviceObject();
-				if (dev != null) {
-					if ( base.getT1() == 0x10 && base.getT2() == 0x05 )
-					{
-						sld = ProductClassifyInfo.getProductStateListDrawable(convertView.getContext(),
-								ProductClassifyInfo.CLASSID_EUREKA_CANDLE,
-								dev.getStatus(),
-								light.getLightStatus());
+				int resourceId = 0;
+				PISDevice dev;
+				StateListDrawable sld = null;
+				PISxinColor light = (PISxinColor)base;
+				if (base.ServiceType != PISBase.SERVICE_TYPE_GROUP){
+					dev = base.getDeviceObject();
+					if (dev != null) {
+						if ( base.getT1() == 0x10 && base.getT2() == 0x05 )
+						{
+							sld = ProductClassifyInfo.getProductStateListDrawable(convertView.getContext(),
+									ProductClassifyInfo.CLASSID_EUREKA_CANDLE,
+									dev.getStatus(),
+									light.getLightStatus());
+						}
+						else
+						{
+							sld = ProductClassifyInfo.getProductStateListDrawable(convertView.getContext(),
+									dev.getClassString(),
+									dev.getStatus(),
+									light.getLightStatus());
+						}
+
+//					resourceId = ProductClassifyInfo.getThumbResourceId(dev.getClassString());
+					} else {
+						sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
+								ProductClassifyInfo.CLASSID_DEFAULT,
+								0,0);
 					}
+				}else {
+					//找到对应的Service，并利用其DEVICE找到classid
+					List<PISBase> srvs = PISManager.getInstance().PIServicesWithQuery(
+							base.getIntegerType(), PISManager.EnumServicesQueryBaseonType);
+					if(srvs == null || srvs.size() == 0)
+						dev = null;
 					else
-					{
-						sld = ProductClassifyInfo.getProductStateListDrawable(convertView.getContext(),
+						dev = srvs.get(0).getDeviceObject();
+					if (dev != null) {
+						sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
 								dev.getClassString(),
 								dev.getStatus(),
 								light.getLightStatus());
+					} else {
+						sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
+								ProductClassifyInfo.CLASSID_DEFAULT,
+								0,0);
 					}
-
-//					resourceId = ProductClassifyInfo.getThumbResourceId(dev.getClassString());
-				} else {
-					sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
-							ProductClassifyInfo.CLASSID_DEFAULT,
-							0,0);
 				}
-			}else {
-				//找到对应的Service，并利用其DEVICE找到classid
-				List<PISBase> srvs = PISManager.getInstance().PIServicesWithQuery(
-						base.getIntegerType(), PISManager.EnumServicesQueryBaseonType);
-				if(srvs == null || srvs.size() == 0)
-					dev = null;
-				else
-					dev = srvs.get(0).getDeviceObject();
-				if (dev != null) {
-					sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
-							dev.getClassString(),
-							dev.getStatus(),
-							light.getLightStatus());
-				} else {
-					sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
-							ProductClassifyInfo.CLASSID_DEFAULT,
-							0,0);
-				}
-			}
 
-			if (sld != null) {
-				try {
-					holder.ivIcon.setBackground(sld);
+				if (sld != null) {
+					try {
+						holder.ivIcon.setBackground(sld);
 //					holder.ivIcon
 //							.setBackgroundResource(resourceId);
 //					if (base.getStatus() == PISBase.SERVICE_STATUS_ONLINE)
@@ -214,10 +239,10 @@ public class LightDetailAdapter extends BaseAdapter {
 //					else
 //						setGrayOnBackgroud(holder.ivIcon.getBackground(), 0);
 
-				}catch (Exception e){
-					PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+					}catch (Exception e){
+						PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+					}
 				}
-			}
 //			if (base.getT1() == PISConstantDefine.PIS_MAJOR_LIGHT
 //					&& base.getT2() == PISConstantDefine.PIS_LIGHT_DOUBLE) {
 //				holder.ivIcon
@@ -225,6 +250,8 @@ public class LightDetailAdapter extends BaseAdapter {
 //			} else {
 //				holder.ivIcon.setImageResource(R.drawable.icon_light_group);
 //			}
+			}
+
 		}
 		return convertView;
 	}

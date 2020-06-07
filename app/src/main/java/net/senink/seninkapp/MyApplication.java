@@ -35,6 +35,7 @@ import net.senink.seninkapp.telink.CrashHandler;
 import net.senink.seninkapp.telink.FileSystem;
 import net.senink.seninkapp.telink.SharedPreferenceHelper;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.telink.model.AddressRange;
 import net.senink.seninkapp.telink.model.LogInfo;
 import net.senink.seninkapp.telink.model.Mesh;
@@ -78,7 +79,7 @@ public class MyApplication extends TelinkApplication {
         meshApplication = this;
 		company = getResources().getString(R.string.company);
 		TelinkApiManager.getInstance().init(this);
-
+		TelinkGroupApiManager.getInstance().init(this);
 
 		CrashHandler.init(this);
 		TelinkLog.d("app create");
@@ -88,7 +89,7 @@ public class MyApplication extends TelinkApplication {
 		logs = new ArrayList<>();
 		this.setLogEnable(SharedPreferenceHelper.isLogEnable(this));
 		closePErrorDialog();
-
+		GeneralDataManager.getInstance();
 	}
 	private void closePErrorDialog() {
 		if (Build.VERSION.SDK_INT <= 27) {

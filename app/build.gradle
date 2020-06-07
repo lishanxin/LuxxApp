@@ -23,7 +23,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 26
         versionCode 1200
-        versionName "1.30"
+        versionName "1.32"
         multiDexEnabled true
         buildConfigField "boolean", "Release", "false"
 
@@ -36,22 +36,22 @@ android {
 //        flavorDimensions "manifestPlaceholders"
     }
     productFlavors {
-        senink {
-            // manifestPlaceholders中写到的『str』，『package_name』不支持用大写，否则Gradle编译会不通过。
-            // 这里所设置的变量可以直接使用在『AndroidManifest.xml』中，使用方式为：${package_name}
-            // android:label="${package_name}"
-            applicationId "net.senink.xLife"
-            manifestPlaceholders = [app_name: "xLife", app_icon: "@mipmap/senink_launcher", PGYER_APPID: "daff96a981c5c715b88d44f7ba5b8d74"]
-            // 这里的参数是为了在 java 代码中使用，具体的使用方式为：context.getResources().getString(R.string.strKey);
-            buildConfigField 'String', 'Manufacturer', '"senink"'
-            buildConfigField 'Integer', 'ManufacturerID', '0'
-            buildConfigField 'String', 'AboutURL', '"http://www.touchome.net/m/aboutus.php"'
-            buildConfigField 'Integer', 'Login_icon', 'R.drawable.senink_login_icon'
-            buildConfigField 'boolean', 'isSave_visible', "false"
-            buildConfigField 'boolean', 'isSave_default', "true"
-            buildConfigField 'boolean', 'isLocal_visible', "false"
-            buildConfigField 'boolean', 'isLocal_default', "true"
-        }
+//        senink {
+//            // manifestPlaceholders中写到的『str』，『package_name』不支持用大写，否则Gradle编译会不通过。
+//            // 这里所设置的变量可以直接使用在『AndroidManifest.xml』中，使用方式为：${package_name}
+//            // android:label="${package_name}"
+//            applicationId "net.senink.xLife"
+//            manifestPlaceholders = [app_name: "xLife", app_icon: "@mipmap/senink_launcher", PGYER_APPID: "daff96a981c5c715b88d44f7ba5b8d74"]
+//            // 这里的参数是为了在 java 代码中使用，具体的使用方式为：context.getResources().getString(R.string.strKey);
+//            buildConfigField 'String', 'Manufacturer', '"senink"'
+//            buildConfigField 'Integer', 'ManufacturerID', '0'
+//            buildConfigField 'String', 'AboutURL', '"http://www.touchome.net/m/aboutus.php"'
+//            buildConfigField 'Integer', 'Login_icon', 'R.drawable.senink_login_icon'
+//            buildConfigField 'boolean', 'isSave_visible', "false"
+//            buildConfigField 'boolean', 'isSave_default', "true"
+//            buildConfigField 'boolean', 'isLocal_visible', "false"
+//            buildConfigField 'boolean', 'isLocal_default', "true"
+//        }
 //        xinColor{
 //            applicationId "net.senink.xinColor"
 //            manifestPlaceholders = [app_name:"xLife", app_icon:"@mipmap/senink_launcher", PGYER_APPID:"daff96a981c5c715b88d44f7ba5b8d74"]

@@ -105,6 +105,16 @@ public class DeviceInfo implements Serializable {
     // 是否打开relay功能 ： for test
     private boolean relayEnable = true;
 
+    private String deviceName;
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
     /**
      * 5s interval, 3 cnt
      */

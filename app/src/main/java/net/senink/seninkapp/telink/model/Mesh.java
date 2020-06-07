@@ -35,6 +35,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 public class Mesh implements Serializable, Cloneable {
 
@@ -60,6 +61,8 @@ public class Mesh implements Serializable, Cloneable {
     public int localAddress;
 
     public List<Group> groups = new ArrayList<>();
+
+    public Stack<Integer> deletedGroupAddress = new Stack<>();
 
     public List<DeviceInfo> devices = new ArrayList<>();
 

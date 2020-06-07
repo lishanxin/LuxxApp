@@ -25,6 +25,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import com.telink.sig.mesh.light.parameter.AutoConnectParameters;
 import com.telink.sig.mesh.light.parameter.FastProvisionParameters;
@@ -57,6 +58,7 @@ import com.telink.sig.mesh.model.message.config.RelaySetMessage;
 import com.telink.sig.mesh.model.message.config.SubSetMessage;
 import com.telink.sig.mesh.model.message.config.SubSigGetMessage;
 import com.telink.sig.mesh.model.message.config.SubVendorGetMessage;
+import com.telink.sig.mesh.util.Arrays;
 import com.telink.sig.mesh.util.TelinkLog;
 import com.telink.sig.mesh.util.UnitConvert;
 
@@ -458,11 +460,15 @@ public class MeshService extends Service {
                 this.appKeyIndex,
                 0,
                 adr,
-                0xE6);
+                0x0211E6);
 
         command.params = commonCommand;
         command.tag = null;
-        return this.sendMeshCommand(command);
+        MeshService.getInstance().sendOpByINI(command.toBytes());
+        String rspInfo = "sendCmd: " + Arrays.bytesToHexString(command.toBytes(), ":");
+        Log.d(TAG, rspInfo);
+//        return this.sendMeshCommand(command);
+        return true;
     }
 
     /**

@@ -30,6 +30,7 @@ import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.BuildConfig;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.R;
+import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.telink.view.IconGenerator;
 import net.senink.seninkapp.ui.activity.LightLEDDetailActivity;
@@ -255,9 +256,9 @@ public class MixLightListAdapter extends BaseAdapter {
                     Intent intent = new Intent(context,
                             LightRGBDetailActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putInt("address", device.meshAddress);
-                    bundle.putBoolean("isTelink", true);
-                    bundle.putBoolean("isGroup", false);
+                    bundle.putInt(TelinkApiManager.TELINK_ADDRESS, device.meshAddress);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, true);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, false);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                     context.overridePendingTransition(
@@ -277,9 +278,9 @@ public class MixLightListAdapter extends BaseAdapter {
                     Intent intent = new Intent(context,
                             LightRGBDetailActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putInt("address", group.address);
-                    bundle.putBoolean("isTelink", true);
-                    bundle.putBoolean("isGroup", true);
+                    bundle.putInt(TelinkApiManager.TELINK_ADDRESS, group.address);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, true);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, true);
                     intent.putExtras(bundle);
                     context.startActivity(intent);
                     context.overridePendingTransition(

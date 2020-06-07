@@ -242,9 +242,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
 			Intent intent = getIntent();
 			Bundle bundle = intent.getExtras();
 			if(bundle != null){
-			    isTelink = bundle.getBoolean("isTelink", false);
-			    isTelinkGroup = bundle.getBoolean("isGroup", false);
-			    telinkAddress = bundle.getInt("address", 0);
+			    isTelink = bundle.getBoolean(TelinkApiManager.IS_TELINK_KEY, false);
+			    isTelinkGroup = bundle.getBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, false);
+			    telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS, 0);
             }
 			String key = intent.getStringExtra("keystring");
             activityMode = intent.getIntExtra(MessageModel.ACTIVITY_MODE, 0);
@@ -334,7 +334,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
         int tempColor = Color.rgb(colors[0],colors[1],colors[2]);
         tvCurrentColor.setBackgroundColor(tempColor);
         if(isTelink){
-
+            if(mCurrentRGBWMode == LIGHT_MODE_WHITE){
+                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getYellowCommand((currentWhite/RGBConfigUtils.MAX_VALUE)));
+                return;
+            }
         }else{
             switch(mCurrentRGBWMode){
                 case LIGHT_MODE_RGB:
@@ -344,6 +347,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     colors[0] = 0;
                     colors[1] = 0;
                     colors[2] = 0;
+
                     break;
             }
         }
@@ -1030,7 +1034,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 break;
             case R.id.light_candle_layout:
                 if(isTelink){
-                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getCandleCommand());
+                    candle_onoff = !candle_onoff;
+                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getCandleCommand(candle_onoff));
                     return;
                 }
                 if (switcher.isChecked()==true)
@@ -1048,12 +1053,25 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 save();
                 break;
             case R.id.title_setting:
-                // TODO LEE 灯控设置界面
+                // TODO LEE 灯控设置界面,//绑定灯组操作
                 if (infor != null) {
                     intent = new Intent(LightRGBDetailActivity.this,
                             LightSettingActivity.class);
                     intent.putExtra(MessageModel.PISBASE_KEYSTR,
                             infor.getPISKeyString());
+
+                    startActivityForResult(intent, REQUEST_CODE_SETTING);
+                    overridePendingTransition(R.anim.anim_in_from_right,
+                            R.anim.anim_out_to_left);
+                }else if(isTelink){
+                    intent = new Intent(LightRGBDetailActivity.this,
+                            LightSettingActivity.class);
+                    intent.putExtra(MessageModel.PISBASE_KEYSTR,
+                            infor.getPISKeyString());
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
                     startActivityForResult(intent, REQUEST_CODE_SETTING);
                     overridePendingTransition(R.anim.anim_in_from_right,
                             R.anim.anim_out_to_left);
@@ -1118,10 +1136,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //                    mCurrentRGBWMode = LIGHT_MODE_WHITE;
 //                    rgbwBtn.setBackgroundResource(R.drawable.icon_btn_effect_normal_nocolor);
 //                }
-                if(isTelink){
-                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getYellowCommand());
-                    return;
-                }
+
                 currentColor = 0xf5b94d;
                 mCurrentRGBWMode = LIGHT_MODE_WHITE;
                 sendRGBOrder(false);

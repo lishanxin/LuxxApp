@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.ParcelUuid;
 import android.support.v4.graphics.ColorUtils;
+import android.util.Log;
 
 import com.telink.sig.mesh.ble.AdvertisingDevice;
 import com.telink.sig.mesh.ble.MeshScanRecord;
@@ -30,6 +31,7 @@ import com.telink.sig.mesh.light.parameter.KeyBindParameters;
 import com.telink.sig.mesh.light.parameter.ProvisionParameters;
 import com.telink.sig.mesh.model.DeviceBindState;
 import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.Group;
 import com.telink.sig.mesh.model.MeshCommand;
 import com.telink.sig.mesh.model.NodeInfo;
 import com.telink.sig.mesh.model.NotificationInfo;
@@ -38,6 +40,7 @@ import com.telink.sig.mesh.model.SigMeshModel;
 import com.telink.sig.mesh.model.message.HSLMessage;
 import com.telink.sig.mesh.model.message.TransitionTime;
 import com.telink.sig.mesh.model.message.config.PubSetMessage;
+import com.telink.sig.mesh.util.Arrays;
 import com.telink.sig.mesh.util.MeshUtils;
 import com.telink.sig.mesh.util.TelinkLog;
 import com.telink.sig.mesh.util.UnitConvert;
@@ -57,6 +60,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * @author: Li Shanxin
@@ -74,13 +78,16 @@ public class TelinkApiManager implements EventListener<String> {
     private DeviceProvisionListAdapter mListAdapter;
     private UnprovisionedDevice targetDevice;
     private ProvisioningDevice pubSettingDevice;
-
     private Handler delayedHandler = new Handler();
 
-    public static TelinkApiManager getInstance(){
-        if(instance == null){
-            synchronized (TelinkApiManager.class){
-                if(instance == null){
+    public static final String IS_TELINK_KEY = "isTelinkKey";
+    public static final String IS_TELINK_GROUP_KEY = "isTelinkGroup";
+    public static final String TELINK_ADDRESS = "TELINKADDRESS";
+
+    public static TelinkApiManager getInstance() {
+        if (instance == null) {
+            synchronized (TelinkApiManager.class) {
+                if (instance == null) {
                     instance = new TelinkApiManager();
                 }
             }
@@ -88,24 +95,24 @@ public class TelinkApiManager implements EventListener<String> {
         return instance;
     }
 
-    public void init(Context context){
+    public void init(Context context) {
         devices = new ArrayList<>();
         mesh = MyApplication.getInstance().getMesh();
         mContext = context;
     }
 
-    public List<ProvisioningDevice> getFoundDevices(){
+    public List<ProvisioningDevice> getFoundDevices() {
         return devices;
     }
 
-    public void startMeshService(Activity activity, EventListener<String> listener){
+    public void startMeshService(Activity activity, EventListener<String> listener) {
         Intent serviceIntent = new Intent(activity, MeshService.class);
         activity.startService(serviceIntent);
 
         addEventListener();
     }
 
-    public void addEventListener(){
+    public void addEventListener() {
         MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
         MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_DEVICE_ON_OFF_STATUS, this);
         MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_MESH_EMPTY, this);
@@ -203,7 +210,7 @@ public class TelinkApiManager implements EventListener<String> {
 
 
     private void onDeviceFound(AdvertisingDevice device) {
-        if(mesh == null){
+        if (mesh == null) {
             mesh = MyApplication.getInstance().getMesh();
         }
         int address = mesh.pvIndex + 1;
@@ -220,7 +227,7 @@ public class TelinkApiManager implements EventListener<String> {
 //        pvDevice.elementCnt = remote.elementCnt;
         pvDevice.failReason = null;
         devices.add(pvDevice);
-        if(mListAdapter != null) {
+        if (mListAdapter != null) {
             mListAdapter.notifyDataSetChanged();
         }
         targetDevice = new UnprovisionedDevice(device, address);
@@ -230,7 +237,7 @@ public class TelinkApiManager implements EventListener<String> {
 //        MeshService.getInstance().startProvision(parameters);
     }
 
-    public ProvisionParameters getProvisionParameters(AdvertisingDevice device, int address){
+    public ProvisionParameters getProvisionParameters(AdvertisingDevice device, int address) {
         UnprovisionedDevice targetDevice = new UnprovisionedDevice(device, address);
         byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
         ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, targetDevice);
@@ -240,10 +247,11 @@ public class TelinkApiManager implements EventListener<String> {
 
     /**
      * 绑定蓝牙
-     * @param device pvDevice.advertisingDevice
-     * @param address  pvDevice.unicastAddress
+     *
+     * @param device  pvDevice.advertisingDevice
+     * @param address pvDevice.unicastAddress
      */
-    private void bindBlue(AdvertisingDevice device, int address){
+    private void bindBlue(AdvertisingDevice device, int address) {
         targetDevice = new UnprovisionedDevice(device, address);
         byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
         ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, new UnprovisionedDevice(device, address));
@@ -258,7 +266,7 @@ public class TelinkApiManager implements EventListener<String> {
             public void onItemClick(int position) {
                 if (devices == null || position >= devices.size()) return;
                 ProvisioningDevice device = devices.get(position);
-                if(device == null) return;
+                if (device == null) return;
                 bindBlue(device.advertisingDevice, device.unicastAddress);
             }
         });
@@ -274,12 +282,12 @@ public class TelinkApiManager implements EventListener<String> {
         if (devices.size() != 0) {
             List<String> excludeList = new ArrayList<>();
             for (int i = 0; i < devices.size(); i++) {
-                if(devices.get(i).getOnOff() != -1){
+                if (devices.get(i).getOnOff() != -1) {
                     excludeList.add(devices.get(i).macAddress);
                 }
             }
             String[] excludeMacs = excludeList.toArray(new String[0]);
-            if(excludeList.size() > 0){
+            if (excludeList.size() > 0) {
                 parameters.setExcludeMacs(excludeMacs);
             }
         }
@@ -288,7 +296,7 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
     public void clearFoundDevice() {
-        if(devices != null){
+        if (devices != null) {
             devices.clear();
         }
     }
@@ -353,6 +361,7 @@ public class TelinkApiManager implements EventListener<String> {
         }
         return null;
     }
+
     private PrivateDevice getPrivateDevice(byte[] scanRecord) {
         if (scanRecord == null) return null;
         MeshScanRecord sr = MeshScanRecord.parseFromBytes(scanRecord);
@@ -457,7 +466,7 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
     // 设置设备颜色
-    public void setDevicesColor(int hslEleAdr, int[] rgbColor){
+    public void setDevicesColor(int hslEleAdr, int[] rgbColor) {
         int red = rgbColor[0];
         int green = rgbColor[1];
         int blue = rgbColor[2];
@@ -471,19 +480,20 @@ public class TelinkApiManager implements EventListener<String> {
                 false, 0, 0, (byte) 0, null);
     }
 
-    public void setCommonCommand(int hslEleAdr, byte[] command){
+    public void setCommonCommand(int hslEleAdr, byte[] command) {
         MeshService.getInstance().setCommonCommand(hslEleAdr,
-                false,command);
+                false, command);
     }
 
+
     // 设置亮度
-    public void setProgress(){
+    public void setProgress() {
 
     }
 
     // 灯具开关
-    public void setSwitchLightOnOff(int hslEleAdr, boolean isOn){
-        MeshService.getInstance().setOnOff(hslEleAdr,(byte) (isOn ? 1: 0), !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
+    public void setSwitchLightOnOff(int hslEleAdr, boolean isOn) {
+        MeshService.getInstance().setOnOff(hslEleAdr, (byte) (isOn ? 1 : 0), !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
     }
 
     private void autoConnect(boolean update) {
@@ -509,6 +519,7 @@ public class TelinkApiManager implements EventListener<String> {
 
     /**
      * 灯具连接状态刷新，刷新灯具连接状态，并进行连接后，才可进行命令操作。
+     *
      * @param context
      */
     public void autoConnectToDevices(Context context) {
@@ -519,5 +530,11 @@ public class TelinkApiManager implements EventListener<String> {
                 autoConnect(false);
             }
         }
+    }
+
+
+
+    public void saveOrUpdateMesh(Context context){
+        MyApplication.getInstance().getMesh().saveOrUpdate(context);
     }
 }
