@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.model.Group;
 
 import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pinm.PINMoBLE.MeshController;
@@ -39,6 +40,7 @@ import net.senink.seninkapp.R;
 //import com.senink.seninkapp.core.PISManager;
 //import com.senink.seninkapp.crmesh.MeshController;
 import net.senink.seninkapp.adapter.LightListAdapter;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.ui.constant.ProductClassifyInfo;
 import net.senink.seninkapp.ui.home.HomeActivity;
 import net.senink.seninkapp.ui.util.ToastUtils;
@@ -181,6 +183,8 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 						finish();
 						overridePendingTransition(R.anim.anim_in_from_left,
 								R.anim.anim_out_to_right);
+						// TODO LEE 需要把两个灯组合并成一个。
+						TelinkGroupApiManager.getInstance().addGroup(getString(R.string.default_group_name), req.object);
 					}else
 						ToastUtils.showToast(AddDevicesActivity.this, R.string.add_group_error_tip);
 

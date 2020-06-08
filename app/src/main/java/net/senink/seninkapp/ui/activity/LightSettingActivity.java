@@ -505,6 +505,11 @@ public class LightSettingActivity extends BaseActivity implements
                 break;
             case R.id.title_delete: {
                 mcm = PISManager.getInstance().getMCSObject();
+                if(isTelink){
+                    if(isTelinkGroup){
+                        TelinkGroupApiManager.getInstance().deleteGroup(telinkAddress);
+                    }
+                }else
                 if (infor.getGroupObjects().size() > 0) {
 //					ToastUtils.showToast(LightSettingActivity.this, R.string.lightgroup_delete_tips);
 

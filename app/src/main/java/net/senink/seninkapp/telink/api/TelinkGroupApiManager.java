@@ -8,6 +8,8 @@ import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
 import com.telink.sig.mesh.model.SigMeshModel;
 
+import net.senink.piservice.pis.PISBase;
+import net.senink.seninkapp.GeneralDataManager;
 import net.senink.seninkapp.MyApplication;
 
 import java.util.ArrayList;
@@ -38,15 +40,29 @@ public class TelinkGroupApiManager {
     private int opType;
 
     private static final String TAG_CMD = "TAG_CMD";
+
     // 添加组
-    public void addGroup(String groupName) {
+    public void addGroup(String groupName, PISBase object) {
         List<Group> groups = MyApplication.getInstance().getMesh().groups;
         Stack<Integer> deleted = MyApplication.getInstance().getMesh().deletedGroupAddress;
+
         Group group = new Group();
         group.address = getGroupAddress(groups, deleted);
         group.name = groupName;
+        group.PISKeyString = object.getPISKeyString();
         groups.add(group);
+
         TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
+    }
+
+    private void bindGroupToPIS(Group group) {
+        List<Group> groups = MyApplication.getInstance().getMesh().groups;
+        List<PISBase> pisGroups = GeneralDataManager.getInstance().getPISGroups();
+        for (PISBase pisGroup : pisGroups) {
+            int pisAddr = pisGroup.getShortAddr();
+            for (Group group1 : groups) {
+            }
+        }
     }
 
     // 删除组

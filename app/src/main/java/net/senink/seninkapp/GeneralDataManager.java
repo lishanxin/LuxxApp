@@ -95,6 +95,20 @@ public class GeneralDataManager {
         return generalGroup;
     }
 
+    public List<PISBase> getPISGroups(){
+        List<Integer> pistypes = getPisTypes(lastCurShowListType);
+        // TODO LEE 灯组及灯列表刷新
+        List<PISBase> srvsGroup = new ArrayList<>();
+        // 刷新灯组列表
+        for (Integer i : pistypes){
+            List<PISBase> groupsPis = pm.PIGroupsWithQuery(i, PISManager.EnumGroupsQueryBaseonType);
+            if (groupsPis != null && groupsPis.size() > 0){
+                srvsGroup.addAll(groupsPis);
+            }
+        }
+        return srvsGroup;
+    }
+
     public List<GeneralDeviceModel> getGeneralDevice(int curShowListType){
 //更新ProductClassifyView状态
         if(pm == null ) return null;
