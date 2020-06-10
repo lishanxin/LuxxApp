@@ -103,6 +103,7 @@ import net.senink.piservice.pinm.PINMoBLE.PinmOverBLE;
 import net.senink.piservice.pinm.PinmInterface;
 import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISManager;
+import net.senink.seninkapp.util.CrashHandler;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -341,7 +342,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		EventBus.getDefault().register(this);
 		/**初始化蒲公英SDK*/
 		pgyerInit();
-
+		CrashHandler.getInstance().init(this);
 		try {
 			registerAllReceiver();
 		}catch (Exception e){
@@ -604,6 +605,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 
 					try {
 						pm = PISManager.getInstance(HomeActivity.this);
+						GeneralDataManager.getInstance().init(this, pm);
 						if (pm == null) {
 							throw new NetworkErrorException("network invaild");
 						}
@@ -792,6 +794,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 						return;
 					int newStatus = bundle.getInt(PinmInterface.PINM_CONNECT_ExtraStatus);
 					pm = PISManager.getInstance();
+					GeneralDataManager.getInstance().init(HomeActivity.this, pm);
 					boolean allConnected = true;
 					for (int i = 0; i < pm.getPinmCount(); i++){
 						PinmInterface pi = pm.getPinmObject(i);
@@ -1155,7 +1158,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 
 		try{
 			//更新ProductClassifyView状态
-
+			// TODO LEE 等列表获取
 			//更新Fragments状态
 			ArrayList<PISBase[]> list = new ArrayList<PISBase[]>();
 

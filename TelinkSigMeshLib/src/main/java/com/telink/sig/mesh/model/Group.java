@@ -22,6 +22,8 @@
 package com.telink.sig.mesh.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kee on 2017/8/18.
@@ -31,6 +33,9 @@ public class Group implements Serializable {
     public enum BOUND_TYPE implements Serializable{
         NONE, PIS_GROUP, TELINK_GROUP
     }
+    public boolean isOn = false;
+    // telink灯具的meshAddress
+    public List<Integer> subList = new ArrayList<>();
     public String name;
     public int address;
     public boolean selected = false;

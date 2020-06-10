@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.CommonMeshCommand;
 import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.Group;
 import com.telink.sig.mesh.model.SigMeshModel;
 
 import net.senink.piservice.PISConstantDefine;
@@ -169,13 +170,14 @@ public class LightRGBDetailActivity extends BaseActivity implements
     private boolean isTelink = false;
     private boolean isTelinkGroup = false;
     private int telinkAddress = 0;
+    private Group telinkGroup;
     private DeviceInfo deviceInfo;
-    private SparseBooleanArray lumEleInfo;
-    private SparseBooleanArray tempEleInfo;
+//    private SparseBooleanArray lumEleInfo;
+//    private SparseBooleanArray tempEleInfo;
     private int hslEleAdr;
-    private List<Integer> onOffEleAdrList;
+//    private List<Integer> onOffEleAdrList;
 
-
+    private Group.BOUND_TYPE bound_type = Group.BOUND_TYPE.NONE;
 
 	@SuppressLint("HandlerLeak")
 	protected Handler mHandler = new Handler() {
@@ -228,7 +230,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
 		setData();
 		setView();
 		setListener();
-		if(isTelink){
+		if(isTelinkGroup){
+		    // TODO LEE 灯组的初始化
+        }else if(isTelink){
             getNodeStatus();
             initTelinkView();
         }
@@ -241,13 +245,32 @@ public class LightRGBDetailActivity extends BaseActivity implements
 		if (getIntent() != null) {
 			Intent intent = getIntent();
 			Bundle bundle = intent.getExtras();
-			if(bundle != null){
+            // TODO LEE 新增sdk
+            if(bundle != null){
 			    isTelink = bundle.getBoolean(TelinkApiManager.IS_TELINK_KEY, false);
 			    isTelinkGroup = bundle.getBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, false);
 			    telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS, 0);
+                if(!isTelinkGroup && isTelink){
+                    deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+                    hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
+                }else if(isTelinkGroup){
+                    telinkGroup = MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress);
+                    if(telinkGroup != null){
+                        bound_type = telinkGroup.type;
+                        if(bound_type == Group.BOUND_TYPE.PIS_GROUP){
+                            key = telinkGroup.PISKeyString;
+                            isTelink = false;
+                            isTelinkGroup = false;
+                        }else if(bound_type == Group.BOUND_TYPE.TELINK_GROUP){
+                            hslEleAdr = telinkGroup.address;
+                        }
+                    }
+                }
             }
+
 			String key = intent.getStringExtra("keystring");
             activityMode = intent.getIntExtra(MessageModel.ACTIVITY_MODE, 0);
+
 			if (key != null){
 				infor = (PISxinColor) manager.getPISObject(key);
 
@@ -286,14 +309,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     }
                 }
 			}
-			// TODO LEE 新增sdk
-			if(isTelink){
-                deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
-                lumEleInfo = deviceInfo.getLumEleInfo();
-                tempEleInfo = deviceInfo.getTempEleInfo();
-                hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
-                onOffEleAdrList = deviceInfo.getOnOffEleAdrList();
-            }
+
 
 		}
 	}
@@ -1059,19 +1075,17 @@ public class LightRGBDetailActivity extends BaseActivity implements
                             LightSettingActivity.class);
                     intent.putExtra(MessageModel.PISBASE_KEYSTR,
                             infor.getPISKeyString());
-
                     startActivityForResult(intent, REQUEST_CODE_SETTING);
                     overridePendingTransition(R.anim.anim_in_from_right,
                             R.anim.anim_out_to_left);
                 }else if(isTelink){
                     intent = new Intent(LightRGBDetailActivity.this,
                             LightSettingActivity.class);
-                    intent.putExtra(MessageModel.PISBASE_KEYSTR,
-                            infor.getPISKeyString());
                     Bundle bundle = new Bundle();
                     bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
                     bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
                     bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
+                    intent.putExtras(bundle);
                     startActivityForResult(intent, REQUEST_CODE_SETTING);
                     overridePendingTransition(R.anim.anim_in_from_right,
                             R.anim.anim_out_to_left);
@@ -1229,6 +1243,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
             }
 //            setScenes();
         } else if (requestCode == REQUEST_CODE_SETTING){
+            if(data == null) return;
             int result = data.getIntExtra("result", 0);
             if (result == 3) {//该组已经被删除
                 finish();

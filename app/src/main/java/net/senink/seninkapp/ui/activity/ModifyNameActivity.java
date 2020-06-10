@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.Group;
 
 import net.senink.piservice.http.HttpRequest;
 import net.senink.piservice.http.HttpUserInfo;
@@ -30,6 +32,7 @@ import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.piservice.struct.PIServiceInfo;
 import net.senink.seninkapp.BaseActivity;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 //import com.senink.seninkapp.core.PISBase;
 //import com.senink.seninkapp.core.PISConstantDefine;
@@ -41,6 +44,7 @@ import net.senink.seninkapp.R;
 //import com.senink.seninkapp.core.struct.PipaServiceInfo;
 //import com.senink.seninkapp.crmesh.MeshController;
 //import com.senink.seninkapp.crmesh.MeshController.onFeedbackListener;
+import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.ui.constant.MessageModel;
 
 /**
@@ -74,6 +78,14 @@ public class ModifyNameActivity extends BaseActivity implements OnClickListener{
 	private PISManager manager;
 	private PISMCSManager mcm;
 	private MeshController controller;
+
+	private boolean isTelink = false;
+	private boolean isTelinkGroup = false;
+	private int telinkAddress = 0;
+
+	private DeviceInfo telinkDeviceinfo;
+	private Group telinkGroup;
+	private Group.BOUND_TYPE bound_type = Group.BOUND_TYPE.NONE;
 	private MeshController.onFeedbackListener listener = new MeshController.onFeedbackListener() {
 		
 		@Override
@@ -125,8 +137,26 @@ public class ModifyNameActivity extends BaseActivity implements OnClickListener{
 	 * 设置传递数据
 	 */
 	private void setData() {
+
 		try{
-			String key = getIntent().getStringExtra(MessageModel.PISBASE_KEYSTR);
+			Bundle bundle = getIntent().getExtras();
+			isTelink = bundle.getBoolean(TelinkApiManager.IS_TELINK_KEY);
+			isTelinkGroup = bundle.getBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY);
+			telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS);
+			if(!isTelinkGroup && isTelink){
+				telinkDeviceinfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+			}else if(isTelinkGroup){
+				telinkGroup = MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress);
+			}
+			String key = null;
+			if(telinkGroup != null){
+				bound_type = telinkGroup.type;
+				if(bound_type != Group.BOUND_TYPE.TELINK_GROUP){
+					key = telinkGroup.PISKeyString;
+				}
+			}else {
+				key = getIntent().getStringExtra(MessageModel.PISBASE_KEYSTR);
+			}
 			if (key == null)
 				return;
 			infor = PISManager.getInstance().getPISObject(key);
@@ -220,58 +250,77 @@ public class ModifyNameActivity extends BaseActivity implements OnClickListener{
 			hideSoftKeyBoard(this,etName);
 			String text = etName.getText().toString();
 			if (!TextUtils.isEmpty(text) && text.getBytes().length <= 16) {
-				if (infor.ServiceType == PISBase.SERVICE_TYPE_GROUP){
+				if(telinkDeviceinfo != null){
+					DeviceInfo deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMacAddress(telinkDeviceinfo.macAddress);
+					deviceInfo.setDeviceName(text);
+					MyApplication.getInstance().getMesh().saveOrUpdate(this);
+					setResult(RESULT_OK);
+					backBtn.performClick();
+					return;
+				}
+				if(telinkGroup != null){
+					Group group = MyApplication.getInstance().getMesh().getGroupByAddress(telinkGroup.address);
+					group.name = text;
+					MyApplication.getInstance().getMesh().saveOrUpdate(this);
+					setResult(RESULT_OK);
+					backBtn.performClick();
+					return;
+				}
+
+				if(infor != null){
+					if (infor.ServiceType == PISBase.SERVICE_TYPE_GROUP){
 //					HttpUserInfo httpuInfo = new HttpUserInfo();
-					PISMCSManager manager = PISManager.getInstance().getMCSObject();
-					PipaRequest req = manager.modifyGroup(
-							infor.getGroupId(), text, (byte)(infor.getT1()&0xFF), (byte)(infor.getT2()&0xFF));
-					req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-						@Override
-						public void onRequestStart(PipaRequest req) {
-							showLoadingDialog();
-						}
-
-						@Override
-						public void onRequestResult(PipaRequest req) {
-							hideLoadingDialog();
-							if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED){
-								setResult(RESULT_OK);
-								backBtn.performClick();
-							}else{
-								Toast.makeText(ModifyNameActivity.this,
-										R.string.modifyname_modify_failed, Toast.LENGTH_SHORT)
-										.show();
+						PISMCSManager manager = PISManager.getInstance().getMCSObject();
+						PipaRequest req = manager.modifyGroup(
+								infor.getGroupId(), text, (byte)(infor.getT1()&0xFF), (byte)(infor.getT2()&0xFF));
+						req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+							@Override
+							public void onRequestStart(PipaRequest req) {
+								showLoadingDialog();
 							}
-						}
-					});
-					manager.request(req);
-				}else{
-					PIServiceInfo srvInfo = new PIServiceInfo((byte)(infor.getT1()&0xFF),
-							(byte)(infor.getT2()&0xFF), infor.getServiceId());
-					srvInfo.Location = (byte)(infor.getLocation() & 0xFF);
-					srvInfo.Name = text;
-					PipaRequest req = infor.commitPISInfo(srvInfo);
-					req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-						@Override
-						public void onRequestStart(PipaRequest req) {
-							showLoadingDialog();
-						}
 
-						@Override
-						public void onRequestResult(PipaRequest req) {
-							hideLoadingDialog();
-							if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED){
-								setResult(RESULT_OK);
-								backBtn.performClick();
-							}else{
-								Toast.makeText(ModifyNameActivity.this,
-										R.string.modifyname_modify_failed, Toast.LENGTH_SHORT)
-										.show();
+							@Override
+							public void onRequestResult(PipaRequest req) {
+								hideLoadingDialog();
+								if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED){
+									setResult(RESULT_OK);
+									backBtn.performClick();
+								}else{
+									Toast.makeText(ModifyNameActivity.this,
+											R.string.modifyname_modify_failed, Toast.LENGTH_SHORT)
+											.show();
+								}
 							}
-						}
-					});
-					infor.request(req);
+						});
+						manager.request(req);
+					}else{
+						PIServiceInfo srvInfo = new PIServiceInfo((byte)(infor.getT1()&0xFF),
+								(byte)(infor.getT2()&0xFF), infor.getServiceId());
+						srvInfo.Location = (byte)(infor.getLocation() & 0xFF);
+						srvInfo.Name = text;
+						PipaRequest req = infor.commitPISInfo(srvInfo);
+						req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+							@Override
+							public void onRequestStart(PipaRequest req) {
+								showLoadingDialog();
+							}
 
+							@Override
+							public void onRequestResult(PipaRequest req) {
+								hideLoadingDialog();
+								if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED){
+									setResult(RESULT_OK);
+									backBtn.performClick();
+								}else{
+									Toast.makeText(ModifyNameActivity.this,
+											R.string.modifyname_modify_failed, Toast.LENGTH_SHORT)
+											.show();
+								}
+							}
+						});
+						infor.request(req);
+
+					}
 				}
 //				if (isGroup) {
 //					if (mcm != null && group != null) {

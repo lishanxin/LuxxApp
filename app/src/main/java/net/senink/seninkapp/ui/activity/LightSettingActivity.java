@@ -33,8 +33,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
+import com.telink.sig.mesh.model.SigMeshModel;
 
 import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pinm.PINMoBLE.MeshController;
@@ -46,6 +48,7 @@ import net.senink.piservice.services.PISXinLight;
 import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.BaseActivity;
 import net.senink.seninkapp.GeneralDeviceModel;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.adapter.LightDetailAdapter;
 import net.senink.seninkapp.adapter.ScenesAdapter;
@@ -158,7 +161,10 @@ public class LightSettingActivity extends BaseActivity implements
     private boolean isTelink = false;
     private boolean isTelinkGroup = false;
     private int telinkAddress = 0;
-
+    private Group telinkGroup;
+    private DeviceInfo deviceInfo;
+    private int hslEleAdr;
+    private Group.BOUND_TYPE bound_type = Group.BOUND_TYPE.NONE;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -223,67 +229,89 @@ public class LightSettingActivity extends BaseActivity implements
      * 获取传值
      */
     private void setData() {
-        if (getIntent() != null
-                && getIntent().getStringExtra(MessageModel.PISBASE_KEYSTR) != null) {
-            String key = getIntent()
-                    .getStringExtra(MessageModel.PISBASE_KEYSTR);
-            infor = manager.getPISObject(key);
-
-            try {
-                if (infor != null) {
-                    //更新组信息
-                    PipaRequest req = infor.updateGroupInfo();
-                    req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-                        @Override
-                        public void onRequestStart(PipaRequest req) {
-
-                        }
-
-                        @Override
-                        public void onRequestResult(PipaRequest req) {
-                            if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED)
-                                updateGroupInfo();
-                        }
-                    });
-                    infor.request(req);
-                } else {
-                    finish();
-                }
-            } catch (Exception e) {
-                PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
-            }
-        }
 
         Intent intent = getIntent();
-        if (intent != null) {
+        if(intent != null){
+            String pisKey = intent.getStringExtra(MessageModel.PISBASE_KEYSTR);
             Bundle bundle = intent.getExtras();
-            if (bundle != null) {
-                isTelink = bundle.getBoolean(TelinkApiManager.IS_TELINK_KEY);
-                isTelinkGroup = bundle.getBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY);
-                telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS);
+            if(bundle != null){
+                isTelink = bundle.getBoolean(TelinkApiManager.IS_TELINK_KEY, false);
+                isTelinkGroup = bundle.getBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, false);
+                telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS, 0);
+                telinkGroup = isTelinkGroup ? MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress):null;
+            }
+            if(isTelinkGroup && telinkGroup != null){
+                bound_type = telinkGroup.type;
+                hslEleAdr = telinkGroup.address;
+                if(bound_type != Group.BOUND_TYPE.TELINK_GROUP){
+                    pisKey = telinkGroup.PISKeyString;
+                }
+            }else if(isTelink){
+                deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+                hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
+            }
+
+            if(pisKey != null){
+                infor = manager.getPISObject(pisKey);
+
+                try {
+                    if (infor != null) {
+                        //更新组信息
+                        PipaRequest req = infor.updateGroupInfo();
+                        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                            @Override
+                            public void onRequestStart(PipaRequest req) {
+
+                            }
+
+                            @Override
+                            public void onRequestResult(PipaRequest req) {
+                                if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED)
+                                    updateGroupInfo();
+                            }
+                        });
+                        infor.request(req);
+                    } else {
+                        finish();
+                    }
+                } catch (Exception e) {
+                    PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+                }
             }
         }
+
 
     }
 
     private void updateLightInfo() {
         tvTitle.setText(R.string.setting);
-        nameBtn.setText(infor.getName());
+        if(infor != null){
+            nameBtn.setText(infor.getName());
 //		setLocation(infor.getLocation());
-        try {
-            if (infor instanceof PISXinLight) {
-                needRequest = false;
-                switcher.setChecked(((PISXinLight) infor).getLightStatus() == PISXinLight.XINLIGHT_STATUS_ON);
-                needRequest = true;
+            try {
+                if (infor instanceof PISXinLight) {
+                    needRequest = false;
+                    switcher.setChecked(((PISXinLight) infor).getLightStatus() == PISXinLight.XINLIGHT_STATUS_ON);
+                    needRequest = true;
+                }
+                if (infor instanceof PISxinColor) {
+                    needRequest = false;
+                    switcher.setChecked(((PISxinColor) infor).getLightStatus() == PISxinColor.XINCOLOR_STATUS_ON);
+                    needRequest = true;
+                }
+            } catch (Exception e) {
+                PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
             }
-            if (infor instanceof PISxinColor) {
-                needRequest = false;
-                switcher.setChecked(((PISxinColor) infor).getLightStatus() == PISxinColor.XINCOLOR_STATUS_ON);
-                needRequest = true;
+        }else{
+            if(telinkGroup != null){
+                nameBtn.setText(telinkGroup.name);
+            }else{
+                if(deviceInfo != null){
+                    nameBtn.setText(deviceInfo.getDeviceName());
+                }
             }
-        } catch (Exception e) {
-            PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
         }
+
     }
 
     private void updateGroupInfo() {
@@ -305,16 +333,8 @@ public class LightSettingActivity extends BaseActivity implements
 					}
                 }
             }else {
-				List<PISBase> gObjs = infor.getGroupObjects();
-				if (gObjs == null || gObjs.size() == 0){
-					return;
-				}
-				for (int i = 0; i < gObjs.size(); i++) {
-					generalDeviceModels.put(i, new GeneralDeviceModel(gObjs.get(i)));
-				}
+                addPISDevice(generalDeviceModels);
 			}
-
-
 
             adapter.setList(generalDeviceModels);
             listView.setAdapter(adapter);
@@ -322,6 +342,16 @@ public class LightSettingActivity extends BaseActivity implements
             PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    private void addPISDevice(SparseArray<GeneralDeviceModel> generalDeviceModels){
+        List<PISBase> gObjs = infor.getGroupObjects();
+        if (gObjs == null || gObjs.size() == 0){
+            return;
+        }
+        for (int i = 0; i < gObjs.size(); i++) {
+            generalDeviceModels.put(i, new GeneralDeviceModel(gObjs.get(i)));
+        }
     }
 
     /**
@@ -369,6 +399,14 @@ public class LightSettingActivity extends BaseActivity implements
                     return;
 //				if (!needRequest)
 //					return;
+                if(isTelinkGroup){
+                    TelinkApiManager.getInstance().setSwitchLightOnOff(telinkAddress, isChecked);
+                    return;
+                }
+                if(isTelink){
+                    TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
+                    return;
+                }
                 PipaRequest req = null;
                 if (infor instanceof PISXinLight) {
                     req = ((PISXinLight) infor).commitLightStatus(isChecked);
@@ -433,9 +471,9 @@ public class LightSettingActivity extends BaseActivity implements
         deleteBtn = (TextView) findViewById(R.id.title_delete);
         if (isTelink) {
             if (isTelinkGroup) {
-                deleteBtn.setVisibility(View.GONE);
-            } else {
                 deleteBtn.setVisibility(View.VISIBLE);
+            } else {
+                deleteBtn.setVisibility(View.GONE);
             }
         } else {
             if (infor.ServiceType != PISBase.SERVICE_TYPE_GROUP) {
@@ -479,131 +517,135 @@ public class LightSettingActivity extends BaseActivity implements
                 backActivity(1);
                 break;
             case R.id.lightsetting_edit:
-            case R.id.lightsetting_groupinfor_layout:
-//			isBack = true;
+            case R.id.lightsetting_groupinfor_layout:{
+                //			isBack = true;
                 intent = new Intent(LightSettingActivity.this,
                         LightEditActivity.class);
-                intent.putExtra(MessageModel.PISBASE_KEYSTR,
-                        infor.getPISKeyString());
+                Bundle bundle = new Bundle();
+                bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
+                bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
+                bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
+                intent.putExtras(bundle);
+                if(infor != null && !isTelinkGroup){
+                    intent.putExtra(MessageModel.PISBASE_KEYSTR,
+                            infor.getPISKeyString());
+                }
                 startActivityForResult(intent, REQUEST_GROUP_ADD);
 
 //			LightSettingActivity.this.startActivity(intent);
                 overridePendingTransition(R.anim.anim_in_from_right,
                         R.anim.anim_out_to_left);
+            }
                 break;
             // 设置灯的名称
             case R.id.lightsetting_lightname:
-            case R.id.lightsetting_name_layout:
+            case R.id.lightsetting_name_layout:{
                 isChangedOnModifyName = true;
+                Bundle bundle = new Bundle();
                 intent = new Intent(LightSettingActivity.this,
                         ModifyNameActivity.class);
-                intent.putExtra(MessageModel.PISBASE_KEYSTR,
-                        infor.getPISKeyString());
+                bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
+                bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
+                bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
+                intent.putExtras(bundle);
+                if(infor != null){
+                    intent.putExtra(MessageModel.PISBASE_KEYSTR,
+                            infor.getPISKeyString());
+                }
                 startActivityForResult(intent, REQUEST_NAME_MOD);
                 overridePendingTransition(R.anim.anim_in_from_right,
                         R.anim.anim_out_to_left);
+            }
                 break;
             case R.id.title_delete: {
                 mcm = PISManager.getInstance().getMCSObject();
                 if(isTelink){
-                    if(isTelinkGroup){
-                        TelinkGroupApiManager.getInstance().deleteGroup(telinkAddress);
+                    if(isTelinkGroup && telinkGroup != null){
+                        TelinkGroupApiManager.getInstance().deleteGroup(telinkGroup.address);
+                        deletePISGroup(manager.getPISObject(telinkGroup.PISKeyString));
+                        return;
                     }
-                }else
-                if (infor.getGroupObjects().size() > 0) {
+                }
+                if(infor != null){
+                    if (infor.getGroupObjects().size() > 0) {
 //					ToastUtils.showToast(LightSettingActivity.this, R.string.lightgroup_delete_tips);
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LightSettingActivity.this);
-                    builder.setTitle(R.string.lightgroup_notice)
-                            .setIcon(R.drawable.luxx_login_icon)
-                            .setMessage(R.string.lightgroup_delete_tips)
-                            .setPositiveButton(R.string.lightgroup_yes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    PipaRequest req = mcm.removeGroup(infor.getGroupId());
-                                    req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-                                        @Override
-                                        public void onRequestStart(PipaRequest req) {
-                                            showLoadingDialog();
-                                        }
-
-                                        @Override
-                                        public void onRequestResult(PipaRequest req) {
-                                            mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
-                                            hideLoadingDialog();
-                                            if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED) {
-                                                backActivity(3);
-                                            } else {
-                                                mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
-                                                mHandler.sendEmptyMessage(MSG_DELETE_GROUP_FAILED);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(LightSettingActivity.this);
+                        builder.setTitle(R.string.lightgroup_notice)
+                                .setIcon(R.drawable.luxx_login_icon)
+                                .setMessage(R.string.lightgroup_delete_tips)
+                                .setPositiveButton(R.string.lightgroup_yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        PipaRequest req = mcm.removeGroup(infor.getGroupId());
+                                        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                                            @Override
+                                            public void onRequestStart(PipaRequest req) {
+                                                showLoadingDialog();
                                             }
-                                        }
-                                    });
-                                    mcm.request(req);
-                                    mHandler.sendEmptyMessageDelayed(MSG_DELETE_GROUP_FAILED,
-                                            Constant.TIMEOUT_TIME);
-                                }
-                            })
-                            .setNegativeButton(R.string.lightgroup_no, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                } else {
-                    PipaRequest req = mcm.removeGroup(infor.getGroupId());
-                    req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-                        @Override
-                        public void onRequestStart(PipaRequest req) {
-                            showLoadingDialog();
-                        }
 
-                        @Override
-                        public void onRequestResult(PipaRequest req) {
-                            mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
-                            hideLoadingDialog();
-                            if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED) {
-                                backActivity(3);
-                            } else {
-                                mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
-                                mHandler.sendEmptyMessage(MSG_DELETE_GROUP_FAILED);
-                            }
-                        }
-                    });
-                    mcm.request(req);
-                    mHandler.sendEmptyMessageDelayed(MSG_DELETE_GROUP_FAILED,
-                            Constant.TIMEOUT_TIME);
+                                            @Override
+                                            public void onRequestResult(PipaRequest req) {
+                                                mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
+                                                hideLoadingDialog();
+                                                if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED) {
+                                                    backActivity(3);
+                                                } else {
+                                                    mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
+                                                    mHandler.sendEmptyMessage(MSG_DELETE_GROUP_FAILED);
+                                                }
+                                            }
+                                        });
+                                        mcm.request(req);
+                                        mHandler.sendEmptyMessageDelayed(MSG_DELETE_GROUP_FAILED,
+                                                Constant.TIMEOUT_TIME);
+                                    }
+                                })
+                                .setNegativeButton(R.string.lightgroup_no, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    } else {
+                        deletePISGroup(infor);
+                    }
                 }
+
             }
             break;
             default:
                 break;
         }
     }
-//
-//	private void refreshScenes() {
-//		List<SceneBean> list = null;
-//		if (infor instanceof PISXinLight) {
-//			list = cacheManger.getLEDScenes();
-//		}
-//		if (infor instanceof PISxinColor){
-//			list = cacheManger.getRGBScenes();
-//		}
-//		if (list != null && list.size() > 0) {
-//			int size = list.size();
-//			for (int i = 0; i < size; i++) {
-//				SceneBean bean = list.get(i);
-//				bean.used = i;
-//				mSceneDao.upgradeScene(bean);
-//			}
-//			cacheManger.setScenes(mSceneDao.getAllScenes(SharePreferenceUtils
-//					.getInstance(this).getCurrentUser()));
-//		}
-//	}
 
+    private void deletePISGroup(PISBase infor){
+        PipaRequest req = mcm.removeGroup(infor.getGroupId());
+        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+            @Override
+            public void onRequestStart(PipaRequest req) {
+                showLoadingDialog();
+            }
+
+            @Override
+            public void onRequestResult(PipaRequest req) {
+                mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
+                hideLoadingDialog();
+                if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED) {
+                    backActivity(3);
+                } else {
+                    mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
+                    mHandler.sendEmptyMessage(MSG_DELETE_GROUP_FAILED);
+                }
+            }
+        });
+        mcm.request(req);
+        mHandler.sendEmptyMessageDelayed(MSG_DELETE_GROUP_FAILED,
+                Constant.TIMEOUT_TIME);
+    }
     /**
      * 设置设备列表的监听器
      */
@@ -632,38 +674,50 @@ public class LightSettingActivity extends BaseActivity implements
                     case 0:
                         GeneralDeviceModel generalDeviceModel = adapter.getGroupObject(position);
                         if (generalDeviceModel.isTelink()) {
-                            // todo lee 删除设备操作
+                            // todo lee 解绑设备操作
+                            TelinkBase telinkBase = generalDeviceModel.getTelinkBase();
+                            if(telinkBase.isDevice()){
+                                if(isTelinkGroup && telinkGroup != null){
+                                    TelinkGroupApiManager.getInstance().deleteDeviceFromGroup(telinkGroup.address, telinkBase.getDevice().meshAddress);
+                                }
+                            }else{
+                                if(deviceInfo != null){
+                                    TelinkGroupApiManager.getInstance().deleteDeviceFromGroup(telinkBase.getGroup().address, deviceInfo.meshAddress);
+                                }
+                            }
                         } else {
                             PISBase obj = generalDeviceModel.getPisBase();
                             try {
                                 PipaRequest req;
                                 PISBase pis;
-                                if (obj.ServiceType == PISBase.SERVICE_TYPE_GROUP) {
-                                    pis = infor;
-                                    req = pis.removeFromGroup(obj);
-                                } else {
-                                    pis = obj;
-                                    req = pis.removeFromGroup(infor);
+                                if(infor != null){
+                                    if (obj.ServiceType == PISBase.SERVICE_TYPE_GROUP) {
+                                        pis = infor;
+                                        req = pis.removeFromGroup(obj);
+                                    } else {
+                                        pis = obj;
+                                        req = pis.removeFromGroup(infor);
+                                    }
+                                    req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                                        @Override
+                                        public void onRequestStart(PipaRequest req) {
+                                            showLoadingDialog();
+                                        }
+
+                                        @Override
+                                        public void onRequestResult(PipaRequest req) {
+                                            hideLoadingDialog();
+                                            if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED)
+                                                adapter.removeView(position);
+                                            else
+                                                ToastUtils.showToast(LightSettingActivity.this, R.string.lightgroup_delete_group_failed);
+                                            updateGroupInfo();
+
+                                        }
+                                    });
+                                    req.NeedAck = true;
+                                    pis.request(req);
                                 }
-                                req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-                                    @Override
-                                    public void onRequestStart(PipaRequest req) {
-                                        showLoadingDialog();
-                                    }
-
-                                    @Override
-                                    public void onRequestResult(PipaRequest req) {
-                                        hideLoadingDialog();
-                                        if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED)
-                                            adapter.removeView(position);
-                                        else
-                                            ToastUtils.showToast(LightSettingActivity.this, R.string.lightgroup_delete_group_failed);
-                                        updateGroupInfo();
-
-                                    }
-                                });
-                                req.NeedAck = true;
-                                pis.request(req);
                             } catch (Exception e) {
                                 PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
                                 ToastUtils.showToast(LightSettingActivity.this, R.string.lightgroup_delete_group_failed);
@@ -728,6 +782,8 @@ public class LightSettingActivity extends BaseActivity implements
 //				mSceneAdapter.notifyDataSetChanged();
                 break;
             case REQUEST_GROUP_ADD:
+                if(infor == null) return;
+                // TODO LEE 添加完成后的回调
                 if (infor.ServiceType == PISBase.SERVICE_TYPE_GROUP) {
                     List<PISBase> srvs = infor.getGroupObjects();
                     if (srvs.size() > 0)    // NextApp.tw

@@ -3,10 +3,17 @@ package net.senink.seninkapp.telink.api;
 import android.content.Context;
 import android.util.Log;
 
+import com.telink.sig.mesh.event.CommandEvent;
+import com.telink.sig.mesh.event.Event;
+import com.telink.sig.mesh.event.EventListener;
+import com.telink.sig.mesh.event.MeshEvent;
+import com.telink.sig.mesh.event.NotificationEvent;
 import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
+import com.telink.sig.mesh.model.MeshCommand;
 import com.telink.sig.mesh.model.SigMeshModel;
+import com.telink.sig.mesh.util.TelinkLog;
 
 import net.senink.piservice.pis.PISBase;
 import net.senink.seninkapp.GeneralDataManager;
@@ -16,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-public class TelinkGroupApiManager {
+public class TelinkGroupApiManager implements EventListener<String> {
     private static final String TAG = TelinkGroupApiManager.class.getSimpleName();
     private static TelinkGroupApiManager instance;
     private Context mContext;
@@ -29,6 +36,12 @@ public class TelinkGroupApiManager {
             }
         }
         return instance;
+    }
+    private TelinkGroupApiManager(){
+        MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_SUB_OP_CONFIRM, this);
+        MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_CTL_STATUS_NOTIFY, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
+        MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_COMPLETE, this);
     }
     public void init(Context context) {
         mContext = context;
@@ -72,7 +85,7 @@ public class TelinkGroupApiManager {
             if(groupAddress == group.address){
                 List<DeviceInfo> deviceInGroup = getDevicesInGroup(groupAddress);
                 for (DeviceInfo deviceInfo : deviceInGroup) {
-                    deleteDeviceFromGroup(groupAddress, deviceInfo);
+                    deleteDeviceFromGroup(groupAddress, deviceInfo.meshAddress);
                 }
                 MyApplication.getInstance().getMesh().deletedGroupAddress.push(groupAddress);
                 groups.remove(group);
@@ -83,13 +96,15 @@ public class TelinkGroupApiManager {
     }
 
     // 添加组内设备
-    public void addDeviceToGroup(int groupAddress,DeviceInfo deviceInfo){
-        setDeviceGroupInfo(groupAddress, 1, deviceInfo);
+    public void addDeviceToGroup(int groupAddress, int deviceMeshAddress){
+        waitBindDeviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(deviceMeshAddress);
+        setDeviceGroupInfo(groupAddress, 0, waitBindDeviceInfo);
     }
 
     // 删除组内设备
-    public void deleteDeviceFromGroup(int groupAddress,DeviceInfo deviceInfo){
-        setDeviceGroupInfo(groupAddress, 0, deviceInfo);
+    public void deleteDeviceFromGroup(int groupAddress,int deviceMeshAddress){
+        waitBindDeviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(deviceMeshAddress);
+        setDeviceGroupInfo(groupAddress, 1, waitBindDeviceInfo);
     }
 
     // 获取组内灯列表
@@ -111,7 +126,34 @@ public class TelinkGroupApiManager {
         return innerDevices;
     }
 
+    private DeviceInfo waitBindDeviceInfo;
 
+    @Override
+    public void performed(Event<String> event) {
+        if (event.getType().equals(NotificationEvent.EVENT_TYPE_SUB_OP_CONFIRM)) {
+//            modelIndex++;
+//            setNextModel();
+
+        } else if (event.getType().equals(NotificationEvent.EVENT_TYPE_CTL_STATUS_NOTIFY)) {
+//            refreshUI();
+        } else if (event.getType().equals(MeshEvent.EVENT_TYPE_DISCONNECTED)) {
+//            refreshUI();
+        } else if (event.getType().equals(CommandEvent.EVENT_TYPE_CMD_COMPLETE)) {
+            MeshCommand meshCommand = ((CommandEvent) event).getMeshCommand();
+            if (meshCommand != null) {
+                if (TAG_CMD.equals(meshCommand.tag)) {
+                    if (meshCommand.rspCnt >= 1) {
+                        modelIndex++;
+                        setNextModel(waitBindDeviceInfo);
+                    } else {
+                        TelinkLog.e("set group sub error");
+                    }
+                }
+            }
+
+
+        }
+    }
 
     /**
      * 灯组绑定
@@ -129,10 +171,13 @@ public class TelinkGroupApiManager {
 
     private void setNextModel(DeviceInfo deviceInfo) {
         if (modelIndex > models.length - 1) {
+            Group group = MyApplication.getInstance().getMesh().getGroupByAddress(opGroupAdr);
             if (opType == 0) {
                 deviceInfo.subList.add(opGroupAdr);
+                group.subList.add(deviceInfo.meshAddress);
             } else {
                 deviceInfo.subList.remove((Integer) opGroupAdr);
+                group.subList.remove(deviceInfo.meshAddress);
             }
             TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
             getLocalDeviceGroupInfo(deviceInfo);

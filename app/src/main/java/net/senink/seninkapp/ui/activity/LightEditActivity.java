@@ -21,6 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.Group;
 
 import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pinm.PINMoBLE.MeshController;
@@ -31,6 +33,8 @@ import net.senink.piservice.pis.PipaRequest;
 import net.senink.piservice.services.PISXinLight;
 import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.BaseActivity;
+import net.senink.seninkapp.GeneralDeviceModel;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.adapter.LightGroupEditAdapter;
 //import com.senink.seninkapp.core.PISBase;
@@ -48,6 +52,9 @@ import net.senink.seninkapp.adapter.LightGroupEditAdapter;
 //import com.senink.seninkapp.crmesh.MeshController;
 //import com.senink.seninkapp.crmesh.MeshController.onFeedbackListener;
 
+import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
+import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.ui.constant.MessageModel;
 import net.senink.seninkapp.ui.util.CommonUtils;
 import net.senink.seninkapp.ui.util.HttpUtils;
@@ -89,6 +96,14 @@ public class LightEditActivity extends BaseActivity implements
 	// 传递过来的pisbase对象
 	private PISBase infor;
 
+	private boolean isTelink = false;
+	private boolean isTelinkGroup = false;
+	private int telinkAddress = 0;
+	private DeviceInfo telinkDeviceinfo;
+	private Group telinkGroup;
+	private Group.BOUND_TYPE bound_type = Group.BOUND_TYPE.NONE;
+	// 点击TELINK item时发送消息
+	public final static int MSG_TELINK_ITEM_CLICK = 0x1011;
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler() {
 		@Override
@@ -101,6 +116,10 @@ public class LightEditActivity extends BaseActivity implements
 			case MSG_ITEM_CLICK:
 //				showLoadingDialog();
 				if (msg.obj != null) {
+					if(isTelinkGroup && telinkGroup != null){
+						telinkGroup.type = Group.BOUND_TYPE.PIS_GROUP;
+						MyApplication.getInstance().getMesh().saveOrUpdate(LightEditActivity.this);
+					}
 					PISBase obj = PISManager.getInstance().getPISObject(((PISBase)msg.obj).getPISKeyString());
 					PISBase base = null;
 					PipaRequest req = null;
@@ -133,6 +152,24 @@ public class LightEditActivity extends BaseActivity implements
 					});
 					req.NeedAck = true;
 					base.request(req);
+				}
+				break;
+			case MSG_TELINK_ITEM_CLICK:
+				if(msg.obj != null){
+					TelinkBase telinkBase = (TelinkBase) msg.obj;
+					if(telinkBase.isDevice()){
+						if(telinkGroup != null){
+							TelinkGroupApiManager.getInstance().addDeviceToGroup(telinkGroup.address, telinkBase.getDevice().meshAddress);
+							telinkGroup.type = Group.BOUND_TYPE.TELINK_GROUP;
+							MyApplication.getInstance().getMesh().saveOrUpdate(LightEditActivity.this);
+						}
+					}else{
+						if(telinkDeviceinfo != null){
+							TelinkGroupApiManager.getInstance().addDeviceToGroup(telinkBase.getGroup().address, telinkDeviceinfo.meshAddress);
+							telinkBase.getGroup().type = Group.BOUND_TYPE.TELINK_GROUP;
+							MyApplication.getInstance().getMesh().saveOrUpdate(LightEditActivity.this);
+						}
+					}
 				}
 				break;
 			case 1000:
@@ -169,7 +206,29 @@ public class LightEditActivity extends BaseActivity implements
 	 */
 	private void setData() {
 		try{
-			String key = getIntent().getStringExtra(MessageModel.PISBASE_KEYSTR);
+			Bundle bundle = getIntent().getExtras();
+			String key = null;
+
+			if(bundle != null){
+				isTelink = bundle.getBoolean(TelinkApiManager.IS_TELINK_KEY);
+				isTelinkGroup = bundle.getBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY);
+				telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS);
+				if(!isTelinkGroup && isTelink){
+					telinkDeviceinfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+				}else if(isTelinkGroup){
+					telinkGroup = MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress);
+					if(telinkGroup != null){
+						bound_type = telinkGroup.type;
+						if(bound_type != Group.BOUND_TYPE.TELINK_GROUP){
+							key = telinkGroup.PISKeyString;
+						}
+					}
+				}
+			}
+
+			if(telinkGroup == null){
+				key = getIntent().getStringExtra(MessageModel.PISBASE_KEYSTR);
+			}
 			if (key == null)
 				return;
 			infor = PISManager.getInstance().getPISObject(key);
@@ -288,17 +347,26 @@ public class LightEditActivity extends BaseActivity implements
 	}
 
 	public void updateGroupList(List<PISBase> objects){
-		if (objects == null || objects.size() == 0)
-			return;
-		ArrayList<PISBase> filterList = new ArrayList<>();
-		List<PISBase> srvs = infor.getGroupObjects();
-		if (srvs == null || srvs.size() == 0){
-			filterList.addAll(objects);
-		}else {
-			for (PISBase srv : objects) {
-				if (!srvs.contains(srv))
-					filterList.add(srv);
+//		if (objects == null || objects.size() == 0)
+//			return;
+		List<GeneralDeviceModel> filterList = new ArrayList<>();
+		List<PISBase> srvs = new ArrayList<>();
+		if(infor != null){
+			srvs = infor.getGroupObjects();
+		}
+		if(telinkGroup != null){
+			if(bound_type == Group.BOUND_TYPE.NONE){
+				addPisDeviceToFilter(objects, filterList);
+				addTelinkDeviceToFilter(telinkGroup, filterList);
+			}else if(bound_type == Group.BOUND_TYPE.TELINK_GROUP){
+				addTelinkDeviceToFilter(telinkGroup, filterList);
+			}else{
+				addPisDeviceToFilter(objects, filterList);
 			}
+		}else if (telinkDeviceinfo != null){
+			addTelinkGroupToFilter(telinkDeviceinfo, filterList);
+		}else if(infor != null){
+			addPisDeviceToFilter(objects, filterList);
 		}
 
 		PISBase tmp = null;
@@ -329,6 +397,51 @@ public class LightEditActivity extends BaseActivity implements
 		adapter.notifyDataSetChanged();
 	}
 
+	private void addTelinkGroupToFilter(DeviceInfo telinkDeviceinfo, List<GeneralDeviceModel> filterList) {
+		List<Group> alreadyGroup = TelinkGroupApiManager.getInstance().getGroupsWithDevice(telinkDeviceinfo.meshAddress);
+		List<Group> allGroups = MyApplication.getInstance().getMesh().groups;
+		outer:
+		for (Group groupInfo : allGroups) {
+			for (Group group : alreadyGroup) {
+				if(groupInfo.address == group.address){
+					continue outer;
+				}
+			}
+			filterList.add(new GeneralDeviceModel(new TelinkBase(groupInfo)));
+		}
+	}
+
+	private void addTelinkDeviceToFilter(Group telinkGroup, List<GeneralDeviceModel> filterList) {
+		List<DeviceInfo> addAlready = TelinkGroupApiManager.getInstance().getDevicesInGroup(telinkGroup.address);
+		List<DeviceInfo> allDevice = MyApplication.getInstance().getMesh().devices;
+		outer:
+		for (DeviceInfo deviceInfo : allDevice) {
+			for (DeviceInfo info : addAlready) {
+				if(deviceInfo.meshAddress == info.meshAddress){
+					continue outer;
+				}
+			}
+			filterList.add(new GeneralDeviceModel(new TelinkBase(deviceInfo)));
+		}
+	}
+
+	private void addPisDeviceToFilter(List<PISBase> objects, List<GeneralDeviceModel> filterList){
+		if(infor != null && objects != null){
+			List<PISBase> srvs = infor.getGroupObjects();
+			List<Group> groups = MyApplication.getInstance().getMesh().groups;
+			for (PISBase srv : objects) {
+				if (!srvs.contains(srv)){
+					filterList.add(new GeneralDeviceModel(srv));
+
+					for (Group group : groups) {
+						if(group.PISKeyString.equals(srv.getPISKeyString()) ){
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
 
 	@Override
 	public void onClick(View v) {
@@ -353,13 +466,15 @@ public class LightEditActivity extends BaseActivity implements
 	protected void onResume() {
 		super.onResume();
 		List<PISBase> allObjects = null;
-		Class query = infor.getClass(); // infor.getT1() | ((infor.getT2() & 0xFF) << 8);
-		if (infor.ServiceType == PISBase.SERVICE_TYPE_GROUP){
-			allObjects =
-					PISManager.getInstance().PIServicesWithQuery(query, PISManager.EnumServicesQueryBaseonClass);
-		}else{
-			allObjects =
-					PISManager.getInstance().PIGroupsWithQuery(query, PISManager.EnumGroupsQueryBaseonClass);
+		if(infor != null){
+			Class query = infor.getClass(); // infor.getT1() | ((infor.getT2() & 0xFF) << 8);
+			if (infor.ServiceType == PISBase.SERVICE_TYPE_GROUP){
+				allObjects =
+						PISManager.getInstance().PIServicesWithQuery(query, PISManager.EnumServicesQueryBaseonClass);
+			}else{
+				allObjects =
+						PISManager.getInstance().PIGroupsWithQuery(query, PISManager.EnumGroupsQueryBaseonClass);
+			}
 		}
 
 		updateGroupList(allObjects);

@@ -12,6 +12,8 @@ import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.ui.util.SortUtils;
 
+import org.spongycastle.pqc.crypto.gmss.util.WinternitzOTSignature;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +71,34 @@ public class GeneralDataManager {
         //更新ProductClassifyView状态
         if(pm == null ) return null;
         //更新Fragments状态
-        ArrayList<PISBase[]> list = new ArrayList<PISBase[]>();
+        // TODO LEE 灯组及灯列表刷新
+        List<PISBase> srvsGroup = getPISGroups(curShowListType);
+
+        List<GeneralDeviceModel> generalGroup = new ArrayList<>();
+
+        for (Group group : MyApplication.getInstance().getMesh().groups) {
+            if(group.type == Group.BOUND_TYPE.TELINK_GROUP){
+                group.isOn = false;
+                for (Integer meshAddress : group.subList) {
+                    DeviceInfo deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(meshAddress);
+                    if(deviceInfo.getOnOff() == 1){
+                        group.isOn = true;
+                        break;
+                    }
+                }
+            }
+            generalGroup.add(new GeneralDeviceModel(new TelinkBase(group)));
+        }
+//        if (srvsGroup.size() > 0){
+//            for (PISBase pisBase : srvsGroup) {
+//                generalGroup.add(new GeneralDeviceModel(pisBase));
+//            }
+//        }
+
+        return generalGroup;
+    }
+
+    private List<PISBase> getPISGroups(int curShowListType){
         List<Integer> pistypes = getPisTypes(curShowListType);
         // TODO LEE 灯组及灯列表刷新
         List<PISBase> srvsGroup = new ArrayList<>();
@@ -80,33 +109,11 @@ public class GeneralDataManager {
                 srvsGroup.addAll(groupsPis);
             }
         }
-
-        List<GeneralDeviceModel> generalGroup = new ArrayList<>();
-
-        for (Group group : MyApplication.getInstance().getMesh().groups) {
-            generalGroup.add(new GeneralDeviceModel(new TelinkBase(group)));
-        }
-        if (srvsGroup.size() > 0){
-            for (PISBase pisBase : srvsGroup) {
-                generalGroup.add(new GeneralDeviceModel(pisBase));
-            }
-        }
-
-        return generalGroup;
+        return srvsGroup;
     }
 
     public List<PISBase> getPISGroups(){
-        List<Integer> pistypes = getPisTypes(lastCurShowListType);
-        // TODO LEE 灯组及灯列表刷新
-        List<PISBase> srvsGroup = new ArrayList<>();
-        // 刷新灯组列表
-        for (Integer i : pistypes){
-            List<PISBase> groupsPis = pm.PIGroupsWithQuery(i, PISManager.EnumGroupsQueryBaseonType);
-            if (groupsPis != null && groupsPis.size() > 0){
-                srvsGroup.addAll(groupsPis);
-            }
-        }
-        return srvsGroup;
+        return getPISGroups(lastCurShowListType);
     }
 
     public List<GeneralDeviceModel> getGeneralDevice(int curShowListType){

@@ -136,6 +136,14 @@ public class Mesh implements Serializable, Cloneable {
         return null;
     }
 
+    public Group getGroupByAddress(int address){
+        for (Group info : groups) {
+            if (info.address == address)
+                return info;
+        }
+        return null;
+    }
+
     public DeviceInfo getDeviceByMacAddress(String address) {
         for (DeviceInfo info : devices) {
             if (info.macAddress.equals(address))

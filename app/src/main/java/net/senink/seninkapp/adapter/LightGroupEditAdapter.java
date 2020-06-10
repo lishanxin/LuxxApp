@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.Group;
 
 import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pis.PISBase;
@@ -28,12 +30,15 @@ import net.senink.piservice.pis.PISDevice;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.services.PISXinLight;
 import net.senink.piservice.services.PISxinColor;
+import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.R;
 //import com.senink.seninkapp.core.PISBase;
 //import com.senink.seninkapp.core.PISConstantDefine;
 //import com.senink.seninkapp.core.PISLightLED;
 //import com.senink.seninkapp.core.PISManager;
 //import com.senink.seninkapp.core.PisDeviceGroup;
+import net.senink.seninkapp.telink.model.TelinkBase;
+import net.senink.seninkapp.telink.view.IconGenerator;
 import net.senink.seninkapp.ui.activity.LightEditActivity;
 import net.senink.seninkapp.ui.activity.LightGroupSettingActivity;
 import net.senink.seninkapp.ui.activity.LightRGBDetailActivity;
@@ -46,19 +51,14 @@ import net.senink.seninkapp.ui.util.Utils;
 
 public class LightGroupEditAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
-	private ArrayList<PISBase> bases = new ArrayList<PISBase>();
-	// 所用分组的信息
-	public SparseArray<PISBase> groupInfors = new SparseArray<PISBase>();
-	// 是否是分组的
-	private boolean isGroup = false;
+	private List<GeneralDeviceModel> bases = new ArrayList<>();
 	private Handler mHandler = null;
 	private int LightMode = 0;
 
-	public LightGroupEditAdapter(Context context, ArrayList<PISBase> infors, int T2,
+	public LightGroupEditAdapter(Context context, List<GeneralDeviceModel> infors, int T2,
 			Handler mHandler) {
 
 		LightMode = T2;				// NextApp.tw
-		this.isGroup = true;
 		this.inflater = LayoutInflater.from(context);
 		this.mHandler = mHandler;
 		setList(infors);
@@ -77,11 +77,11 @@ public class LightGroupEditAdapter extends BaseAdapter {
 	 * 
 	 * @param infors
 	 */
-	public void setList(List<PISBase> infors) {
+	public void setList(List<GeneralDeviceModel> infors) {
 		if (null == infors) {
-			this.bases = new ArrayList<PISBase>();
+			this.bases = new ArrayList<>();
 		} else {
-			this.bases = (ArrayList<PISBase>)infors;
+			this.bases = infors;
 		}
 	}
 
@@ -136,60 +136,75 @@ public class LightGroupEditAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-
-		PISBase base = bases.get(position);
-		if (base != null) {
-			holder.tvName.setText(base.getName() == null ? "" : base.getName());
-			holder.tvLocation.setVisibility(View.VISIBLE);
-
-			PISDevice dev;
-			StateListDrawable sld = null;
-  			PISxinColor light = (PISxinColor)base;
-			if (base.ServiceType != PISBase.SERVICE_TYPE_GROUP){
-				dev = base.getDeviceObject();
-				if (dev != null) {
-					if ( base.getT2() == 0x05 )
-					{
-						sld = ProductClassifyInfo.getProductStateListDrawable(convertView.getContext(),
-								ProductClassifyInfo.CLASSID_EUREKA_CANDLE,
-								dev.getStatus(),
-								light.getLightStatus());
-					}
-					else
-					{
-						sld = ProductClassifyInfo.getProductStateListDrawable(convertView.getContext(),
-								dev.getClassString(),
-								dev.getStatus(),
-								light.getLightStatus());
-					}
+		GeneralDeviceModel generalBase = bases.get(position);
+		if (generalBase != null) {
+			if (generalBase.isTelink()) {
+				TelinkBase telinkBase = generalBase.getTelinkBase();
+				String name = "";
+				if (telinkBase.isDevice()) {
+					DeviceInfo deviceInfo = telinkBase.getDevice();
+					name = deviceInfo.getDeviceName();
+					final int deviceType = deviceInfo.nodeInfo != null && deviceInfo.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
+					holder.ivIcon.setBackgroundResource(IconGenerator.getIcon(deviceType, deviceInfo.getOnOff()));
 				} else {
-					sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
-							ProductClassifyInfo.CLASSID_DEFAULT,
-							0,0);
+					Group group = telinkBase.getGroup();
+					name = group.name;
 				}
-			}else {
-				//找到对应的Service，并利用其DEVICE找到classid
-				List<PISBase> srvs = PISManager.getInstance().PIServicesWithQuery(
-						base.getIntegerType(), PISManager.EnumServicesQueryBaseonType);
-				if(srvs == null || srvs.size() == 0)
-					dev = null;
-				else
-					dev = srvs.get(0).getDeviceObject();
-				if (dev != null) {
-					sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
-							dev.getClassString(),
-							dev.getStatus(),
-							light.getLightStatus());
-				} else {
-					sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
-							ProductClassifyInfo.CLASSID_DEFAULT,
-							0,0);
-				}
-			}
+				holder.tvName.setText(name);
+			} else {
+				PISBase base = generalBase.getPisBase();
+				if (base != null) {
+					holder.tvName.setText(base.getName() == null ? "" : base.getName());
+					holder.tvLocation.setVisibility(View.VISIBLE);
 
-			if (sld != null) {
-				try {
-					holder.ivIcon.setBackground(sld);
+					PISDevice dev;
+					StateListDrawable sld = null;
+					PISxinColor light = (PISxinColor)base;
+					if (base.ServiceType != PISBase.SERVICE_TYPE_GROUP){
+						dev = base.getDeviceObject();
+						if (dev != null) {
+							if ( base.getT2() == 0x05 )
+							{
+								sld = ProductClassifyInfo.getProductStateListDrawable(convertView.getContext(),
+										ProductClassifyInfo.CLASSID_EUREKA_CANDLE,
+										dev.getStatus(),
+										light.getLightStatus());
+							}
+							else
+							{
+								sld = ProductClassifyInfo.getProductStateListDrawable(convertView.getContext(),
+										dev.getClassString(),
+										dev.getStatus(),
+										light.getLightStatus());
+							}
+						} else {
+							sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
+									ProductClassifyInfo.CLASSID_DEFAULT,
+									0,0);
+						}
+					}else {
+						//找到对应的Service，并利用其DEVICE找到classid
+						List<PISBase> srvs = PISManager.getInstance().PIServicesWithQuery(
+								base.getIntegerType(), PISManager.EnumServicesQueryBaseonType);
+						if(srvs == null || srvs.size() == 0)
+							dev = null;
+						else
+							dev = srvs.get(0).getDeviceObject();
+						if (dev != null) {
+							sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
+									dev.getClassString(),
+									dev.getStatus(),
+									light.getLightStatus());
+						} else {
+							sld = ProductClassifyInfo.getGroupStateListDrawable(convertView.getContext(),
+									ProductClassifyInfo.CLASSID_DEFAULT,
+									0,0);
+						}
+					}
+
+					if (sld != null) {
+						try {
+							holder.ivIcon.setBackground(sld);
 //					holder.ivIcon
 //							.setBackgroundResource(resourceId);
 //					if (base.getStatus() == PISBase.SERVICE_STATUS_ONLINE)
@@ -197,14 +212,17 @@ public class LightGroupEditAdapter extends BaseAdapter {
 //					else
 //						setGrayOnBackgroud(holder.ivIcon.getBackground(), 0);
 
-				}catch (Exception e){
-					PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+						}catch (Exception e){
+							PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+						}
+					}
+					setLocation(holder.tvLocation, (base.getLocation() & 0xFF));
 				}
 			}
-			setLocation(holder.tvLocation, (base.getLocation() & 0xFF));
-			holder.tvName.setTag(base);
+			holder.tvName.setTag(generalBase);
 			setListener(holder.tvName);
 		}
+
 
 		return convertView;
 	}
@@ -227,29 +245,37 @@ public class LightGroupEditAdapter extends BaseAdapter {
 					return;
 				try {
 					// NextApp.tw
-					PISBase group = (PISBase) obj;
-
-					if ( LightMode == 0 | group.getT2() == LightMode )
-					{
+					GeneralDeviceModel generalDeviceModel = (GeneralDeviceModel) obj;
+					if(generalDeviceModel.isTelink()){
 						mHandler.obtainMessage(
-								LightEditActivity.MSG_ITEM_CLICK, group)
+								LightEditActivity.MSG_TELINK_ITEM_CLICK, generalDeviceModel.getTelinkBase())
 								.sendToTarget();
-					}
-					else
-					{
-						if ( LightMode == 0x03 )
+					}else{
+						PISBase group = generalDeviceModel.getPisBase();
+
+						if ( LightMode == 0 | group.getT2() == LightMode )
 						{
 							mHandler.obtainMessage(
-									16, group)
+									LightEditActivity.MSG_ITEM_CLICK, group)
 									.sendToTarget();
 						}
-						if ( LightMode == 0x05 )
+						else
 						{
-							mHandler.obtainMessage(
-									15, group)
-									.sendToTarget();
+							if ( LightMode == 0x03 )
+							{
+								mHandler.obtainMessage(
+										16, group)
+										.sendToTarget();
+							}
+							if ( LightMode == 0x05 )
+							{
+								mHandler.obtainMessage(
+										15, group)
+										.sendToTarget();
+							}
 						}
 					}
+
 				} catch (Exception e) {
 					PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
 				}
