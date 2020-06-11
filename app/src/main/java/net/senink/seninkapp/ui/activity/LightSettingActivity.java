@@ -67,6 +67,7 @@ import net.senink.seninkapp.adapter.ScenesAdapter;
 import net.senink.seninkapp.sqlite.SceneDao;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
+import net.senink.seninkapp.telink.model.EventBusOperation;
 import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.ui.cache.CacheManager;
 import net.senink.seninkapp.ui.constant.Constant;
@@ -82,6 +83,9 @@ import net.senink.seninkapp.ui.view.listview.SwipeMenu;
 import net.senink.seninkapp.ui.view.listview.SwipeMenuCreator;
 import net.senink.seninkapp.ui.view.listview.SwipeMenuItem;
 import net.senink.seninkapp.ui.view.listview.SwipeMenuListView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 // TODO LEE 灯组设置。灯的设置是否也进入这个界面，待验证
 public class LightSettingActivity extends BaseActivity implements
@@ -204,13 +208,13 @@ public class LightSettingActivity extends BaseActivity implements
         setContentView(R.layout.activity_lightsetting);
         manager = PISManager.getInstance();
         controller = MeshController.getInstance(this);
+        EventBus.getDefault().register(this);
 //		cacheManger = CacheManager.getInstance();
 //		mSceneDao = new SceneDao(this);
         setData();
         initView();
 //		setReciever();
         setListener();
-
 
     }
 
@@ -239,48 +243,77 @@ public class LightSettingActivity extends BaseActivity implements
                 isTelinkGroup = bundle.getBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, false);
                 telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS, 0);
                 telinkGroup = isTelinkGroup ? MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress):null;
-            }
-            if(isTelinkGroup && telinkGroup != null){
-                bound_type = telinkGroup.type;
-                hslEleAdr = telinkGroup.address;
-                if(bound_type != Group.BOUND_TYPE.TELINK_GROUP){
-                    pisKey = telinkGroup.PISKeyString;
-                }
-            }else if(isTelink){
-                deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
-                hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
-            }
-
-            if(pisKey != null){
-                infor = manager.getPISObject(pisKey);
-
-                try {
-                    if (infor != null) {
-                        //更新组信息
-                        PipaRequest req = infor.updateGroupInfo();
-                        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-                            @Override
-                            public void onRequestStart(PipaRequest req) {
-
-                            }
-
-                            @Override
-                            public void onRequestResult(PipaRequest req) {
-                                if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED)
-                                    updateGroupInfo();
-                            }
-                        });
-                        infor.request(req);
-                    } else {
-                        finish();
+                if(isTelinkGroup && telinkGroup != null){
+                    bound_type = telinkGroup.type;
+                    hslEleAdr = telinkGroup.address;
+                    if(bound_type == Group.BOUND_TYPE.PIS_GROUP){
+                        pisKey = telinkGroup.PISKeyString;
+                        isTelink = false;
+                        isTelinkGroup = false;
                     }
-                } catch (Exception e) {
-                    PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+                }else if(isTelink){
+                    deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+                    hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
+                }
+            }
+
+            setPisData(pisKey);
+
+        }
+    }
+
+    private void setPisData(String pisKey){
+        if(pisKey != null){
+            infor = manager.getPISObject(pisKey);
+
+            try {
+                if (infor != null) {
+                    //更新组信息
+                    PipaRequest req = infor.updateGroupInfo();
+                    req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                        @Override
+                        public void onRequestStart(PipaRequest req) {
+
+                        }
+
+                        @Override
+                        public void onRequestResult(PipaRequest req) {
+                            if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED)
+                                updateGroupInfo();
+                        }
+                    });
+                    infor.request(req);
+                } else {
+                    finish();
+                }
+            } catch (Exception e) {
+                PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+            }
+        }
+    }
+
+    @Subscribe
+    public void reSetTelinkGroupData(EventBusOperation opr){
+        if(opr.getOpr() == EventBusOperation.REFRESH_GROUP_DATA){
+            resetGroupData();
+        }
+    }
+
+    private void resetGroupData() {
+        if(isTelinkGroup){
+            telinkGroup = MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress);
+            if(telinkGroup != null){
+                bound_type = telinkGroup.type;
+                if(bound_type == Group.BOUND_TYPE.PIS_GROUP){
+                    String key = telinkGroup.PISKeyString;
+                    isTelink = false;
+                    isTelinkGroup = false;
+                    setPisData(key);
+                }else if(bound_type == Group.BOUND_TYPE.TELINK_GROUP){
+                    hslEleAdr = telinkGroup.address;
                 }
             }
         }
-
-
     }
 
     private void updateLightInfo() {
@@ -322,10 +355,12 @@ public class LightSettingActivity extends BaseActivity implements
 
 			if (isTelink) {
                 if (isTelinkGroup) {
-                    List<DeviceInfo> telinkDevice = TelinkGroupApiManager.getInstance().getDevicesInGroup(telinkAddress);
-					for (int i = 0; i < telinkDevice.size(); i++) {
-						generalDeviceModels.put(i, new GeneralDeviceModel(new TelinkBase(telinkDevice.get(i))));
-					}
+                    if(bound_type == Group.BOUND_TYPE.TELINK_GROUP){
+                        List<DeviceInfo> telinkDevice = TelinkGroupApiManager.getInstance().getDevicesInGroup(telinkAddress);
+                        for (int i = 0; i < telinkDevice.size(); i++) {
+                            generalDeviceModels.put(i, new GeneralDeviceModel(new TelinkBase(telinkDevice.get(i))));
+                        }
+                    }
 				} else {
                     List<Group> telinkGroups = TelinkGroupApiManager.getInstance().getGroupsWithDevice(telinkAddress);
 					for (int i = 0; i < telinkGroups.size(); i++) {
@@ -521,14 +556,15 @@ public class LightSettingActivity extends BaseActivity implements
                 //			isBack = true;
                 intent = new Intent(LightSettingActivity.this,
                         LightEditActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
-                bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
-                bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
-                intent.putExtras(bundle);
                 if(infor != null && !isTelinkGroup){
                     intent.putExtra(MessageModel.PISBASE_KEYSTR,
                             infor.getPISKeyString());
+                }else{
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
+                    intent.putExtras(bundle);
                 }
                 startActivityForResult(intent, REQUEST_GROUP_ADD);
 
@@ -621,6 +657,8 @@ public class LightSettingActivity extends BaseActivity implements
                 break;
         }
     }
+
+
 
     private void deletePISGroup(PISBase infor){
         PipaRequest req = mcm.removeGroup(infor.getGroupId());
@@ -823,6 +861,7 @@ public class LightSettingActivity extends BaseActivity implements
     protected void onDestroy() {
 //		unregisterReceiver(lightReciever);
         mHandler.removeMessages(MessageModel.MSG_GET_DEVICES);
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 

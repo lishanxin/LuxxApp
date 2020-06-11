@@ -145,7 +145,9 @@ public class MyApplication extends TelinkApplication {
 		} else {
 			mMesh = (Mesh) object;
 		}
+
 	}
+
 
 	public String getLocalUUID() {
 		if (localUUID == null) {

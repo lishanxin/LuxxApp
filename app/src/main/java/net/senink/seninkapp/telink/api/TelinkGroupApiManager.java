@@ -16,8 +16,12 @@ import com.telink.sig.mesh.model.SigMeshModel;
 import com.telink.sig.mesh.util.TelinkLog;
 
 import net.senink.piservice.pis.PISBase;
+import net.senink.piservice.pis.PISMCSManager;
+import net.senink.piservice.pis.PISManager;
+import net.senink.piservice.pis.PipaRequest;
 import net.senink.seninkapp.GeneralDataManager;
 import net.senink.seninkapp.MyApplication;
+import net.senink.seninkapp.ui.constant.Constant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,31 +72,48 @@ public class TelinkGroupApiManager implements EventListener<String> {
         TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
     }
 
-    private void bindGroupToPIS(Group group) {
-        List<Group> groups = MyApplication.getInstance().getMesh().groups;
-        List<PISBase> pisGroups = GeneralDataManager.getInstance().getPISGroups();
-        for (PISBase pisGroup : pisGroups) {
-            int pisAddr = pisGroup.getShortAddr();
-            for (Group group1 : groups) {
-            }
-        }
-    }
-
     // 删除组
     public void deleteGroup(int groupAddress){
         List<Group> groups = MyApplication.getInstance().getMesh().groups;
-        for (Group group : groups) {
-            if(groupAddress == group.address){
-                List<DeviceInfo> deviceInGroup = getDevicesInGroup(groupAddress);
-                for (DeviceInfo deviceInfo : deviceInGroup) {
-                    deleteDeviceFromGroup(groupAddress, deviceInfo.meshAddress);
-                }
-                MyApplication.getInstance().getMesh().deletedGroupAddress.push(groupAddress);
-                groups.remove(group);
-                break;
+        Group group = MyApplication.getInstance().getMesh().getGroupByAddress(groupAddress);
+        if(group != null){
+            List<DeviceInfo> deviceInGroup = getDevicesInGroup(groupAddress);
+            for (DeviceInfo deviceInfo : deviceInGroup) {
+                deleteDeviceFromGroup(groupAddress, deviceInfo.meshAddress);
             }
+            MyApplication.getInstance().getMesh().deletedGroupAddress.push(groupAddress);
+            if(group.PISKeyString != null){
+                PISBase infor = PISManager.getInstance().getPISObject(group.PISKeyString);
+                deletePISGroup(infor, new PipaRequest.OnPipaRequestStatusListener() {
+                    @Override
+                    public void onRequestStart(PipaRequest req) {
+
+                    }
+
+                    @Override
+                    public void onRequestResult(PipaRequest req) {
+
+                    }
+                });
+            }
+            groups.remove(group);
+            TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
         }
-        TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
+    }
+
+    public void deletePISGroup(String PISKeyString, PipaRequest.OnPipaRequestStatusListener listener){
+        if(PISKeyString != null){
+            PISBase infor = PISManager.getInstance().getPISObject(PISKeyString);
+            deletePISGroup(infor, listener);
+        }
+    }
+
+    public void deletePISGroup(PISBase infor, PipaRequest.OnPipaRequestStatusListener listener){
+        if(infor == null) return;
+        PISMCSManager mcm = PISManager.getInstance().getMCSObject();
+        PipaRequest req = mcm.removeGroup(infor.getGroupId());
+        req.setOnPipaRequestStatusListener(listener);
+        mcm.request(req);
     }
 
     // 添加组内设备

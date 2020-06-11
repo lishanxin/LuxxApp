@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.telink.sig.mesh.event.Event;
 import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.CommonMeshCommand;
 import com.telink.sig.mesh.model.DeviceInfo;
@@ -41,6 +42,7 @@ import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.sqlite.SceneDao;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.model.EventBusOperation;
 import net.senink.seninkapp.ui.constant.Constant;
 import net.senink.seninkapp.ui.constant.MessageModel;
 import net.senink.seninkapp.ui.entity.SceneBean;
@@ -49,6 +51,9 @@ import net.senink.seninkapp.ui.util.RGBConfigUtils;
 import net.senink.seninkapp.ui.util.ToastUtils;
 import net.senink.seninkapp.ui.util.Utils;
 import net.senink.seninkapp.ui.view.ColorCircle;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -164,7 +169,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
 	// 统计设置颜色命令ack返回的数量
     protected int countOnRGBW = 0;
     //传值的pisbase对象的piskeystring字符串
-    protected String key = null;
+//    protected String key = null;
     boolean candle_onoff = false;
 
     private boolean isTelink = false;
@@ -222,6 +227,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
             layoutResid = savedInstanceState.getInt(LAYOUT_RESOURCEID);
         }
 		setContentView(layoutResid);
+        EventBus.getDefault().register(this);
 		manager = PISManager.getInstance();
 		controller = MeshController.getInstance(this);
 //		cacheManager = CacheManager.getInstance();
@@ -245,6 +251,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
 		if (getIntent() != null) {
 			Intent intent = getIntent();
 			Bundle bundle = intent.getExtras();
+            String key = intent.getStringExtra("keystring");
             // TODO LEE 新增sdk
             if(bundle != null){
 			    isTelink = bundle.getBoolean(TelinkApiManager.IS_TELINK_KEY, false);
@@ -268,16 +275,36 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 }
             }
 
-			String key = intent.getStringExtra("keystring");
             activityMode = intent.getIntExtra(MessageModel.ACTIVITY_MODE, 0);
 
-			if (key != null){
-				infor = (PISxinColor) manager.getPISObject(key);
+            setPisData(key);
 
-				// NextApp.tw
-                if ( infor.getServiceId() != 0 )
+		}
+	}
+
+	private void setPisData(String key){
+        if (key != null){
+            infor = (PISxinColor) manager.getPISObject(key);
+
+            // NextApp.tw
+            if ( infor.getServiceId() != 0 )
+            {
+                if ( infor.getT1() == 0x10 && infor.getT2() == 0x05 )
                 {
-                    if ( infor.getT1() == 0x10 && infor.getT2() == 0x05 )
+                    candle_light.setVisibility(View.VISIBLE);
+
+                }
+                else
+                {
+
+                    candle_light.setVisibility(View.GONE);
+                }
+            }
+            else
+            {
+                if ( infor.getGroupObjects().size() > 0 )
+                {
+                    if ( infor.getGroupObjects().get(0).getT1() == 0x10 && infor.getGroupObjects().get(0).getT2() == 0x05 )
                     {
                         candle_light.setVisibility(View.VISIBLE);
 
@@ -290,29 +317,36 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 }
                 else
                 {
-                    if ( infor.getGroupObjects().size() > 0 )
-                    {
-                        if ( infor.getGroupObjects().get(0).getT1() == 0x10 && infor.getGroupObjects().get(0).getT2() == 0x05 )
-                        {
-                            candle_light.setVisibility(View.VISIBLE);
-
-                        }
-                        else
-                        {
-
-                            candle_light.setVisibility(View.GONE);
-                        }
-                    }
-                    else
-                    {
-                        candle_light.setVisibility(View.VISIBLE);
-                    }
+                    candle_light.setVisibility(View.VISIBLE);
                 }
-			}
+            }
+        }
+    }
 
+	@Subscribe
+    public void reSetTelinkGroupData(EventBusOperation opr){
+	    if(opr.getOpr() == EventBusOperation.REFRESH_GROUP_DATA){
+	        resetGroupData();
+        }
+    }
 
-		}
-	}
+    private void resetGroupData() {
+        if(isTelinkGroup){
+            telinkGroup = MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress);
+            if(telinkGroup != null){
+                bound_type = telinkGroup.type;
+                if(bound_type == Group.BOUND_TYPE.PIS_GROUP){
+                    String key = telinkGroup.PISKeyString;
+                    isTelink = false;
+                    isTelinkGroup = false;
+                    setPisData(key);
+                }else if(bound_type == Group.BOUND_TYPE.TELINK_GROUP){
+                    hslEleAdr = telinkGroup.address;
+                }
+            }
+        }
+    }
+
 
     /**
      * 发送RGB命令
@@ -1525,6 +1559,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		clearData();
+        EventBus.getDefault().unregister(this);
 	}
 
     /**

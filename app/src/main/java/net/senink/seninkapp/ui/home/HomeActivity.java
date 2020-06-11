@@ -429,8 +429,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_ERROR_BUSY, this);
 		MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_KICK_OUT_CONFIRM, this);
 		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN, this);
-
 	}
+
 
 	@Override
 	protected void onStart() {

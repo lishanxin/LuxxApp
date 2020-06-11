@@ -79,6 +79,11 @@ public class GeneralDataManager {
         for (Group group : MyApplication.getInstance().getMesh().groups) {
             if(group.type == Group.BOUND_TYPE.TELINK_GROUP){
                 group.isOn = false;
+                for (PISBase base : srvsGroup) {
+                    if(base.getPISKeyString().equals(group.PISKeyString)){
+                        srvsGroup.remove(base);
+                    }
+                }
                 for (Integer meshAddress : group.subList) {
                     DeviceInfo deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(meshAddress);
                     if(deviceInfo.getOnOff() == 1){
@@ -89,11 +94,12 @@ public class GeneralDataManager {
             }
             generalGroup.add(new GeneralDeviceModel(new TelinkBase(group)));
         }
-//        if (srvsGroup.size() > 0){
-//            for (PISBase pisBase : srvsGroup) {
-//                generalGroup.add(new GeneralDeviceModel(pisBase));
-//            }
-//        }
+
+        if (srvsGroup.size() > 0){
+            for (PISBase pisBase : srvsGroup) {
+                generalGroup.add(new GeneralDeviceModel(pisBase));
+            }
+        }
 
         return generalGroup;
     }

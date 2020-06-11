@@ -54,7 +54,9 @@ import net.senink.seninkapp.adapter.LightGroupEditAdapter;
 
 import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
+import net.senink.seninkapp.telink.model.EventBusOperation;
 import net.senink.seninkapp.telink.model.TelinkBase;
+import net.senink.seninkapp.ui.constant.Constant;
 import net.senink.seninkapp.ui.constant.MessageModel;
 import net.senink.seninkapp.ui.util.CommonUtils;
 import net.senink.seninkapp.ui.util.HttpUtils;
@@ -65,6 +67,8 @@ import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase;
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase.Mode;
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase.OnRefreshListener;
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshListView;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * 用于修改等分组和某分组下的设备
@@ -160,16 +164,15 @@ public class LightEditActivity extends BaseActivity implements
 					if(telinkBase.isDevice()){
 						if(telinkGroup != null){
 							TelinkGroupApiManager.getInstance().addDeviceToGroup(telinkGroup.address, telinkBase.getDevice().meshAddress);
-							telinkGroup.type = Group.BOUND_TYPE.TELINK_GROUP;
-							MyApplication.getInstance().getMesh().saveOrUpdate(LightEditActivity.this);
+							setTelinkGroup(telinkGroup);
 						}
 					}else{
 						if(telinkDeviceinfo != null){
 							TelinkGroupApiManager.getInstance().addDeviceToGroup(telinkBase.getGroup().address, telinkDeviceinfo.meshAddress);
-							telinkBase.getGroup().type = Group.BOUND_TYPE.TELINK_GROUP;
-							MyApplication.getInstance().getMesh().saveOrUpdate(LightEditActivity.this);
+							setTelinkGroup(telinkBase.getGroup());
 						}
 					}
+					EventBus.getDefault().post(new EventBusOperation(EventBusOperation.REFRESH_GROUP_DATA));
 				}
 				break;
 			case 1000:
@@ -189,6 +192,27 @@ public class LightEditActivity extends BaseActivity implements
 			}
 		}
 	};
+
+	private void setTelinkGroup(Group telinkGroup) {
+		if(telinkGroup.type != Group.BOUND_TYPE.TELINK_GROUP){
+			infor = null;
+			telinkGroup.type = Group.BOUND_TYPE.TELINK_GROUP;
+			TelinkGroupApiManager.getInstance().deletePISGroup(telinkGroup.PISKeyString, new PipaRequest.OnPipaRequestStatusListener() {
+				@Override
+				public void onRequestStart(PipaRequest req) {
+
+				}
+
+				@Override
+				public void onRequestResult(PipaRequest req) {
+
+				}
+			});
+			MyApplication.getInstance().getMesh().saveOrUpdate(LightEditActivity.this);
+			updateGroupList(null);
+		}
+	}
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -219,7 +243,7 @@ public class LightEditActivity extends BaseActivity implements
 					telinkGroup = MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress);
 					if(telinkGroup != null){
 						bound_type = telinkGroup.type;
-						if(bound_type != Group.BOUND_TYPE.TELINK_GROUP){
+						if(bound_type == Group.BOUND_TYPE.NONE){
 							key = telinkGroup.PISKeyString;
 						}
 					}
@@ -428,16 +452,9 @@ public class LightEditActivity extends BaseActivity implements
 	private void addPisDeviceToFilter(List<PISBase> objects, List<GeneralDeviceModel> filterList){
 		if(infor != null && objects != null){
 			List<PISBase> srvs = infor.getGroupObjects();
-			List<Group> groups = MyApplication.getInstance().getMesh().groups;
 			for (PISBase srv : objects) {
 				if (!srvs.contains(srv)){
 					filterList.add(new GeneralDeviceModel(srv));
-
-					for (Group group : groups) {
-						if(group.PISKeyString.equals(srv.getPISKeyString()) ){
-							break;
-						}
-					}
 				}
 			}
 		}

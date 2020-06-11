@@ -22,6 +22,7 @@ import com.telink.sig.mesh.event.MeshEvent;
 import com.telink.sig.mesh.event.NotificationEvent;
 import com.telink.sig.mesh.event.OnlineStatusEvent;
 import com.telink.sig.mesh.light.MeshService;
+import com.telink.sig.mesh.model.Group;
 
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.seninkapp.GeneralDeviceModel;
@@ -29,6 +30,7 @@ import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 
 import net.senink.seninkapp.adapter.MixLightListAdapter;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.ui.home.HomeActivity;
 import net.senink.seninkapp.ui.home.TelinkDataRefreshEntry;
 import net.senink.seninkapp.ui.util.LogUtils;
@@ -87,6 +89,7 @@ public class LightControlFragment extends Fragment implements  EventListener<Str
 
         setData();
         setListener();
+        checkTelinkGroups();
         return mRootView;
     }
 
@@ -211,8 +214,27 @@ public class LightControlFragment extends Fragment implements  EventListener<Str
         MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_MESH_RESET, this);
 
         MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_COMPLETE, this);
+
     }
 
+    private void checkTelinkGroups() {
+        List<Group> groups = MyApplication.getInstance().getMesh().groups;
+        for (Group group : groups) {
+            if(group.type == Group.BOUND_TYPE.TELINK_GROUP){
+                TelinkGroupApiManager.getInstance().deletePISGroup(group.PISKeyString, new PipaRequest.OnPipaRequestStatusListener() {
+                    @Override
+                    public void onRequestStart(PipaRequest req) {
+
+                    }
+
+                    @Override
+                    public void onRequestResult(PipaRequest req) {
+
+                    }
+                });
+            }
+        }
+    }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
