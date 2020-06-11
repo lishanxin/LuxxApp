@@ -16,12 +16,17 @@ import com.telink.sig.mesh.model.SigMeshModel;
 import com.telink.sig.mesh.util.TelinkLog;
 
 import net.senink.piservice.pis.PISBase;
+import net.senink.piservice.pis.PISBaseAdd;
 import net.senink.piservice.pis.PISMCSManager;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.seninkapp.GeneralDataManager;
 import net.senink.seninkapp.MyApplication;
+import net.senink.seninkapp.R;
 import net.senink.seninkapp.ui.constant.Constant;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +51,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
         MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_CTL_STATUS_NOTIFY, this);
         MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
         MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_COMPLETE, this);
+        EventBus.getDefault().register(this);
     }
     public void init(Context context) {
         mContext = context;
@@ -57,6 +63,15 @@ public class TelinkGroupApiManager implements EventListener<String> {
     private int opType;
 
     private static final String TAG_CMD = "TAG_CMD";
+
+
+    @Subscribe
+    public void pisDeviceAdded(PISBaseAdd pisBaseAdd){
+        PISBase pisBase = pisBaseAdd.getDevice();
+        if(pisBase.ServiceType == PISBase.SERVICE_TYPE_GROUP){
+            addGroup(mContext.getText(R.string.default_group_name).toString(), pisBase);
+        }
+    }
 
     // 添加组
     public void addGroup(String groupName, PISBase object) {
@@ -82,20 +97,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
                 deleteDeviceFromGroup(groupAddress, deviceInfo.meshAddress);
             }
             MyApplication.getInstance().getMesh().deletedGroupAddress.push(groupAddress);
-            if(group.PISKeyString != null){
-                PISBase infor = PISManager.getInstance().getPISObject(group.PISKeyString);
-                deletePISGroup(infor, new PipaRequest.OnPipaRequestStatusListener() {
-                    @Override
-                    public void onRequestStart(PipaRequest req) {
 
-                    }
-
-                    @Override
-                    public void onRequestResult(PipaRequest req) {
-
-                    }
-                });
-            }
             groups.remove(group);
             TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
         }

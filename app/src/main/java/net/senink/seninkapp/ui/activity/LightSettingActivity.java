@@ -580,14 +580,16 @@ public class LightSettingActivity extends BaseActivity implements
                 Bundle bundle = new Bundle();
                 intent = new Intent(LightSettingActivity.this,
                         ModifyNameActivity.class);
-                bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
-                bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
-                bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
-                intent.putExtras(bundle);
-                if(infor != null){
+                if(isTelink){
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
+                    bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
+                    intent.putExtras(bundle);
+                } else if(infor != null){
                     intent.putExtra(MessageModel.PISBASE_KEYSTR,
                             infor.getPISKeyString());
                 }
+
                 startActivityForResult(intent, REQUEST_NAME_MOD);
                 overridePendingTransition(R.anim.anim_in_from_right,
                         R.anim.anim_out_to_left);
@@ -598,7 +600,12 @@ public class LightSettingActivity extends BaseActivity implements
                 if(isTelink){
                     if(isTelinkGroup && telinkGroup != null){
                         TelinkGroupApiManager.getInstance().deleteGroup(telinkGroup.address);
-                        deletePISGroup(manager.getPISObject(telinkGroup.PISKeyString));
+                        if(telinkGroup.PISKeyString != null){
+                            PISBase infor = PISManager.getInstance().getPISObject(telinkGroup.PISKeyString);
+                            if(infor != null){
+                                deletePISGroup(infor);
+                            }
+                        }
                         return;
                     }
                 }

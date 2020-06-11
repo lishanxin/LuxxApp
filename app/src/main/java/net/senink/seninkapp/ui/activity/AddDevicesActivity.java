@@ -183,8 +183,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 						finish();
 						overridePendingTransition(R.anim.anim_in_from_left,
 								R.anim.anim_out_to_right);
-						// TODO LEE 需要把两个灯组合并成一个。
-						TelinkGroupApiManager.getInstance().addGroup(getString(R.string.default_group_name), req.object);
+
 					}else
 						ToastUtils.showToast(AddDevicesActivity.this, R.string.add_group_error_tip);
 

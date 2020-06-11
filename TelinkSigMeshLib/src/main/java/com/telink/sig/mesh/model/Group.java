@@ -33,7 +33,6 @@ public class Group implements Serializable {
     public enum BOUND_TYPE implements Serializable{
         NONE, PIS_GROUP, TELINK_GROUP
     }
-    public boolean isOn = false;
     // telink灯具的meshAddress
     public List<Integer> subList = new ArrayList<>();
     public String name;

@@ -156,6 +156,7 @@ public class LightEditActivity extends BaseActivity implements
 					});
 					req.NeedAck = true;
 					base.request(req);
+					EventBus.getDefault().post(new EventBusOperation(EventBusOperation.REFRESH_GROUP_DATA));
 				}
 				break;
 			case MSG_TELINK_ITEM_CLICK:

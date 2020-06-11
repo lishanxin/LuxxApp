@@ -14,6 +14,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
+import net.senink.piservice.R;
 import net.senink.piservice.http.PISHttpManager;
 import net.senink.piservice.jniutil.PisInterface;
 import net.senink.piservice.PISConstantDefine;
@@ -35,6 +36,8 @@ import net.senink.piservice.struct.PipaRequestData;
 import net.senink.piservice.struct.UserInfo;
 import net.senink.piservice.util.ByteUtilLittleEndian;
 import net.senink.piservice.util.LogUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -767,6 +770,9 @@ public class PISManager implements Serializable {
             return;
 
         piserviceMap.put(object.getPISKeyString(), object);
+        if(object.ServiceType == PISBase.SERVICE_TYPE_GROUP){
+            EventBus.getDefault().post(new PISBaseAdd(object));
+        }
         if (object instanceof PISDevice) {
             List<PISBase> srvs = PIServicesWithQuery(object, EnumServicesQueryBaseonDevice);
             for (PISBase srv : srvs) {
