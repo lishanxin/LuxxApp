@@ -23,7 +23,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 26
         versionCode 1200
-        versionName "1.32"
+        versionName "1.33"
         multiDexEnabled true
         buildConfigField "boolean", "Release", "false"
 
@@ -90,7 +90,7 @@ android {
 //            buildConfigField 'boolean','isLocal_default', "true"
 //        }
         eureka {
-            applicationId "net.senink.eureka"
+            applicationId "net.senink.eureka.test"
             manifestPlaceholders = [app_name: "NORDIC DLUXX", app_icon: "@mipmap/luxx_launcher", PGYER_APPID: "b3ddb7c3b6205b34452b94a1998fa35b"]
             buildConfigField 'String', 'Manufacturer', '"eureka"'
             buildConfigField 'Integer', 'ManufacturerID', '5'

@@ -172,7 +172,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             String currTime = formatter.format(new Date());
             fileName = "crash-" + currTime + "-" + timestamp + ".log";
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                String path = Environment.getExternalStorageDirectory().getPath() + "/kmbox/log/";
+                String path = Environment.getExternalStorageDirectory().getPath() + "/lsxLog/log/";
                 File dir = new File(path);
                 if (!dir.exists()) {
                     dir.mkdirs();

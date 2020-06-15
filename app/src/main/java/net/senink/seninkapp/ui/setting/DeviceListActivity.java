@@ -14,6 +14,7 @@ import net.senink.seninkapp.BaseActivity;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.telink.model.TelinkBase;
+import net.senink.seninkapp.telink.view.IconGenerator;
 import net.senink.seninkapp.ui.cache.CacheManager;
 import net.senink.seninkapp.ui.constant.MessageModel;
 import net.senink.seninkapp.ui.constant.ProductClassifyInfo;
@@ -618,6 +619,9 @@ public class DeviceListActivity extends BaseActivity implements
 			if(generalDeviceModel.isTelink()){
 				com.telink.sig.mesh.model.DeviceInfo telinkDeviceInfo = generalDeviceModel.getTelinkBase().getDevice();
 				holder.macTv.setText(telinkDeviceInfo.macAddress);
+				final int deviceType = telinkDeviceInfo.nodeInfo != null && telinkDeviceInfo.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
+				holder.icon.setImageResource(IconGenerator.getIcon(deviceType, telinkDeviceInfo.getOnOff()));
+				holder.nameTv.setText(telinkDeviceInfo.getDeviceName());
 			}else{
 				PISDevice deviceInfo = (PISDevice) generalDeviceModel.getPisBase();
 				try {

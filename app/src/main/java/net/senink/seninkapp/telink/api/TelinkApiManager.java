@@ -158,9 +158,8 @@ public class TelinkApiManager implements EventListener<String> {
                 mContext.sendBroadcast(intent);
                 if (onKeyBindSuccess((MeshEvent) event)) {
                     TelinkLog.d("set device time publish");
-                    // waiting for publication status
                 } else {
-                    startScanTelink();
+//                    startScanTelink();
                 }
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_FAIL:
@@ -276,6 +275,7 @@ public class TelinkApiManager implements EventListener<String> {
 
     // 扫描蓝牙
     public void startScanTelink() {
+        TelinkApiManager.getInstance().clearFoundDevice();
         ScanParameters parameters = ScanParameters.getDefault(false, true);
         parameters.setScanTimeout(20 * 1000);
         List<DeviceInfo> devices = MyApplication.getInstance().getMesh().devices;
@@ -298,6 +298,9 @@ public class TelinkApiManager implements EventListener<String> {
     public void clearFoundDevice() {
         if (devices != null) {
             devices.clear();
+            if(mListAdapter != null){
+                mListAdapter.notifyDataSetChanged();
+            }
         }
     }
 

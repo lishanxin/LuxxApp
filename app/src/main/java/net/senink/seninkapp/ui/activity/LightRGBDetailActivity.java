@@ -42,6 +42,7 @@ import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.sqlite.SceneDao;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.telink.model.EventBusOperation;
 import net.senink.seninkapp.ui.constant.Constant;
 import net.senink.seninkapp.ui.constant.MessageModel;
@@ -285,7 +286,6 @@ public class LightRGBDetailActivity extends BaseActivity implements
 	private void setPisData(String key){
         if (key != null){
             infor = (PISxinColor) manager.getPISObject(key);
-
             // NextApp.tw
             if ( infor.getServiceId() != 0 )
             {

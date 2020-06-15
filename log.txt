@@ -1,0 +1,655 @@
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/TelinkBluetoothSDK-JNI: SendPkt
+D/TelinkBluetoothSDK: sendPkt type:17 data:40:6A:A4:81:39:46:D3:4D:01:3A:D1:7B:5A:9B:1C:1F:C0:A3:96:FD
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: 40,6A,A4,81,39,46,D3,4D,01,3A,D1,7B,5A,9B,1C,1F,C0,A3,96,FD delay :0}
+D/TelinkBluetoothSDK-JNI: SendPkt
+W/TelinkBluetoothSDK: commandSuccess
+D/TelinkBluetoothSDK: sendPkt type:17 data:C0:7D
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: C0,7D delay :0}
+W/TelinkBluetoothSDK: commandSuccess
+D/TelinkBluetoothSDK-JNI: [ERR]:tx reliable: cmd is busy:
+    [ERR]:mesh_bulk_cmd failed:
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 11
+W/TelinkBluetoothSDK: INI CMD ERR:00:00:00:00:02:00:01:C0:82:01
+D/TelinkBluetoothSDK: on command err: MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+    cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 0
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+D/SHLib: request PIPA ADDR ING......piadState:1
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_MESSAGE  message:5 
+    pimain_task alive
+W/TelinkBluetoothSDK: onNotify -->00:6A:E4:1D:74:48:F9:9A:4C:90:59:B6:F9:FA:BF:7B:4E:44:9E:A7:1D:83
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+W/TelinkBluetoothSDK: onNotify -->00:6A:7D:DB:1B:E2:55:B7:E4:E9:E8:3E:22:04:7E:A0:05:87:94:4D:EA:51
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+D/TelinkBluetoothSDK: TelinkApplication#onCommandEvent
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+D/SHLib: recv a block to local 
+    broadcast PIPA package 
+W/TelinkBluetoothSDK: CMD busy
+    CMD busy
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0002,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+    [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK-JNI: mesh_tx_reliable_stop_report
+D/TelinkBluetoothSDK: onReliableCmdStop: , op=0182 rspMax=0 rspCnt=1
+D/TelinkBluetoothSDK: cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 1
+I/mash: hide ble connecting tips
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_DEVICE_ON_OFF_STATUS--com.telink.sig.mesh.event.NotificationEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0002,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+    [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:02:00:01:00:82:04:01
+W/TelinkBluetoothSDK: onNotify -->00:6A:4E:16:AC:56:31:F2:B8:25:CF:79:FB:F8:AF:EA:7D:B7:31:09:1C:CD
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [DEBUG]:(common) -- Tx cmd use INI format -- : 
+    :a3 ff 00 00 00 00 02 00  00 c0 82 01 
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [DEBUG]:(common) -- Tx cmd use INI format -- : 
+    :a3 ff 00 00 00 00 02 00  01 c0 82 01 
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0006,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+    [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:06:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:06:00:01:00:82:04:01
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)the mesh access tx cmd is 0x0182 :
+I/mash: hide ble connecting tips
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_DEVICE_ON_OFF_STATUS--com.telink.sig.mesh.event.NotificationEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_PROCESSING--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_PROCESSING--com.telink.sig.mesh.event.CommandEvent
+I/mash: hide ble connecting tips
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_DEVICE_ON_OFF_STATUS--com.telink.sig.mesh.event.NotificationEvent
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+D/SHLib: pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/TelinkBluetoothSDK-JNI: SendPkt
+D/TelinkBluetoothSDK: sendPkt type:17 data:40:6A:22:4D:C2:63:7F:62:E8:A4:AE:EC:2B:D4:C2:D1:6F:DD:DA:F6
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: 40,6A,22,4D,C2,63,7F,62,E8,A4,AE,EC,2B,D4,C2,D1,6F,DD,DA,F6 delay :0}
+W/TelinkBluetoothSDK: commandSuccess
+D/TelinkBluetoothSDK-JNI: SendPkt
+D/TelinkBluetoothSDK: sendPkt type:17 data:C0:5E
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: C0,5E delay :0}
+D/TelinkBluetoothSDK-JNI: [ERR]:tx reliable: cmd is busy:
+    [ERR]:mesh_bulk_cmd failed:
+    OnAppendLog_vs： 11
+W/TelinkBluetoothSDK: commandSuccess
+W/TelinkBluetoothSDK: INI CMD ERR:00:00:00:00:02:00:01:C0:82:01
+D/TelinkBluetoothSDK: on command err: MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+    cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 0
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+    Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+D/TelinkBluetoothSDK: TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+D/SHLib: recv a block
+D/SHLib: frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+W/TelinkBluetoothSDK: onNotify -->00:6A:A1:A8:4B:BB:75:D8:8C:5D:C0:99:BC:2F:AC:39:1C:18:61:33:DB:F9
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0002,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+    [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK-JNI: mesh_tx_reliable_stop_report
+D/TelinkBluetoothSDK: onReliableCmdStop: , op=0182 rspMax=0 rspCnt=1
+    cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 1
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [DEBUG]:(common) -- Tx cmd use INI format -- : 
+    :a3 ff 00 00 00 00 02 00  00 c0 82 01 
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [DEBUG]:(common) -- Tx cmd use INI format -- : 
+    :a3 ff 00 00 00 00 02 00  01 c0 82 01 
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)the mesh access tx cmd is 0x0182 :
+W/TelinkBluetoothSDK: CMD busy
+    CMD busy
+I/mash: hide ble connecting tips
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_DEVICE_ON_OFF_STATUS--com.telink.sig.mesh.event.NotificationEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_PROCESSING--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_PROCESSING--com.telink.sig.mesh.event.CommandEvent
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+D/SHLib: recv a block
+D/SHLib: recv a block to local 
+D/SHLib: frametype:PIPA_FRMTYPE_NORMAL 
+D/SHLib: broadcast PIPA package 
+D/SHLib: pimain_task alive
+D/SHLib: piservice_task alive 
+D/SHLib: pimain_task alive
+D/SHLib: recv a block to local 
+    broadcast PIPA package 
+    piservice_task alive 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+D/SHLib: recv a block
+D/SHLib: recv a block to local 
+D/SHLib: frametype:PIPA_FRMTYPE_NORMAL 
+D/SHLib: broadcast PIPA package 
+D/SHLib: pimain_task alive
+D/SHLib: piservice_task alive 
+D/SHLib: pimain_task alive
+D/SHLib: recv a block to local 
+    broadcast PIPA package 
+    piservice_task alive 
+D/TelinkBluetoothSDK-JNI: SendPkt
+D/TelinkBluetoothSDK: sendPkt type:17 data:40:6A:1C:FD:39:DA:A9:D1:F8:A0:B7:EB:59:D9:5D:5E:0A:D9:C7:13
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: 40,6A,1C,FD,39,DA,A9,D1,F8,A0,B7,EB,59,D9,5D,5E,0A,D9,C7,13 delay :0}
+D/TelinkBluetoothSDK-JNI: SendPkt
+D/TelinkBluetoothSDK: sendPkt type:17 data:C0:B3
+W/TelinkBluetoothSDK: commandSuccess
+    processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: C0,B3 delay :0}
+W/TelinkBluetoothSDK: commandSuccess
+D/TelinkBluetoothSDK-JNI: [ERR]:tx reliable: cmd is busy:
+    [ERR]:mesh_bulk_cmd failed:
+    OnAppendLog_vs： 11
+W/TelinkBluetoothSDK: INI CMD ERR:00:00:00:00:02:00:01:C0:82:01
+D/TelinkBluetoothSDK: on command err: MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+    cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 0
+W/TelinkBluetoothSDK: onNotify -->00:6A:0F:96:AB:A8:D8:DD:2A:BD:DE:64:5B:64:9B:29:DF:CE:C5:AE:E0:44
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0006,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+    [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:06:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:06:00:01:00:82:04:01
+D/TelinkBluetoothSDK-JNI: mesh_tx_reliable_stop_report
+D/TelinkBluetoothSDK: onReliableCmdStop: , op=0182 rspMax=0 rspCnt=1
+    cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 1
+W/TelinkBluetoothSDK: onNotify -->00:6A:67:76:CC:CA:80:67:F1:02:74:AD:F6:75:3F:22:99:95:66:86:5A:FC
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+D/TelinkBluetoothSDK: TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+I/mash: hide ble connecting tips
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_DEVICE_ON_OFF_STATUS--com.telink.sig.mesh.event.NotificationEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+W/TelinkBluetoothSDK: CMD busy
+    CMD busy
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0002,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+    [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [DEBUG]:(common) -- Tx cmd use INI format -- : 
+    :a3 ff 00 00 00 00 02 00  00 c0 82 01 
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [DEBUG]:(common) -- Tx cmd use INI format -- : 
+    :a3 ff 00 00 00 00 02 00  01 c0 82 01 
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)the mesh access tx cmd is 0x0182 :
+I/mesh-connect:  send data to device[0]
+D/TelinkBluetoothSDK-JNI: SendPkt
+D/TelinkBluetoothSDK: sendPkt type:17 data:40:6A:B9:3F:BA:31:2B:E8:6E:4F:51:00:0F:49:E1:AC:9F:C9:48:70
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: 40,6A,B9,3F,BA,31,2B,E8,6E,4F,51,00,0F,49,E1,AC,9F,C9,48,70 delay :0}
+W/TelinkBluetoothSDK: commandSuccess
+D/TelinkBluetoothSDK-JNI: SendPkt
+D/TelinkBluetoothSDK: sendPkt type:17 data:C0:CC
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: C0,CC delay :0}
+W/TelinkBluetoothSDK: commandSuccess
+D/TelinkBluetoothSDK-JNI: [ERR]:tx reliable: cmd is busy:
+    [ERR]:mesh_bulk_cmd failed:
+    OnAppendLog_vs： 11
+W/TelinkBluetoothSDK: INI CMD ERR:00:00:00:00:02:00:01:C0:82:01
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+D/TelinkBluetoothSDK: on command err: MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/SHLib: frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/TelinkBluetoothSDK: cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 0
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+I/mash: hide ble connecting tips
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_DEVICE_ON_OFF_STATUS--com.telink.sig.mesh.event.NotificationEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_PROCESSING--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_PROCESSING--com.telink.sig.mesh.event.CommandEvent
+D/TelinkBluetoothSDK: TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+W/TelinkBluetoothSDK: onNotify -->00:6A:01:D0:49:81:B3:7B:FB:9F:C9:4D:7F:65:64:3C:A5:AD:41:43:0D:A9
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0002,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+D/TelinkBluetoothSDK-JNI: [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK-JNI: mesh_tx_reliable_stop_report
+D/TelinkBluetoothSDK: onReliableCmdStop: , op=0182 rspMax=0 rspCnt=1
+    cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 1
+W/TelinkBluetoothSDK: onNotify -->00:6A:3D:3A:0C:18:6B:D6:59:2C:DC:97:BE:FB:1F:5F:BF:2C:1F:D2:9D:79
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/TelinkBluetoothSDK: TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+I/mash: hide ble connecting tips
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_DEVICE_ON_OFF_STATUS--com.telink.sig.mesh.event.NotificationEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0006,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+D/TelinkBluetoothSDK-JNI: [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:06:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:06:00:01:00:82:04:01
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [DEBUG]:(common) -- Tx cmd use INI format -- : 
+    :a3 ff 00 00 00 00 02 00  00 c0 82 01 
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [DEBUG]:(common) -- Tx cmd use INI format -- : 
+    :a3 ff 00 00 00 00 02 00  01 c0 82 01 
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)the mesh access tx cmd is 0x0182 :
+W/TelinkBluetoothSDK: CMD busy
+    CMD busy
+I/mash: hide ble connecting tips
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_DEVICE_ON_OFF_STATUS--com.telink.sig.mesh.event.NotificationEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_PROCESSING--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_PROCESSING--com.telink.sig.mesh.event.CommandEvent
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+D/SHLib: piservice_task alive 
+    recv a block to local 
+D/SHLib: pimain_task alive
+D/SHLib: broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+D/SHLib: piservice_task alive 
+    recv a block to local 
+D/SHLib: pimain_task alive
+D/SHLib: broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+D/SHLib: piservice_task alive 
+    recv a block to local 
+D/SHLib: pimain_task alive
+D/SHLib: broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+D/SHLib: piservice_task alive 
+    recv a block to local 
+D/SHLib: pimain_task alive
+D/SHLib: broadcast PIPA package 
+D/SHLib: pimain_task alive
+D/TelinkBluetoothSDK-JNI: SendPkt
+D/TelinkBluetoothSDK: sendPkt type:17 data:40:6A:27:CE:05:82:C0:F8:36:01:73:8C:28:D3:EA:BF:FF:37:C7:2C
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: 40,6A,27,CE,05,82,C0,F8,36,01,73,8C,28,D3,EA,BF,FF,37,C7,2C delay :0}
+D/TelinkBluetoothSDK-JNI: SendPkt
+W/TelinkBluetoothSDK: commandSuccess
+D/TelinkBluetoothSDK: sendPkt type:17 data:C0:C2
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: C0,C2 delay :0}
+W/TelinkBluetoothSDK: commandSuccess
+D/TelinkBluetoothSDK-JNI: [ERR]:tx reliable: cmd is busy:
+    [ERR]:mesh_bulk_cmd failed:
+    OnAppendLog_vs： 11
+W/TelinkBluetoothSDK: INI CMD ERR:00:00:00:00:02:00:01:C0:82:01
+D/TelinkBluetoothSDK: on command err: MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+    cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 0
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+    Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+W/mesh-connect: recv data from [33684] to 28741
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    p2p PIPA package 
+W/mesh-connect: recv data from [33684] to 28741
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/TelinkBluetoothSDK: TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+D/TelinkBluetoothSDK: TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+W/TelinkBluetoothSDK: CMD busy
+    CMD busy
+I/PISManager: PIPA_EVENT_ALIVE pid[0x0100] saddr[0x8394] srvid[0x0001] t1[00] t2[00
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    p2p PIPA package 
+I/PISManager: PIPA_EVENT_ALIVE pid[0x0100] saddr[0x8394] srvid[0x0002] t1[10] t2[05
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+    piservice_task alive 
+W/TelinkBluetoothSDK: onNotify -->00:6A:DE:AD:78:0F:31:26:97:74:E6:C5:33:6F:D8:B6:B1:B6:A9:D2:5E:07
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0002,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+    [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK-JNI: mesh_tx_reliable_stop_report
+D/TelinkBluetoothSDK: onReliableCmdStop: , op=0182 rspMax=0 rspCnt=1
+    cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 1
+I/mash: hide ble connecting tips
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_DEVICE_ON_OFF_STATUS--com.telink.sig.mesh.event.NotificationEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [DEBUG]:(common) -- Tx cmd use INI format -- : 
+    :a3 ff 00 00 00 00 02 00  00 c0 82 01 
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [DEBUG]:(common) -- Tx cmd use INI format -- : 
+    :a3 ff 00 00 00 00 02 00  01 c0 82 01 
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+W/TelinkBluetoothSDK: onNotify -->00:6A:1E:F3:AC:A5:15:A5:FC:27:1D:66:91:98:8F:6F:FF:A1:24:85:3E:FB
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0006,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+    [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:06:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:06:00:01:00:82:04:01
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)the mesh access tx cmd is 0x0182 :
+D/TelinkBluetoothSDK: TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_PROCESSING--com.telink.sig.mesh.event.CommandEvent
+D/TelinkBluetoothSDK: TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_PROCESSING--com.telink.sig.mesh.event.CommandEvent
+I/mash: hide ble connecting tips
+D/TelinkBluetoothSDK: post event : com.telink.sig.mesh.EVENT_TYPE_DEVICE_ON_OFF_STATUS--com.telink.sig.mesh.event.NotificationEvent
+D/SHLib: recv a block
+D/SHLib: frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+D/SHLib: frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+D/TelinkBluetoothSDK-JNI: SendPkt
+D/TelinkBluetoothSDK: sendPkt type:17 data:40:6A:35:62:96:74:A0:55:8C:11:CA:D5:44:E8:14:87:7F:5C:97:39
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: 40,6A,35,62,96,74,A0,55,8C,11,CA,D5,44,E8,14,87,7F,5C,97,39 delay :0}
+W/TelinkBluetoothSDK: commandSuccess
+D/TelinkBluetoothSDK-JNI: SendPkt
+D/TelinkBluetoothSDK: sendPkt type:17 data:C0:1E
+W/TelinkBluetoothSDK: processCommand : { tag : null, type : WRITE_NO_RESPONSE CHARACTERISTIC_UUID_WRITE :00002add-0000-1000-8000-00805f9b34fb data: C0,1E delay :0}
+W/TelinkBluetoothSDK: commandSuccess
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+D/TelinkBluetoothSDK-JNI: [ERR]:tx reliable: cmd is busy:
+    [ERR]:mesh_bulk_cmd failed:
+    OnAppendLog_vs： 11
+W/TelinkBluetoothSDK: INI CMD ERR:00:00:00:00:02:00:01:C0:82:01
+D/TelinkBluetoothSDK: on command err: MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+    cmd complete opCode -- 000182 rspMax -- 0 rspCnt -- 0
+D/TelinkBluetoothSDK: TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_ERROR_BUSY--com.telink.sig.mesh.event.CommandEvent
+    TelinkApplication#onCommandEvent
+    post event : com.telink.sig.mesh.EVENT_TYPE_CMD_COMPLETE--com.telink.sig.mesh.event.CommandEvent
+D/SHLib: recv a block
+    frametype:PIPA_FRMTYPE_NORMAL 
+    pimain_task alive
+D/SHLib: piservice_task alive 
+    recv a block to local 
+    broadcast PIPA package 
+W/TelinkBluetoothSDK: CMD busy
+    CMD busy
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C000, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/TelinkBluetoothSDK: Send Mesh Command : MeshCommand{netKeyIndex=0000, applicationKeyIndex=0000, retryCnt=02, rspMax=00, destAddress=C001, opcode=000182, params=}
+D/TelinkBluetoothSDK-JNI: isOpReliable: 1
+    sendOpByINI
+    [ERR]:(common)tx cmd busy!........................:
+D/TelinkBluetoothSDK: Error: CMD busy!
+D/PullToRefresh: First Visible: 0. Visible Count: 4. Total Items:4
+W/TelinkBluetoothSDK: onNotify -->00:6A:11:C4:D7:96:56:1A:DD:79:AD:87:19:10:64:E3:F9:68:E1:FE:9A:C9
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+W/TelinkBluetoothSDK: onNotify -->00:6A:33:D8:11:5E:58:79:4D:1B:E9:F1:74:93:2E:CB:80:70:9D:1C:88:23
+D/TelinkBluetoothSDK-JNI: pushNotifyIntoFifo:22
+D/TelinkBluetoothSDK-JNI: OnAppendLog_vs： 23
+D/TelinkBluetoothSDK-JNI: [INFO]:(Basic)adr_src:0x0002,adr_dst:0x0001,access rx cmd is 0x482 :82 04 01 
+    [ERR]:model 0x1001 did't bind this key in element index 0:
+    OnAppendLog_vs： 10
+W/TelinkBluetoothSDK: MESH_CMD_RSP:F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK: command rsp F0:07:02:00:01:00:82:04:01
+D/TelinkBluetoothSDK-JNI: mesh_tx_reliable_stop_report
+D/TelinkBluetoothSDK: onReliableCmdStop: , op=0182 rspMax=0 rspCnt=1
+    cmd complete opCod

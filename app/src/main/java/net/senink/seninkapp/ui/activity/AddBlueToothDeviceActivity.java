@@ -166,70 +166,74 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 case MSG_UPDATEVIEW:
                     if (blueToothDevices != null && blueToothDevices.size() > 0 && !isConfiging) {
                         startAnima1();
-                        listView.setVisibility(View.VISIBLE);
-
+                        setListViewVisible(View.VISIBLE);
                         adapter.setList(blueToothDevices);
                         adapter.notifyDataSetChanged();
                     } else {
                         stopAnima1();
-                        listView.setVisibility(View.GONE);
+                        setListViewVisible(View.GONE);
                     }
                     break;
                 case MSG_TELINK_LINE_INIT: {
-					isConfiging = true;
-					telinkListView.setVisibility(View.GONE);
-					setSteps(0, true);
+                    isConfiging = true;
+                    setListViewVisible(View.GONE);
+                    setSteps(0, true);
 
-					mHandler.removeMessages(AddBlueToothDeviceActivity.MSG_TELINK_START_BINDING);
-					mHandler.removeMessages(AddBlueToothDeviceActivity.MSG_TELINK_DEVBIND_FAILED);
-					mHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_START_BINDING);
+                    mHandler.removeMessages(AddBlueToothDeviceActivity.MSG_TELINK_START_BINDING);
+                    mHandler.removeMessages(AddBlueToothDeviceActivity.MSG_TELINK_DEVBIND_FAILED);
+                    mHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_START_BINDING);
                 }
                 break;
-				case MSG_TELINK_START_BINDING: {
-					mHandler.removeMessages(MSG_TELINK_START_BINDING);
-					telinkListView.setVisibility(View.GONE);
-					startAnima2();
-				}
-				break;
-				case MSG_TELINK_DEVBIND_SUCCESS:{
-					mHandler.removeMessages(MSG_TELINK_DEVBIND_SUCCESS);
-					isConfiging = true;
-					setSteps(1, true);
-					startAnima2();
-					telinkListView.setVisibility(View.GONE);
-				}
-				break;
-				case MSG_TELINK_DEVBIND_FAILED:{
-					mHandler.removeMessages(MSG_TELINK_DEVBIND_FAILED);
-					isConfiging = false;
-					stopAnima2();
-					setSteps(1, false);
-					telinkListView.setVisibility(View.VISIBLE);
-				}
-				break;
-				case MSG_TELINK_CONFIG_SUCCESS:{
-					mHandler.removeMessages(MSG_TELINK_CONFIG_SUCCESS);
-					stopAnima3();
-					setSteps(3, true);
-					isConfiging = false;
-					//考虑如何在新设备添加后直接转换为PISDevice置入列表中保存
-					PISManager.getInstance().DiscoverAll();
-					ToastUtils.showToast(getApplicationContext(),
-							R.string.addbubble_step2_tip);
-					backBtn.performClick();
-				}
-				break;
-				case MSG_TELINK_CONFIG_FAILED:{
-					isConfiging = false;
-					stopAnima3();
-					mHandler.removeMessages(MSG_TELINK_CONFIG_FAILED);
-					telinkListView.setVisibility(View.VISIBLE);
-					setSteps(3, false);
-				}
-				break;
+                case MSG_TELINK_START_BINDING: {
+                    mHandler.removeMessages(MSG_TELINK_START_BINDING);
+                    setListViewVisible(View.GONE);
+                    startAnima2();
+                }
+                break;
+                case MSG_TELINK_DEVBIND_SUCCESS: {
+                    mHandler.removeMessages(MSG_TELINK_DEVBIND_SUCCESS);
+                    isConfiging = true;
+                    setSteps(1, true);
+                    startAnima2();
+                    setListViewVisible(View.GONE);
+                    mHandler.sendEmptyMessage(MSG_TELINK_START_CONFIGING);
+                }
+                break;
+                case MSG_TELINK_DEVBIND_FAILED: {
+                    mHandler.removeMessages(MSG_TELINK_DEVBIND_FAILED);
+                    isConfiging = false;
+                    stopAnima2();
+                    setSteps(1, false);
+                    setListViewVisible(View.VISIBLE);
+                }
+                break;
+                case MSG_TELINK_START_CONFIGING: {
+                    stopAnima2();
+                    startAnima3();
+                    setSteps(2, true);
+                }
+                break;
+                case MSG_TELINK_CONFIG_SUCCESS: {
+                    mHandler.removeMessages(MSG_TELINK_CONFIG_SUCCESS);
+                    stopAnima3();
+                    setSteps(3, true);
+                    isConfiging = false;
+                    //考虑如何在新设备添加后直接转换为PISDevice置入列表中保存
+                    configSuccess(false);
+                }
+                break;
+
+                case MSG_TELINK_CONFIG_FAILED: {
+                    isConfiging = false;
+                    stopAnima3();
+                    mHandler.removeMessages(MSG_TELINK_CONFIG_FAILED);
+                    setListViewVisible(View.VISIBLE);
+                    setSteps(3, false);
+                }
+                break;
                 case MSG_LINE_INIT: {
                     isConfiging = true;
-                    listView.setVisibility(View.GONE);
+                    setListViewVisible(View.GONE);
                     setSteps(0, true);
 
                     selectedBubble = adapter.getSelectedBubble();
@@ -349,7 +353,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                     isConfiging = false;
                     //考虑如何在新设备添加后直接转换为PISDevice置入列表中保存
                     PISManager.getInstance().DiscoverAll();
-                    configSuccess();
+                    configSuccess(true);
                     break;
                 case MSG_CONFIG_FAILED:
                     isConfiging = false;
@@ -372,27 +376,37 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     };
     private DeviceProvisionListAdapter telinkListAdapter;
 
-    private void configSuccess() {
-        if (adapter.getCount() == 1) {
-            ToastUtils.showToast(getApplicationContext(),
-                    R.string.addbubble_step2_tip);
-            backBtn.performClick();
-        } else {
-            try {
-                if (adapter.getSelectedBubble() != null) {
-                    blueToothDevices.remove(adapter.getSelectedBubble().uuidHash);
-                    adapter.setList(blueToothDevices);
-                }
-                adapter.notifyDataSetChanged();
-            } catch (Exception e) {
-                PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
-            }
-            if (adapter.getCount() > 0) {
-                setVisiablityOnListView(true);
+    private void configSuccess(boolean isPis) {
+        if (isPis) {
+            if (adapter.getCount() == 1 && telinkListAdapter.getItemCount() == 0) {
+                ToastUtils.showToast(getApplicationContext(),
+                        R.string.addbubble_step2_tip);
+                backBtn.performClick();
             } else {
-                setVisiablityOnListView(false);
+                try {
+                    if (adapter.getSelectedBubble() != null) {
+                        blueToothDevices.remove(adapter.getSelectedBubble().uuidHash);
+                        adapter.setList(blueToothDevices);
+                    }
+                    adapter.notifyDataSetChanged();
+                } catch (Exception e) {
+                    PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+                }
+                if (adapter.getCount() > 0) {
+                    setVisiablityOnListView(true);
+                } else {
+                    setVisiablityOnListView(false);
+                }
             }
+        }else{
+            if(telinkListAdapter.getItemCount() <= 1 && adapter.getCount() == 0){
+                ToastUtils.showToast(getApplicationContext(),
+                        R.string.addbubble_step2_tip);
+                backBtn.performClick();
+            }
+            TelinkApiManager.getInstance().startScanTelink();
         }
+        setListViewVisible(View.VISIBLE);
     }
 
     @Override
@@ -403,7 +417,6 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         manger = PISManager.getInstance();
 //		threadPool = Executors.newFixedThreadPool(1);
         mcm = manger.getMCSObject();
-        TelinkApiManager.getInstance().clearFoundDevice();
         TelinkApiManager.getInstance().startScanTelink();
 //		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_SUCCESS, this);
 //		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_FAIL, this);
@@ -422,6 +435,21 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
             anima1.start();
             ivAnima1.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setListViewVisible(int visible) {
+        if (visible == View.VISIBLE) {
+            if (adapter.getCount() > 0) {
+                listView.setVisibility(visible);
+            }
+            if (telinkListAdapter != null && telinkListAdapter.getItemCount() > 0) {
+                telinkListView.setVisibility(visible);
+            }
+        } else {
+            telinkListView.setVisibility(visible);
+            listView.setVisibility(visible);
+        }
+
     }
 
     private void stopAnima1() {
@@ -503,21 +531,21 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
             }
         });
 
-		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
-		MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_DEVICE_ON_OFF_STATUS, this);
-		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_MESH_EMPTY, this);
-		MyApplication.getInstance().addEventListener(com.telink.sig.mesh.light.MeshController.EVENT_TYPE_SERVICE_CREATE, this);
-		MyApplication.getInstance().addEventListener(com.telink.sig.mesh.light.MeshController.EVENT_TYPE_SERVICE_DESTROY, this);
-		MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_PROCESSING, this);
-		MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_COMPLETE, this);
-		MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_ERROR_BUSY, this);
-		MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_KICK_OUT_CONFIRM, this);
-		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN, this);
-		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_SUCCESS, this);
-		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_FAIL, this);
-		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS, this);
-		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_KEY_BIND_FAIL, this);
-		MyApplication.getInstance().addEventListener(ScanEvent.DEVICE_FOUND, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
+        MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_DEVICE_ON_OFF_STATUS, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_MESH_EMPTY, this);
+        MyApplication.getInstance().addEventListener(com.telink.sig.mesh.light.MeshController.EVENT_TYPE_SERVICE_CREATE, this);
+        MyApplication.getInstance().addEventListener(com.telink.sig.mesh.light.MeshController.EVENT_TYPE_SERVICE_DESTROY, this);
+        MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_PROCESSING, this);
+        MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_COMPLETE, this);
+        MyApplication.getInstance().addEventListener(CommandEvent.EVENT_TYPE_CMD_ERROR_BUSY, this);
+        MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_KICK_OUT_CONFIRM, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_AUTO_CONNECT_LOGIN, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_SUCCESS, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_FAIL, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS, this);
+        MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_KEY_BIND_FAIL, this);
+        MyApplication.getInstance().addEventListener(ScanEvent.DEVICE_FOUND, this);
     }
 
     /*
@@ -638,11 +666,11 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
      */
     private void setVisiablityOnListView(boolean isVisiable) {
         if (isVisiable) {
-            listView.setVisibility(View.VISIBLE);
             spaceView.setVisibility(View.GONE);
+            setListViewVisible(View.VISIBLE);
         } else {
-            listView.setVisibility(View.GONE);
             spaceView.setVisibility(View.VISIBLE);
+            setListViewVisible(View.GONE);
         }
     }
 
@@ -829,7 +857,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS:
                 mHandler.sendEmptyMessage(MSG_TELINK_CONFIG_SUCCESS);
-				TelinkApiManager.getInstance().autoConnectToDevices(this);
+                TelinkApiManager.getInstance().autoConnectToDevices(this);
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_FAIL:
                 mHandler.sendEmptyMessage(MSG_TELINK_CONFIG_FAILED);

@@ -597,8 +597,10 @@ public class LightSettingActivity extends BaseActivity implements
                 break;
             case R.id.title_delete: {
                 mcm = PISManager.getInstance().getMCSObject();
-                if(isTelink){
-                    if(isTelinkGroup && telinkGroup != null){
+                if(telinkGroup != null){
+                    if(adapter != null && adapter.getCount() > 0){
+                        deleteGroupByAlert();
+                    }else{
                         TelinkGroupApiManager.getInstance().deleteGroup(telinkGroup.address);
                         if(telinkGroup.PISKeyString != null){
                             PISBase infor = PISManager.getInstance().getPISObject(telinkGroup.PISKeyString);
@@ -606,53 +608,13 @@ public class LightSettingActivity extends BaseActivity implements
                                 deletePISGroup(infor);
                             }
                         }
-                        return;
                     }
+                    return;
                 }
                 if(infor != null){
                     if (infor.getGroupObjects().size() > 0) {
 //					ToastUtils.showToast(LightSettingActivity.this, R.string.lightgroup_delete_tips);
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LightSettingActivity.this);
-                        builder.setTitle(R.string.lightgroup_notice)
-                                .setIcon(R.drawable.luxx_login_icon)
-                                .setMessage(R.string.lightgroup_delete_tips)
-                                .setPositiveButton(R.string.lightgroup_yes, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                        PipaRequest req = mcm.removeGroup(infor.getGroupId());
-                                        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-                                            @Override
-                                            public void onRequestStart(PipaRequest req) {
-                                                showLoadingDialog();
-                                            }
-
-                                            @Override
-                                            public void onRequestResult(PipaRequest req) {
-                                                mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
-                                                hideLoadingDialog();
-                                                if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED) {
-                                                    backActivity(3);
-                                                } else {
-                                                    mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
-                                                    mHandler.sendEmptyMessage(MSG_DELETE_GROUP_FAILED);
-                                                }
-                                            }
-                                        });
-                                        mcm.request(req);
-                                        mHandler.sendEmptyMessageDelayed(MSG_DELETE_GROUP_FAILED,
-                                                Constant.TIMEOUT_TIME);
-                                    }
-                                })
-                                .setNegativeButton(R.string.lightgroup_no, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                        deleteGroupByAlert();
                     } else {
                         deletePISGroup(infor);
                     }
@@ -665,6 +627,49 @@ public class LightSettingActivity extends BaseActivity implements
         }
     }
 
+    private void deleteGroupByAlert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(LightSettingActivity.this);
+        builder.setTitle(R.string.lightgroup_notice)
+                .setIcon(R.drawable.luxx_login_icon)
+                .setMessage(R.string.lightgroup_delete_tips)
+                .setPositiveButton(R.string.lightgroup_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        PipaRequest req = mcm.removeGroup(infor.getGroupId());
+                        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                            @Override
+                            public void onRequestStart(PipaRequest req) {
+                                showLoadingDialog();
+                            }
+
+                            @Override
+                            public void onRequestResult(PipaRequest req) {
+                                mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
+                                hideLoadingDialog();
+                                if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED) {
+                                    TelinkGroupApiManager.getInstance().deleteGroup(telinkGroup.address);
+                                    backActivity(3);
+                                } else {
+                                    mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
+                                    mHandler.sendEmptyMessage(MSG_DELETE_GROUP_FAILED);
+                                }
+                            }
+                        });
+                        mcm.request(req);
+                        mHandler.sendEmptyMessageDelayed(MSG_DELETE_GROUP_FAILED,
+                                Constant.TIMEOUT_TIME);
+                    }
+                })
+                .setNegativeButton(R.string.lightgroup_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
     private void deletePISGroup(PISBase infor){

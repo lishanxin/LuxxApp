@@ -46,8 +46,12 @@
     <ImageButton
         android:id="@+id/title_add"
         style="@style/MenuInTitleStyle"
-        android:background="@drawable/icon_add"
+        android:background="@null"
+        android:src="@drawable/icon_add"
+        android:padding="20dp"
+        android:layout_marginRight="0dp"
         android:visibility="gone" />
+
     <Button
         android:id="@+id/title_finished"
         style="@style/MenuInTitleStyle"

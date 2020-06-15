@@ -103,6 +103,17 @@ public class TelinkGroupApiManager implements EventListener<String> {
         }
     }
 
+    public Group getTelinkGroupByPisKeyString(String pisKeyString){
+        if(pisKeyString == null) return null;
+        List<Group> groups = MyApplication.getInstance().getMesh().groups;
+        for (Group group : groups) {
+            if(pisKeyString.equals(group.PISKeyString)){
+                return group;
+            }
+        }
+        return null;
+    }
+
     public void deletePISGroup(String PISKeyString, PipaRequest.OnPipaRequestStatusListener listener){
         if(PISKeyString != null){
             PISBase infor = PISManager.getInstance().getPISObject(PISKeyString);
