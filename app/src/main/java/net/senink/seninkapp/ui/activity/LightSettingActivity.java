@@ -4,23 +4,16 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.StringRes;
-import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -28,17 +21,13 @@ import android.widget.ImageView;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pgyersdk.crash.PgyCrashManager;
-import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
 import com.telink.sig.mesh.model.SigMeshModel;
 
-import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pinm.PINMoBLE.MeshController;
 import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISMCSManager;
@@ -51,7 +40,6 @@ import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.adapter.LightDetailAdapter;
-import net.senink.seninkapp.adapter.ScenesAdapter;
 //import com.senink.seninkapp.core.PISBase;
 //import com.senink.seninkapp.core.PISConstantDefine;
 //import com.senink.seninkapp.core.PISLightLED;
@@ -64,19 +52,12 @@ import net.senink.seninkapp.adapter.ScenesAdapter;
 //import com.senink.seninkapp.core.PisDeviceGroup;
 //import com.senink.seninkapp.crmesh.MeshController;
 //import com.senink.seninkapp.crmesh.MeshController.onFeedbackListener;
-import net.senink.seninkapp.sqlite.SceneDao;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
-import net.senink.seninkapp.telink.model.EventBusOperation;
+import net.senink.seninkapp.telink.model.TelinkOperation;
 import net.senink.seninkapp.telink.model.TelinkBase;
-import net.senink.seninkapp.ui.cache.CacheManager;
 import net.senink.seninkapp.ui.constant.Constant;
 import net.senink.seninkapp.ui.constant.MessageModel;
-import net.senink.seninkapp.ui.entity.LocationName;
-import net.senink.seninkapp.ui.entity.SceneBean;
-import net.senink.seninkapp.ui.util.CommonUtils;
-import net.senink.seninkapp.ui.util.HttpUtils;
-import net.senink.seninkapp.ui.util.SharePreferenceUtils;
 import net.senink.seninkapp.ui.util.ToastUtils;
 import net.senink.seninkapp.ui.util.Utils;
 import net.senink.seninkapp.ui.view.listview.SwipeMenu;
@@ -250,6 +231,7 @@ public class LightSettingActivity extends BaseActivity implements
                         pisKey = telinkGroup.PISKeyString;
                         isTelink = false;
                         isTelinkGroup = false;
+                        telinkGroup = null;
                     }
                 }else if(isTelink){
                     deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
@@ -293,9 +275,16 @@ public class LightSettingActivity extends BaseActivity implements
     }
 
     @Subscribe
-    public void reSetTelinkGroupData(EventBusOperation opr){
-        if(opr.getOpr() == EventBusOperation.REFRESH_GROUP_DATA){
+    public void reSetTelinkGroupData(TelinkOperation opr){
+        if(opr.getOpr() == TelinkOperation.REFRESH_GROUP_DATA){
             resetGroupData();
+            updateGroupInfo();
+        }else if(opr.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_SUCCEED){
+            updateGroupInfo();
+            hideLoadingDialog();
+        }else if(opr.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_FAIL){
+            ToastUtils.showToast(LightSettingActivity.this, R.string.lightgroup_delete_group_failed);
+            hideLoadingDialog();
         }
     }
 
@@ -308,6 +297,8 @@ public class LightSettingActivity extends BaseActivity implements
                     String key = telinkGroup.PISKeyString;
                     isTelink = false;
                     isTelinkGroup = false;
+                    telinkGroup = null;
+                    TelinkGroupApiManager.getInstance().deleteGroup(telinkGroup.address);
                     setPisData(key);
                 }else if(bound_type == Group.BOUND_TYPE.TELINK_GROUP){
                     hslEleAdr = telinkGroup.address;
@@ -338,9 +329,11 @@ public class LightSettingActivity extends BaseActivity implements
         }else{
             if(telinkGroup != null){
                 nameBtn.setText(telinkGroup.name);
+                switcher.setChecked(TelinkGroupApiManager.getInstance().isGroupOn(telinkGroup));
             }else{
                 if(deviceInfo != null){
                     nameBtn.setText(deviceInfo.getDeviceName());
+                    switcher.setChecked(deviceInfo.getOnOff() == 1);
                 }
             }
         }
@@ -606,7 +599,11 @@ public class LightSettingActivity extends BaseActivity implements
                             PISBase infor = PISManager.getInstance().getPISObject(telinkGroup.PISKeyString);
                             if(infor != null){
                                 deletePISGroup(infor);
+                            }else{
+                                backActivity(RESULT_CODE);
                             }
+                        }else{
+                            backActivity(RESULT_CODE);
                         }
                     }
                     return;
@@ -627,6 +624,10 @@ public class LightSettingActivity extends BaseActivity implements
         }
     }
 
+    private static final int RESULT_CODE = 3;
+
+
+
     private void deleteGroupByAlert(){
         AlertDialog.Builder builder = new AlertDialog.Builder(LightSettingActivity.this);
         builder.setTitle(R.string.lightgroup_notice)
@@ -636,29 +637,18 @@ public class LightSettingActivity extends BaseActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        PipaRequest req = mcm.removeGroup(infor.getGroupId());
-                        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-                            @Override
-                            public void onRequestStart(PipaRequest req) {
-                                showLoadingDialog();
+                        if(telinkGroup != null){
+                            TelinkGroupApiManager.getInstance().deleteGroup(telinkGroup.address);
+                        }else{
+                            if(infor != null){
+                                TelinkGroupApiManager.getInstance().deleteTelinkGroupByPisKey(infor.getPISKeyString());
                             }
-
-                            @Override
-                            public void onRequestResult(PipaRequest req) {
-                                mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
-                                hideLoadingDialog();
-                                if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED) {
-                                    TelinkGroupApiManager.getInstance().deleteGroup(telinkGroup.address);
-                                    backActivity(3);
-                                } else {
-                                    mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
-                                    mHandler.sendEmptyMessage(MSG_DELETE_GROUP_FAILED);
-                                }
-                            }
-                        });
-                        mcm.request(req);
-                        mHandler.sendEmptyMessageDelayed(MSG_DELETE_GROUP_FAILED,
-                                Constant.TIMEOUT_TIME);
+                        }
+                        if(infor != null){
+                            deletePISGroup(infor);
+                        }else{
+                            backActivity(RESULT_CODE);
+                        }
                     }
                 })
                 .setNegativeButton(R.string.lightgroup_no, new DialogInterface.OnClickListener() {
@@ -685,7 +675,7 @@ public class LightSettingActivity extends BaseActivity implements
                 mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
                 hideLoadingDialog();
                 if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED) {
-                    backActivity(3);
+                    backActivity(RESULT_CODE);
                 } else {
                     mHandler.removeMessages(MSG_DELETE_GROUP_FAILED);
                     mHandler.sendEmptyMessage(MSG_DELETE_GROUP_FAILED);
@@ -725,6 +715,7 @@ public class LightSettingActivity extends BaseActivity implements
                         GeneralDeviceModel generalDeviceModel = adapter.getGroupObject(position);
                         if (generalDeviceModel.isTelink()) {
                             // todo lee 解绑设备操作
+                            showLoadingDialog();
                             TelinkBase telinkBase = generalDeviceModel.getTelinkBase();
                             if(telinkBase.isDevice()){
                                 if(isTelinkGroup && telinkGroup != null){
@@ -735,6 +726,7 @@ public class LightSettingActivity extends BaseActivity implements
                                     TelinkGroupApiManager.getInstance().deleteDeviceFromGroup(telinkBase.getGroup().address, deviceInfo.meshAddress);
                                 }
                             }
+
                         } else {
                             PISBase obj = generalDeviceModel.getPisBase();
                             try {

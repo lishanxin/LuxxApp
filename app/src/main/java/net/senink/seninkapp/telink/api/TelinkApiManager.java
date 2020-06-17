@@ -55,6 +55,9 @@ import net.senink.seninkapp.telink.model.ProvisioningDevice;
 import net.senink.seninkapp.telink.view.BaseRecyclerViewAdapter;
 import net.senink.seninkapp.telink.view.DeviceProvisionListAdapter;
 import net.senink.seninkapp.ui.activity.AddBlueToothDeviceActivity;
+import net.senink.seninkapp.ui.home.TelinkDataRefreshEntry;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -138,6 +141,7 @@ public class TelinkApiManager implements EventListener<String> {
                 TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_CREATE");
                 isServiceCreated = true;
                 autoConnect(false);
+                startScanTelink();
                 break;
             case MeshController.EVENT_TYPE_SERVICE_DESTROY:
                 TelinkLog.d(TAG + "-- service destroyed event");
@@ -209,6 +213,7 @@ public class TelinkApiManager implements EventListener<String> {
 
 
     private void onDeviceFound(AdvertisingDevice device) {
+        EventBus.getDefault().post(new TelinkDataRefreshEntry(true));
         if (mesh == null) {
             mesh = MyApplication.getInstance().getMesh();
         }

@@ -31,12 +31,14 @@ import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.services.PISXinLight;
 import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.GeneralDeviceModel;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 //import com.senink.seninkapp.core.PISBase;
 //import com.senink.seninkapp.core.PISConstantDefine;
 //import com.senink.seninkapp.core.PISLightLED;
 //import com.senink.seninkapp.core.PISManager;
 //import com.senink.seninkapp.core.PisDeviceGroup;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.telink.view.IconGenerator;
 import net.senink.seninkapp.ui.activity.LightEditActivity;
@@ -146,6 +148,20 @@ public class LightGroupEditAdapter extends BaseAdapter {
 					name = deviceInfo.getDeviceName();
 					final int deviceType = deviceInfo.nodeInfo != null && deviceInfo.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
 					holder.ivIcon.setBackgroundResource(IconGenerator.getIcon(deviceType, deviceInfo.getOnOff()));
+					List<Integer> sublist = deviceInfo.subList;
+					if(sublist != null){
+						StringBuilder groupName = new StringBuilder();
+						for (Integer integer : sublist) {
+							Group group = MyApplication.getInstance().getMesh().getGroupByAddress(integer);
+							if(group != null && group.name != null){
+								groupName.append(group.name).append(",");
+							}
+						}
+						if(groupName.length() > 0){
+							groupName.deleteCharAt(groupName.length() - 1);
+//							holder.tvLocation.setText(groupName.toString());
+						}
+					}
 				} else {
 					Group group = telinkBase.getGroup();
 					name = group.name;

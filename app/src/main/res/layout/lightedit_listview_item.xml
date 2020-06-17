@@ -40,7 +40,7 @@
         android:layout_centerVertical="true"
         android:drawableLeft="@drawable/icon_location"
         android:drawablePadding="@dimen/lightedit_location_drawablepadding"
-        android:text="客厅"
+        android:text="@string/unknown"
         android:textColor="@color/light_text_color"
         android:textSize="10sp" />
 

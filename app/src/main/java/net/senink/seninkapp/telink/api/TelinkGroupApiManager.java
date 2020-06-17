@@ -20,10 +20,9 @@ import net.senink.piservice.pis.PISBaseAdd;
 import net.senink.piservice.pis.PISMCSManager;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
-import net.senink.seninkapp.GeneralDataManager;
 import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
-import net.senink.seninkapp.ui.constant.Constant;
+import net.senink.seninkapp.telink.model.TelinkOperation;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -103,7 +102,14 @@ public class TelinkGroupApiManager implements EventListener<String> {
         }
     }
 
-    public Group getTelinkGroupByPisKeyString(String pisKeyString){
+    public void deleteTelinkGroupByPisKey(String pisKeyString){
+        Group group = getTelinkGroupByPisKeyString(pisKeyString);
+        if(group != null){
+            deleteGroup(group.address);
+        }
+    }
+
+    private Group getTelinkGroupByPisKeyString(String pisKeyString){
         if(pisKeyString == null) return null;
         List<Group> groups = MyApplication.getInstance().getMesh().groups;
         for (Group group : groups) {
@@ -208,13 +214,18 @@ public class TelinkGroupApiManager implements EventListener<String> {
             Group group = MyApplication.getInstance().getMesh().getGroupByAddress(opGroupAdr);
             if (opType == 0) {
                 deviceInfo.subList.add(opGroupAdr);
-                group.subList.add(deviceInfo.meshAddress);
+                if(group != null){
+                    group.subList.add(deviceInfo.meshAddress);
+                }
             } else {
                 deviceInfo.subList.remove((Integer) opGroupAdr);
-                group.subList.remove(deviceInfo.meshAddress);
+                if(group != null){
+                    group.subList.remove((Integer) deviceInfo.meshAddress);
+                }
             }
             TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
-            getLocalDeviceGroupInfo(deviceInfo);
+            EventBus.getDefault().post(new TelinkOperation(TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_SUCCEED));
+//            getLocalDeviceGroupInfo(deviceInfo);
 
         } else {
             final int eleAdr = deviceInfo.getTargetEleAdr(models[modelIndex].modelId);
@@ -226,6 +237,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
             // if (!MeshService.getInstance().cfgCmdSubSet(opCode, address, eleAdr, opGroupAdr, models[modelIndex].modelId, true)) {
             if (!MeshService.getInstance().setSubscription(opType, deviceInfo.meshAddress, eleAdr, opGroupAdr, models[modelIndex].modelId, true, TAG_CMD)) {
                 Log.d(TAG, "setting fail!");
+                EventBus.getDefault().post(new TelinkOperation(TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_FAIL));
             }
         }
 
@@ -275,7 +287,20 @@ public class TelinkGroupApiManager implements EventListener<String> {
                 }
             }
         }
+    }
 
+    public boolean isGroupOn(Group group){
+        if(group == null) return false;
+        List<Integer> deviceAddress = group.subList;
+        if(deviceAddress != null){
+            for (Integer address : deviceAddress) {
+                DeviceInfo deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(address);
+                if(deviceInfo.getOnOff() == 1){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 

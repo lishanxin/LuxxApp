@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -23,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.telink.sig.mesh.event.Event;
 import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.CommonMeshCommand;
 import com.telink.sig.mesh.model.DeviceInfo;
@@ -43,7 +41,7 @@ import net.senink.seninkapp.R;
 import net.senink.seninkapp.sqlite.SceneDao;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
-import net.senink.seninkapp.telink.model.EventBusOperation;
+import net.senink.seninkapp.telink.model.TelinkOperation;
 import net.senink.seninkapp.ui.constant.Constant;
 import net.senink.seninkapp.ui.constant.MessageModel;
 import net.senink.seninkapp.ui.entity.SceneBean;
@@ -269,6 +267,13 @@ public class LightRGBDetailActivity extends BaseActivity implements
                             key = telinkGroup.PISKeyString;
                             isTelink = false;
                             isTelinkGroup = false;
+                            PISBase tempInfor =  manager.getPISObject(key);
+                            telinkGroup = null;
+                            if(tempInfor == null){
+                                ToastUtils.showToast(this, "PIS 灯组为null，请排查");
+                                finish();
+                                return;
+                            }
                         }else if(bound_type == Group.BOUND_TYPE.TELINK_GROUP){
                             hslEleAdr = telinkGroup.address;
                         }
@@ -324,8 +329,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
     }
 
 	@Subscribe
-    public void reSetTelinkGroupData(EventBusOperation opr){
-	    if(opr.getOpr() == EventBusOperation.REFRESH_GROUP_DATA){
+    public void reSetTelinkGroupData(TelinkOperation opr){
+	    if(opr.getOpr() == TelinkOperation.REFRESH_GROUP_DATA){
 	        resetGroupData();
         }
     }
@@ -339,6 +344,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     String key = telinkGroup.PISKeyString;
                     isTelink = false;
                     isTelinkGroup = false;
+                    telinkGroup = null;
                     setPisData(key);
                 }else if(bound_type == Group.BOUND_TYPE.TELINK_GROUP){
                     hslEleAdr = telinkGroup.address;
@@ -1109,6 +1115,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
                             LightSettingActivity.class);
                     intent.putExtra(MessageModel.PISBASE_KEYSTR,
                             infor.getPISKeyString());
+                    Bundle bundle = new Bundle();
+                    intent.putExtras(bundle);
                     startActivityForResult(intent, REQUEST_CODE_SETTING);
                     overridePendingTransition(R.anim.anim_in_from_right,
                             R.anim.anim_out_to_left);

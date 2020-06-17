@@ -31,6 +31,7 @@ import net.senink.seninkapp.BuildConfig;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.R;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.telink.view.IconGenerator;
 import net.senink.seninkapp.ui.activity.LightLEDDetailActivity;
@@ -246,7 +247,7 @@ public class MixLightListAdapter extends BaseAdapter {
         if(infor.isDevice()){
             final DeviceInfo device = infor.getDevice();
             final int deviceType = device.nodeInfo != null && device.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
-            nameBtn.setImageResource(IconGenerator.getIcon(deviceType, device.getOnOff()));
+            nameBtn.setBackgroundResource(IconGenerator.getIcon(deviceType, device.getOnOff()));
             nametv.setText(device.macAddress);
             nameBtn.setOnClickListener(new OnClickListener() {
 
@@ -269,8 +270,8 @@ public class MixLightListAdapter extends BaseAdapter {
         }else{
             final Group group = infor.getGroup();
 
-            boolean isOn = MeshService.getInstance() != null && MeshService.getInstance().getOnOff(group.address, 0, null);
-            nameBtn.setImageResource(IconGenerator.getGroupIconRes(isOn));
+            boolean isOn = TelinkGroupApiManager.getInstance().isGroupOn(group);
+            nameBtn.setBackgroundResource(IconGenerator.getGroupIconRes(isOn));
             nametv.setText(group.name);
             nameBtn.setOnClickListener(new OnClickListener() {
 

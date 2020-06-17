@@ -2,15 +2,13 @@ package net.senink.seninkapp.ui.activity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
-import android.util.SparseArray;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -18,20 +16,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pgyersdk.crash.PgyCrashManager;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
 
-import net.senink.piservice.PISConstantDefine;
-import net.senink.piservice.pinm.PINMoBLE.MeshController;
 import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISMCSManager;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
-import net.senink.piservice.services.PISXinLight;
-import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.BaseActivity;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.MyApplication;
@@ -54,14 +47,9 @@ import net.senink.seninkapp.adapter.LightGroupEditAdapter;
 
 import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
-import net.senink.seninkapp.telink.model.EventBusOperation;
+import net.senink.seninkapp.telink.model.TelinkOperation;
 import net.senink.seninkapp.telink.model.TelinkBase;
-import net.senink.seninkapp.ui.constant.Constant;
 import net.senink.seninkapp.ui.constant.MessageModel;
-import net.senink.seninkapp.ui.util.CommonUtils;
-import net.senink.seninkapp.ui.util.HttpUtils;
-import net.senink.seninkapp.ui.util.LogUtils;
-import net.senink.seninkapp.ui.util.SharePreferenceUtils;
 import net.senink.seninkapp.ui.util.ToastUtils;
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase;
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase.Mode;
@@ -69,6 +57,7 @@ import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase.OnRe
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshListView;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * 用于修改等分组和某分组下的设备
@@ -133,6 +122,7 @@ public class LightEditActivity extends BaseActivity implements
 					}else{
 						base = infor;
 						req = base.addToGroup(obj);
+						TelinkGroupApiManager.getInstance().deleteTelinkGroupByPisKey(obj.getPISKeyString());
 					}
 					req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
 						@Override
@@ -156,24 +146,29 @@ public class LightEditActivity extends BaseActivity implements
 					});
 					req.NeedAck = true;
 					base.request(req);
-					EventBus.getDefault().post(new EventBusOperation(EventBusOperation.REFRESH_GROUP_DATA));
+					EventBus.getDefault().post(new TelinkOperation(TelinkOperation.REFRESH_GROUP_DATA));
 				}
 				break;
 			case MSG_TELINK_ITEM_CLICK:
 				if(msg.obj != null){
+					showLoadingDialog();
 					TelinkBase telinkBase = (TelinkBase) msg.obj;
 					if(telinkBase.isDevice()){
 						if(telinkGroup != null){
 							TelinkGroupApiManager.getInstance().addDeviceToGroup(telinkGroup.address, telinkBase.getDevice().meshAddress);
 							setTelinkGroup(telinkGroup);
+						}else {
+							hideLoadingDialog();
 						}
 					}else{
 						if(telinkDeviceinfo != null){
 							TelinkGroupApiManager.getInstance().addDeviceToGroup(telinkBase.getGroup().address, telinkDeviceinfo.meshAddress);
 							setTelinkGroup(telinkBase.getGroup());
+						}else {
+							hideLoadingDialog();
 						}
 					}
-					EventBus.getDefault().post(new EventBusOperation(EventBusOperation.REFRESH_GROUP_DATA));
+					EventBus.getDefault().post(new TelinkOperation(TelinkOperation.REFRESH_GROUP_DATA));
 				}
 				break;
 			case 1000:
@@ -194,19 +189,34 @@ public class LightEditActivity extends BaseActivity implements
 		}
 	};
 
+	@Subscribe
+	public void reSetTelinkGroupData(TelinkOperation opr){
+		if(opr.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_SUCCEED){
+			hideLoadingDialog();
+			Intent aintent = new Intent(LightEditActivity.this, LightSettingActivity.class);
+			LightEditActivity.this.setResult(RESULT_OK, aintent); //这理有2个参数(int resultCode, Intent intent)
+			finish();
+		}else if(opr.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_FAIL){
+			hideLoadingDialog();
+			ToastUtils.showToast(LightEditActivity.this,
+					R.string.lightedit_add_failed);
+		}
+	}
 	private void setTelinkGroup(Group telinkGroup) {
 		if(telinkGroup.type != Group.BOUND_TYPE.TELINK_GROUP){
 			infor = null;
+			String key = telinkGroup.PISKeyString;
 			telinkGroup.type = Group.BOUND_TYPE.TELINK_GROUP;
-			TelinkGroupApiManager.getInstance().deletePISGroup(telinkGroup.PISKeyString, new PipaRequest.OnPipaRequestStatusListener() {
+			telinkGroup.PISKeyString = "";
+			TelinkGroupApiManager.getInstance().deletePISGroup(key, new PipaRequest.OnPipaRequestStatusListener() {
 				@Override
 				public void onRequestStart(PipaRequest req) {
-
+					Log.e(TAG, "pis group start delete");
 				}
 
 				@Override
 				public void onRequestResult(PipaRequest req) {
-
+					Log.e(TAG, "pis group start delete");
 				}
 			});
 			MyApplication.getInstance().getMesh().saveOrUpdate(LightEditActivity.this);
@@ -220,7 +230,7 @@ public class LightEditActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lightedit);
 
-
+		EventBus.getDefault().register(this);
 		initView();
 		setData();
 		setListener();
@@ -273,7 +283,8 @@ public class LightEditActivity extends BaseActivity implements
 		}
 		return super.dispatchTouchEvent(ev);
 	}
-	
+
+
 	/**
 	 * 设置监听器
 	 */
@@ -427,6 +438,9 @@ public class LightEditActivity extends BaseActivity implements
 		List<Group> allGroups = MyApplication.getInstance().getMesh().groups;
 		outer:
 		for (Group groupInfo : allGroups) {
+			if(groupInfo.type == Group.BOUND_TYPE.PIS_GROUP){
+				continue;
+			}
 			for (Group group : alreadyGroup) {
 				if(groupInfo.address == group.address){
 					continue outer;
@@ -508,6 +522,7 @@ public class LightEditActivity extends BaseActivity implements
 	protected void onDestroy() {
 		mHandler.removeMessages(MessageModel.MSG_GET_DEVICES);
 		mHandler.removeMessages(MSG_BIND_FAILED);
+		EventBus.getDefault().unregister(this);
 		super.onDestroy();
 	}
 

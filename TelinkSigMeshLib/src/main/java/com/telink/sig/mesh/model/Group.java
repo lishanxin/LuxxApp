@@ -35,9 +35,9 @@ public class Group implements Serializable {
     }
     // telink灯具的meshAddress
     public List<Integer> subList = new ArrayList<>();
-    public String name;
+    public String name = "";
     public int address;
     public boolean selected = false;
-    public String PISKeyString; // 同一时间创建的pis 灯组地址
+    public String PISKeyString = ""; // 同一时间创建的pis 灯组地址
     public BOUND_TYPE type = BOUND_TYPE.NONE; // 灯组绑定的灯类别
 }

@@ -76,10 +76,30 @@ public class GeneralDataManager {
 
         List<GeneralDeviceModel> generalGroup = new ArrayList<>();
 
-        for (Group group : MyApplication.getInstance().getMesh().groups) {
+        List<Group> telinkGroup = MyApplication.getInstance().getMesh().groups;
+        outerGroup:
+        for (Group group : telinkGroup) {
+            if(group.type == Group.BOUND_TYPE.NONE){
+                if(pm.getPISObject(group.PISKeyString) == null){
+                    group.PISKeyString = "";
+                    group.type = Group.BOUND_TYPE.TELINK_GROUP;
+                }
+            }
             for (PISBase base : srvsGroup) {
                 if(base.getPISKeyString().equals(group.PISKeyString)){
-                    srvsGroup.remove(base);
+                    List<PISBase> sublist = base.getGroupObjects();
+                    if(sublist != null && sublist.size() > 0 && sublist.get(0) != null){
+                        if(group.type == Group.BOUND_TYPE.NONE ){
+                            group.type = Group.BOUND_TYPE.TELINK_GROUP;
+                            group.PISKeyString = "";
+                        }else if(group.type == Group.BOUND_TYPE.PIS_GROUP){
+                            telinkGroup.remove(group);
+                            MyApplication.getInstance().getMesh().saveOrUpdate(mContext);
+                            continue outerGroup;
+                        }
+                    }else{
+                        srvsGroup.remove(base);
+                    }
                     break;
                 }
             }
