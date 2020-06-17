@@ -278,7 +278,7 @@ public class LightSettingActivity extends BaseActivity implements
     public void reSetTelinkGroupData(TelinkOperation opr){
         if(opr.getOpr() == TelinkOperation.REFRESH_GROUP_DATA){
             resetGroupData();
-            updateGroupInfo();
+            refreshViews();
         }else if(opr.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_SUCCEED){
             updateGroupInfo();
             hideLoadingDialog();
@@ -297,9 +297,9 @@ public class LightSettingActivity extends BaseActivity implements
                     String key = telinkGroup.PISKeyString;
                     isTelink = false;
                     isTelinkGroup = false;
-                    telinkGroup = null;
                     TelinkGroupApiManager.getInstance().deleteGroup(telinkGroup.address);
                     setPisData(key);
+                    telinkGroup = null;
                 }else if(bound_type == Group.BOUND_TYPE.TELINK_GROUP){
                     hslEleAdr = telinkGroup.address;
                 }

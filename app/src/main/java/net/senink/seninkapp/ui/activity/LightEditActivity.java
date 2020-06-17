@@ -109,10 +109,6 @@ public class LightEditActivity extends BaseActivity implements
 			case MSG_ITEM_CLICK:
 //				showLoadingDialog();
 				if (msg.obj != null) {
-					if(isTelinkGroup && telinkGroup != null){
-						telinkGroup.type = Group.BOUND_TYPE.PIS_GROUP;
-						MyApplication.getInstance().getMesh().saveOrUpdate(LightEditActivity.this);
-					}
 					PISBase obj = PISManager.getInstance().getPISObject(((PISBase)msg.obj).getPISKeyString());
 					PISBase base = null;
 					PipaRequest req = null;
@@ -136,6 +132,11 @@ public class LightEditActivity extends BaseActivity implements
 							if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED){
 								Intent aintent = new Intent(LightEditActivity.this, LightSettingActivity.class);
 								LightEditActivity.this.setResult(RESULT_OK, aintent); //这理有2个参数(int resultCode, Intent intent)
+                                if(isTelinkGroup && telinkGroup != null){
+                                    telinkGroup.type = Group.BOUND_TYPE.PIS_GROUP;
+                                    MyApplication.getInstance().getMesh().saveOrUpdate(LightEditActivity.this);
+                                    EventBus.getDefault().post(new TelinkOperation(TelinkOperation.REFRESH_GROUP_DATA));
+                                }
 								finish();
 							}else{
 								ToastUtils.showToast(LightEditActivity.this,
@@ -146,7 +147,6 @@ public class LightEditActivity extends BaseActivity implements
 					});
 					req.NeedAck = true;
 					base.request(req);
-					EventBus.getDefault().post(new TelinkOperation(TelinkOperation.REFRESH_GROUP_DATA));
 				}
 				break;
 			case MSG_TELINK_ITEM_CLICK:

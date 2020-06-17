@@ -85,6 +85,10 @@ public class GeneralDataManager {
                     group.type = Group.BOUND_TYPE.TELINK_GROUP;
                 }
             }
+            if(group.type == Group.BOUND_TYPE.PIS_GROUP && pm.getPISObject(group.PISKeyString) == null){
+                telinkGroup.remove(group);
+                continue;
+            }
             for (PISBase base : srvsGroup) {
                 if(base.getPISKeyString().equals(group.PISKeyString)){
                     List<PISBase> sublist = base.getGroupObjects();
