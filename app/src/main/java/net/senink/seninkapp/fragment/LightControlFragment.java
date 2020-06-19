@@ -49,7 +49,7 @@ import org.greenrobot.eventbus.EventBus;
  * @author zhaojunfeng
  * @date 2015-07-09
  */
-public class LightControlFragment extends Fragment implements  EventListener<String> {
+public class LightControlFragment extends Fragment implements EventListener<String> {
     public static final String TAG = "LightControlFragment";
 
     private View mRootView;
@@ -95,7 +95,7 @@ public class LightControlFragment extends Fragment implements  EventListener<Str
 
     @Override
     public void onDetach() {
-        if (mHandler != null){
+        if (mHandler != null) {
             mHandler.removeMessages(2000);
         }
         super.onDetach();
@@ -103,7 +103,7 @@ public class LightControlFragment extends Fragment implements  EventListener<Str
 
     @Override
     public void onPause() {
-        if (mHandler != null){
+        if (mHandler != null) {
             mHandler.removeMessages(2000);
         }
         super.onPause();
@@ -182,9 +182,9 @@ public class LightControlFragment extends Fragment implements  EventListener<Str
                             for (GeneralDeviceModel[] srvs : mLights) {
                                 for (GeneralDeviceModel generalSrv : srvs) {
                                     PISBase srv = generalSrv.getPisBase();
-                                    if(generalSrv.isTelink()){
+                                    if (generalSrv.isTelink()) {
 
-                                    }else if (srv != null && srv.ServiceType != PISBase.SERVICE_TYPE_GROUP) {
+                                    } else if (srv != null && srv.ServiceType != PISBase.SERVICE_TYPE_GROUP) {
                                         srv.request(srv.updatePISInfo());
                                         List<PISBase> grps = srv.getGroupObjects();
                                         if (grps == null || grps.size() == 0) {
@@ -220,21 +220,20 @@ public class LightControlFragment extends Fragment implements  EventListener<Str
     private void checkTelinkGroups() {
         List<Group> groups = MyApplication.getInstance().getMesh().groups;
         for (Group group : groups) {
-            if(group.type == Group.BOUND_TYPE.TELINK_GROUP){
-                TelinkGroupApiManager.getInstance().deletePISGroup(group.PISKeyString, new PipaRequest.OnPipaRequestStatusListener() {
-                    @Override
-                    public void onRequestStart(PipaRequest req) {
+            TelinkGroupApiManager.getInstance().deletePISGroup(group.PISKeyString, new PipaRequest.OnPipaRequestStatusListener() {
+                @Override
+                public void onRequestStart(PipaRequest req) {
 
-                    }
+                }
 
-                    @Override
-                    public void onRequestResult(PipaRequest req) {
-
-                    }
-                });
-            }
+                @Override
+                public void onRequestResult(PipaRequest req) {
+                    // todo lee 删除开始
+                }
+            });
         }
     }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -275,6 +274,7 @@ public class LightControlFragment extends Fragment implements  EventListener<Str
     private static final String TAG_ALL_ON = "ALL_ON";
     private static final String TAG_ALL_OFF = "ALL_OFF";
     private long startTime;
+
     @Override
     public void performed(Event<String> event) {
         if (event.getType().equals(MeshEvent.EVENT_TYPE_DISCONNECTED) || event.getType().equals(MeshEvent.EVENT_TYPE_DEVICE_OFFLINE)
@@ -299,9 +299,11 @@ public class LightControlFragment extends Fragment implements  EventListener<Str
             }
         }
     }
+
     private void saveLog(String action) {
         MyApplication.getInstance().saveLog(" --test-- " + action);
     }
+
     private void refreshUI() {
         EventBus.getDefault().post(new TelinkDataRefreshEntry());
     }

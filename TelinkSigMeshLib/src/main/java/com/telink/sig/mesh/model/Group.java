@@ -30,14 +30,14 @@ import java.util.List;
  */
 
 public class Group implements Serializable {
-    public enum BOUND_TYPE implements Serializable{
-        NONE, PIS_GROUP, TELINK_GROUP
-    }
+//    public enum BOUND_TYPE implements Serializable{
+//        NONE, PIS_GROUP, TELINK_GROUP
+//    }
     // telink灯具的meshAddress
     public List<Integer> subList = new ArrayList<>();
     public String name = "";
     public int address;
     public boolean selected = false;
     public String PISKeyString = ""; // 同一时间创建的pis 灯组地址
-    public BOUND_TYPE type = BOUND_TYPE.NONE; // 灯组绑定的灯类别
+//    public BOUND_TYPE type = BOUND_TYPE.NONE; // 灯组绑定的灯类别
 }

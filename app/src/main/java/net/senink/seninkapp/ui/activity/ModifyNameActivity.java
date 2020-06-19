@@ -85,7 +85,6 @@ public class ModifyNameActivity extends BaseActivity implements OnClickListener{
 
 	private DeviceInfo telinkDeviceinfo;
 	private Group telinkGroup;
-	private Group.BOUND_TYPE bound_type = Group.BOUND_TYPE.NONE;
 	private MeshController.onFeedbackListener listener = new MeshController.onFeedbackListener() {
 		
 		@Override
@@ -152,10 +151,7 @@ public class ModifyNameActivity extends BaseActivity implements OnClickListener{
 			}
 			String key = null;
 			if(isTelinkGroup && telinkGroup != null){
-				bound_type = telinkGroup.type;
-				if(bound_type != Group.BOUND_TYPE.TELINK_GROUP){
-					key = telinkGroup.PISKeyString;
-				}
+				key = telinkGroup.PISKeyString;
 			}else {
 				key = getIntent().getStringExtra(MessageModel.PISBASE_KEYSTR);
 			}
