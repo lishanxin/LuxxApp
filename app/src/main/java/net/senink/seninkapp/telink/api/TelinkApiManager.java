@@ -501,7 +501,9 @@ public class TelinkApiManager implements EventListener<String> {
 
     // 灯具开关
     public void setSwitchLightOnOff(int hslEleAdr, boolean isOn) {
-        MeshService.getInstance().setOnOff(hslEleAdr, (byte) (isOn ? 1 : 0), !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
+        if(MeshService.getInstance() != null){
+            MeshService.getInstance().setOnOff(hslEleAdr, (byte) (isOn ? 1 : 0), !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
+        }
     }
 
     private void autoConnect(boolean update) {

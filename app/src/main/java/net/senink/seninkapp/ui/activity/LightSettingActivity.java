@@ -150,6 +150,8 @@ public class LightSettingActivity extends BaseActivity implements
     private DeviceInfo deviceInfo;
     private int hslEleAdr;
     private Group.BOUND_TYPE bound_type = Group.BOUND_TYPE.NONE;
+
+    private int selectDeletePosition = -1;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -196,7 +198,9 @@ public class LightSettingActivity extends BaseActivity implements
         initView();
 //		setReciever();
         setListener();
-
+        if (adapter == null)
+            adapter = new LightDetailAdapter(this, infor);
+        listView.setAdapter(adapter);
     }
 
 
@@ -280,11 +284,14 @@ public class LightSettingActivity extends BaseActivity implements
             resetGroupData();
             refreshViews();
         }else if(opr.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_SUCCEED){
+            adapter.removeView(selectDeletePosition);
+            selectDeletePosition = -1;
             updateGroupInfo();
             hideLoadingDialog();
         }else if(opr.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_FAIL){
             ToastUtils.showToast(LightSettingActivity.this, R.string.lightgroup_delete_group_failed);
             hideLoadingDialog();
+            selectDeletePosition = -1;
         }
     }
 
@@ -342,10 +349,7 @@ public class LightSettingActivity extends BaseActivity implements
 
     private void updateGroupInfo() {
         try {
-            if (adapter == null)
-                adapter = new LightDetailAdapter(this, infor);
 			SparseArray<GeneralDeviceModel> generalDeviceModels = new SparseArray<>();
-
 			if (isTelink) {
                 if (isTelinkGroup) {
                     if(bound_type == Group.BOUND_TYPE.TELINK_GROUP){
@@ -363,9 +367,7 @@ public class LightSettingActivity extends BaseActivity implements
             }else {
                 addPISDevice(generalDeviceModels);
 			}
-
             adapter.setList(generalDeviceModels);
-            listView.setAdapter(adapter);
         } catch (Exception e) {
             PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
         }
@@ -717,6 +719,7 @@ public class LightSettingActivity extends BaseActivity implements
                             // todo lee 解绑设备操作
                             showLoadingDialog();
                             TelinkBase telinkBase = generalDeviceModel.getTelinkBase();
+
                             if(telinkBase.isDevice()){
                                 if(isTelinkGroup && telinkGroup != null){
                                     TelinkGroupApiManager.getInstance().deleteDeviceFromGroup(telinkGroup.address, telinkBase.getDevice().meshAddress);

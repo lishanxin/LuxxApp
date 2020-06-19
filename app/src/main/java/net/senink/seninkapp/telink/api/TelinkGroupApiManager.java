@@ -295,7 +295,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
         if(deviceAddress != null){
             for (Integer address : deviceAddress) {
                 DeviceInfo deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(address);
-                if(deviceInfo.getOnOff() == 1){
+                if(deviceInfo != null && deviceInfo.getOnOff() == 1){
                     return true;
                 }
             }

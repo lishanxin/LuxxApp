@@ -237,6 +237,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
 		setListener();
 		if(isTelinkGroup){
 		    // TODO LEE 灯组的初始化
+            initTelinkView();
         }else if(isTelink){
             getNodeStatus();
             initTelinkView();
@@ -961,6 +962,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
         if(deviceInfo != null){
             int onOff =  deviceInfo.getOnOff();
             switcher.setChecked(onOff == 1);
+        }else if(telinkGroup != null){
+            switcher.setChecked(TelinkGroupApiManager.getInstance().isGroupOn(telinkGroup));
         }
 
         whiteBar.setProgress((int)(RGBConfigUtils.MAX_VALUE * 0.68));
