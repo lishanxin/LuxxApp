@@ -355,27 +355,6 @@ public class LightRGBDetailActivity extends BaseActivity implements
         int tempColor = Color.rgb(colors[0],colors[1],colors[2]);
         tvCurrentColor.setBackgroundColor(tempColor);
         if(isTelink){
-
-        }else{
-            switch(mCurrentRGBWMode){
-                case LIGHT_MODE_RGB:
-                    currentWhite = 0;
-                    break;
-                case LIGHT_MODE_WHITE:
-                    colors[0] = 0;
-                    colors[1] = 0;
-                    colors[2] = 0;
-
-                    break;
-            }
-        }
-
-
-//        if (candle_onoff == true )
-//        {
-//            setCandle(false);
-//        }
-        if(isTelink){
             if(isTelinkGroup && infor != null){
                 setPisColor(colors, isScened, currentWhite);
             }
@@ -390,7 +369,23 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
     }
 
-    private void setPisColor(int[] colors, boolean isScened, float currentWhite){
+    private void setPisColor(int[] colorsSource, boolean isScened, float currentWhiteSource){
+        float currentWhite = currentWhiteSource;
+         int[] colors = new int[3];
+        colors[0] = colorsSource[0];
+        colors[1] =colorsSource[1];
+        colors[2] = colorsSource[2];
+        switch(mCurrentRGBWMode){
+            case LIGHT_MODE_RGB:
+                currentWhite = 0;
+                break;
+            case LIGHT_MODE_WHITE:
+                colors[0] = 0;
+                colors[1] = 0;
+                colors[2] = 0;
+
+                break;
+        }
         PipaRequest req = infor.commitLightColor(colors[0], colors[1], colors[2],
                 (int)currentWhite, true);
         if (isScened){
@@ -955,6 +950,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
      */
     private void updateView() {
         if (infor != null) {
+            List<PISBase> gObjs = infor.getGroupObjects();
+            if(infor.ServiceType  == PISBase.SERVICE_TYPE_GROUP && (gObjs == null || gObjs.size() == 0)){
+                return;
+            }
             int white = 0;
             byte[] rgbBytes = infor.getColorBytes(false);
             if (rgbBytes != null){

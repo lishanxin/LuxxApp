@@ -401,6 +401,7 @@ public class LightEditActivity extends BaseActivity implements
 
     private void addTelinkGroupToFilter(DeviceInfo telinkDeviceinfo, List<GeneralDeviceModel> filterList) {
         List<Group> alreadyGroup = TelinkGroupApiManager.getInstance().getGroupsWithDevice(telinkDeviceinfo.meshAddress);
+        if (alreadyGroup.size() > 0) return;
         List<Group> allGroups = MyApplication.getInstance().getMesh().groups;
         outer:
         for (Group groupInfo : allGroups) {
@@ -418,6 +419,7 @@ public class LightEditActivity extends BaseActivity implements
         List<DeviceInfo> allDevice = MyApplication.getInstance().getMesh().devices;
         outer:
         for (DeviceInfo deviceInfo : allDevice) {
+            if(deviceInfo.subList != null && deviceInfo.subList.size() > 0) continue;
             for (DeviceInfo info : addAlready) {
                 if (deviceInfo.meshAddress == info.meshAddress) {
                     continue outer;

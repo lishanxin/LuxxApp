@@ -341,6 +341,12 @@ public class LightSettingActivity extends BaseActivity implements
             PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
         }
         adapter.notifyDataSetChanged();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                listView.invalidate();
+            }
+        }, 1000);
     }
 
     private void addPISDevice(SparseArray<GeneralDeviceModel> generalDeviceModels) {

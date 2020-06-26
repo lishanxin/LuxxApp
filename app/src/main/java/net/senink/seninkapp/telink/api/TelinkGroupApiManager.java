@@ -67,8 +67,9 @@ public class TelinkGroupApiManager implements EventListener<String> {
     @Subscribe
     public void pisDeviceAdded(PISBaseAdd pisBaseAdd){
         PISBase pisBase = pisBaseAdd.getDevice();
+        if(pisBase == null) return;
         if(pisBase.ServiceType == PISBase.SERVICE_TYPE_GROUP){
-            addGroup(mContext.getText(R.string.default_group_name).toString(), pisBase);
+            addGroup(pisBase.getName(), pisBase);
         }
     }
 
