@@ -744,6 +744,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         clearData();
+        TelinkApiManager.getInstance().stopScan();
     }
 
     /**

@@ -670,6 +670,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	 * @param resId
 	 */
 	private void setVisibilityOnTip(boolean isVisialbe, int resId) {
+		if(isVisialbe){
+			handler.removeMessages(MSG_HIDE_TIP);
+			handler.sendEmptyMessageDelayed(MSG_HIDE_TIP, 6000);
+		}
 		if (connectedTip == null) {
 			try {
 				connectedTip = (RelativeLayout) findViewById(R.id.title_bluetooth_tip);

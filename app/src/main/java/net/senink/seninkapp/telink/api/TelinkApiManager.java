@@ -82,7 +82,7 @@ public class TelinkApiManager implements EventListener<String> {
     private UnprovisionedDevice targetDevice;
     private ProvisioningDevice pubSettingDevice;
     private Handler delayedHandler = new Handler();
-
+    private boolean stopScan;
     public static final String IS_TELINK_KEY = "isTelinkKey";
     public static final String IS_TELINK_GROUP_KEY = "isTelinkGroup";
     public static final String TELINK_ADDRESS = "TELINKADDRESS";
@@ -131,6 +131,8 @@ public class TelinkApiManager implements EventListener<String> {
         MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS, this);
         MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_KEY_BIND_FAIL, this);
         MyApplication.getInstance().addEventListener(ScanEvent.DEVICE_FOUND, this);
+        MyApplication.getInstance().addEventListener(ScanEvent.SCAN_TIMEOUT, this);
+
     }
 
 
@@ -141,7 +143,7 @@ public class TelinkApiManager implements EventListener<String> {
                 TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_CREATE");
                 isServiceCreated = true;
                 autoConnect(false);
-                startScanTelink();
+                _startScanTelink();
                 break;
             case MeshController.EVENT_TYPE_SERVICE_DESTROY:
                 TelinkLog.d(TAG + "-- service destroyed event");
@@ -150,12 +152,17 @@ public class TelinkApiManager implements EventListener<String> {
                 AdvertisingDevice device = ((ScanEvent) event).advertisingDevice;
                 onDeviceFound(device);
                 break;
+            case ScanEvent.SCAN_TIMEOUT:
+                if(devices != null && devices.size() > 0) return;
+                if(stopScan) return;
+                _startScanTelink();
+                break;
             case MeshEvent.EVENT_TYPE_PROVISION_SUCCESS:
                 onProvisionSuccess((MeshEvent) event);
                 break;
             case MeshEvent.EVENT_TYPE_PROVISION_FAIL:
                 onProvisionFail((MeshEvent) event);
-                startScanTelink();
+                _startScanTelink();
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS:
                 Intent intent = new Intent(REFRESH_DEVICES);
@@ -163,12 +170,12 @@ public class TelinkApiManager implements EventListener<String> {
                 if (onKeyBindSuccess((MeshEvent) event)) {
                     TelinkLog.d("set device time publish");
                 } else {
-//                    startScanTelink();
+//                    _startScanTelink();
                 }
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_FAIL:
                 onKeyBindFail((MeshEvent) event);
-                startScanTelink();
+                _startScanTelink();
                 break;
             case NotificationEvent.EVENT_TYPE_PUBLICATION_STATUS:
                 NotificationInfo notificationInfo = ((NotificationEvent) event).getNotificationInfo();
@@ -180,7 +187,7 @@ public class TelinkApiManager implements EventListener<String> {
                     delayedHandler.removeCallbacks(pubSetTimeoutTask);
                     pvingDevice.state = ProvisioningDevice.STATE_PUB_SET_SUCCESS;
                     mListAdapter.notifyDataSetChanged();
-                    startScanTelink();
+                    _startScanTelink();
                 }
                 break;
             case NotificationEvent.EVENT_TYPE_KICK_OUT_CONFIRM:
@@ -196,6 +203,10 @@ public class TelinkApiManager implements EventListener<String> {
                 sendTimeStatus();
                 break;
         }
+    }
+
+    public void stopScan(){
+        this.stopScan = true;
     }
 
     public void sendTimeStatus() {
@@ -277,12 +288,10 @@ public class TelinkApiManager implements EventListener<String> {
         return this.mListAdapter;
     }
 
-
-    // 扫描蓝牙
-    public void startScanTelink() {
+    private void _startScanTelink(){
         TelinkApiManager.getInstance().clearFoundDevice();
         ScanParameters parameters = ScanParameters.getDefault(false, true);
-        parameters.setScanTimeout(20 * 1000);
+        parameters.setScanTimeout(10 * 1000);
         List<DeviceInfo> devices = MyApplication.getInstance().getMesh().devices;
         if (devices.size() != 0) {
             List<String> excludeList = new ArrayList<>();
@@ -298,6 +307,12 @@ public class TelinkApiManager implements EventListener<String> {
         }
 //        parameters.setIncludeMacs(new String[]{"FF:FF:BB:CC:DD:53"});
         MeshService.getInstance().startScan(parameters);
+    }
+
+    // 扫描蓝牙
+    public void startScanTelink() {
+        stopScan = false;
+        _startScanTelink();
     }
 
     public void clearFoundDevice() {
@@ -442,7 +457,7 @@ public class TelinkApiManager implements EventListener<String> {
             if (pubSettingDevice != null) {
                 pubSettingDevice.state = ProvisioningDevice.STATE_PUB_SET_SUCCESS;
                 mListAdapter.notifyDataSetChanged();
-                startScanTelink();
+                _startScanTelink();
             }
 
         }
