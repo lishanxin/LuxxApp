@@ -265,8 +265,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                         hslEleAdr = telinkGroup.address;
                         if(tempInfor == null){
                             ToastUtils.showToast(this, "PIS 灯组为null，请排查");
-                            finish();
-                            return;
+                            key = null;
                         }
                     }
                 }
@@ -1092,8 +1091,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
                     bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
                     intent.putExtras(bundle);
-                    intent.putExtra(MessageModel.PISBASE_KEYSTR,
-                            infor.getPISKeyString());
+                    if(infor != null){
+                        intent.putExtra(MessageModel.PISBASE_KEYSTR,
+                                infor.getPISKeyString());
+                    }
                     startActivityForResult(intent, REQUEST_CODE_SETTING);
                     overridePendingTransition(R.anim.anim_in_from_right,
                             R.anim.anim_out_to_left);

@@ -262,7 +262,9 @@ public class LightSettingActivity extends BaseActivity implements
                     });
                     infor.request(req);
                 } else {
-                    finish();
+                    if(!isTelinkGroup){
+                        finish();
+                    }
                 }
             } catch (Exception e) {
                 PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
@@ -524,8 +526,10 @@ public class LightSettingActivity extends BaseActivity implements
                 //			isBack = true;
                 intent = new Intent(LightSettingActivity.this,
                         LightEditActivity.class);
-                    intent.putExtra(MessageModel.PISBASE_KEYSTR,
-                            infor.getPISKeyString());
+                    if(infor != null){
+                        intent.putExtra(MessageModel.PISBASE_KEYSTR,
+                                infor.getPISKeyString());
+                    }
                     Bundle bundle = new Bundle();
                     bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
                     bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);

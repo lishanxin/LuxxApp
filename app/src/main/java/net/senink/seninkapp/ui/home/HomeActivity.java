@@ -671,8 +671,8 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	 */
 	private void setVisibilityOnTip(boolean isVisialbe, int resId) {
 		if(isVisialbe){
-			handler.removeMessages(MSG_HIDE_TIP);
-			handler.sendEmptyMessageDelayed(MSG_HIDE_TIP, 6000);
+			myHandler.removeMessages(MSG_HIDE_TIP);
+			myHandler.sendEmptyMessageDelayed(MSG_HIDE_TIP, 6000);
 		}
 		if (connectedTip == null) {
 			try {
