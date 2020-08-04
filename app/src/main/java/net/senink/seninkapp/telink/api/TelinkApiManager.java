@@ -143,7 +143,7 @@ public class TelinkApiManager implements EventListener<String> {
                 TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_CREATE");
                 isServiceCreated = true;
                 autoConnect(false);
-                _startScanTelink();
+//                _startScanTelink();
                 break;
             case MeshController.EVENT_TYPE_SERVICE_DESTROY:
                 TelinkLog.d(TAG + "-- service destroyed event");
@@ -151,6 +151,7 @@ public class TelinkApiManager implements EventListener<String> {
             case ScanEvent.DEVICE_FOUND:
                 AdvertisingDevice device = ((ScanEvent) event).advertisingDevice;
                 onDeviceFound(device);
+                _startScanTelink();
                 break;
             case ScanEvent.SCAN_TIMEOUT:
                 if(devices != null && devices.size() > 0) return;
@@ -267,6 +268,7 @@ public class TelinkApiManager implements EventListener<String> {
      * @param address pvDevice.unicastAddress
      */
     private void bindBlue(AdvertisingDevice device, int address) {
+        stopScan = true;
         targetDevice = new UnprovisionedDevice(device, address);
         byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
         ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, new UnprovisionedDevice(device, address));
@@ -288,22 +290,28 @@ public class TelinkApiManager implements EventListener<String> {
         return this.mListAdapter;
     }
 
+    private int timeout = 7 * 1000;
     private void _startScanTelink(){
-        TelinkApiManager.getInstance().clearFoundDevice();
+        delayedHandler.removeCallbacks(recyclerScan);
+        if(stopScan){
+            return;
+        }
+        delayedHandler.postDelayed(recyclerScan, timeout);
         ScanParameters parameters = ScanParameters.getDefault(false, true);
-        parameters.setScanTimeout(10 * 1000);
-        List<DeviceInfo> devices = MyApplication.getInstance().getMesh().devices;
-        if (devices.size() != 0) {
-            List<String> excludeList = new ArrayList<>();
-            for (int i = 0; i < devices.size(); i++) {
-                if (devices.get(i).getOnOff() != -1) {
-                    excludeList.add(devices.get(i).macAddress);
-                }
+        parameters.setScanTimeout(timeout);
+        List<DeviceInfo> boundDevices = MyApplication.getInstance().getMesh().devices;
+        List<String> excludeList = new ArrayList<>();
+        for (ProvisioningDevice device : devices) {
+            excludeList.add(device.macAddress);
+        }
+        for (DeviceInfo boundDevice : boundDevices) {
+            if(boundDevice.getOnOff() != -1){
+                excludeList.add(boundDevice.macAddress);
             }
-            String[] excludeMacs = excludeList.toArray(new String[0]);
-            if (excludeList.size() > 0) {
-                parameters.setExcludeMacs(excludeMacs);
-            }
+        }
+        String[] excludeMacs = excludeList.toArray(new String[0]);
+        if (excludeList.size() > 0) {
+            parameters.setExcludeMacs(excludeMacs);
         }
 //        parameters.setIncludeMacs(new String[]{"FF:FF:BB:CC:DD:53"});
         MeshService.getInstance().startScan(parameters);
@@ -312,6 +320,7 @@ public class TelinkApiManager implements EventListener<String> {
     // 扫描蓝牙
     public void startScanTelink() {
         stopScan = false;
+        TelinkApiManager.getInstance().clearFoundDevice();
         _startScanTelink();
     }
 
@@ -459,9 +468,18 @@ public class TelinkApiManager implements EventListener<String> {
                 mListAdapter.notifyDataSetChanged();
                 _startScanTelink();
             }
-
         }
     };
+
+    private Runnable recyclerScan = new Runnable() {
+        @Override
+        public void run() {
+            if(!stopScan && devices.size() == 0){
+                _startScanTelink();
+            }
+        }
+    };
+
 
     private void onKeyBindFail(MeshEvent event) {
         DeviceInfo remote = event.getDeviceInfo();

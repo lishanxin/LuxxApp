@@ -104,6 +104,7 @@ import net.senink.piservice.pinm.PinmInterface;
 import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISManager;
 import net.senink.seninkapp.util.CrashHandler;
+import net.senink.seninkapp.util.LogUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -343,6 +344,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		/**初始化蒲公英SDK*/
 		pgyerInit();
 		CrashHandler.getInstance().init(this);
+		LogUtil.INSTANCE.storeLog();
 		try {
 			registerAllReceiver();
 		}catch (Exception e){
