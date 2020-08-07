@@ -39,6 +39,7 @@ public class BaseActivity extends Activity  {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		Utils.printMemoryInfor("MAT", getClass().getName() + ":onStart()");
 		ActivityManager.getInstance().onActivityStart();
 	}
 

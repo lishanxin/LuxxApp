@@ -52,6 +52,7 @@ import net.senink.seninkapp.telink.SharedPreferenceHelper;
 import net.senink.seninkapp.telink.model.Mesh;
 import net.senink.seninkapp.telink.model.PrivateDevice;
 import net.senink.seninkapp.telink.model.ProvisioningDevice;
+import net.senink.seninkapp.telink.model.TelinkOperation;
 import net.senink.seninkapp.telink.view.BaseRecyclerViewAdapter;
 import net.senink.seninkapp.telink.view.DeviceProvisionListAdapter;
 import net.senink.seninkapp.ui.activity.AddBlueToothDeviceActivity;
@@ -102,7 +103,19 @@ public class TelinkApiManager implements EventListener<String> {
         devices = new ArrayList<>();
         mesh = MyApplication.getInstance().getMesh();
         mContext = context;
+        connectedListener = new MeshService.OnCheckConnectedListener() {
+            @Override
+            public void onCheckConnected(boolean isConnected) {
+                if(!isConnected){
+                    EventBus.getDefault().post(new TelinkOperation(TelinkOperation.RECONNECT_TELINK_DEVICES));
+                }
+            }
+        };
     }
+
+    // 检测是否需要刷新
+    private MeshService.OnCheckConnectedListener connectedListener;
+
 
     public List<ProvisioningDevice> getFoundDevices() {
         return devices;
@@ -142,6 +155,7 @@ public class TelinkApiManager implements EventListener<String> {
             case MeshController.EVENT_TYPE_SERVICE_CREATE:
                 TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_CREATE");
                 isServiceCreated = true;
+//                MeshService.getInstance().setCheckConnectedListener(connectedListener);
                 autoConnect(false);
 //                _startScanTelink();
                 break;
@@ -537,6 +551,13 @@ public class TelinkApiManager implements EventListener<String> {
         if(MeshService.getInstance() != null){
             MeshService.getInstance().setOnOff(hslEleAdr, (byte) (isOn ? 1 : 0), !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
         }
+    }
+
+    /**
+     * 检测设备是否连接
+     */
+    private void checkDeviceConnected() {
+
     }
 
     private void autoConnect(boolean update) {

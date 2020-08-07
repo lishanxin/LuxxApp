@@ -65,6 +65,7 @@ import net.senink.seninkapp.telink.AppSettings;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.model.Mesh;
 import net.senink.seninkapp.telink.model.TelinkBase;
+import net.senink.seninkapp.telink.model.TelinkOperation;
 import net.senink.seninkapp.ui.activity.AddDevicesActivity;
 import net.senink.seninkapp.ui.activity.LoginActivity;
 import net.senink.seninkapp.ui.activity.MipcaCaptureActivity;
@@ -182,8 +183,12 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	// 刷新页面
 	private static final int MSG_UPDATE_VIEW = 6;
 
+	private static final int MSG_RECONNECT_TELINK_SDK = 8;
+
 	// 添加设备或者分组的弹出框
 	private PopupWindow addDialog = null;
+
+
 
 	// 检测升级的工具类
 	private ApkUpgradeUtils upgradeUtils = null;
@@ -242,6 +247,9 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
+				case MSG_RECONNECT_TELINK_SDK:
+					reconnectTelink();
+					break;
 				case MSG_HIDE_TIP:
 					removeMessages(MSG_HIDE_TIP);
 					setVisibilityOnTip(false, 0);
@@ -457,7 +465,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	@Override
 	protected void onResume() {
 		super.onResume();
-		getTelinkOnOff();
 		try {
 			if (!checkAllPermission()) {
 				return;
@@ -484,17 +491,26 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		}catch (Exception e){
 			PgyCrashManager.reportCaughtException(HomeActivity.this, e);
 		}
-		TelinkApiManager.getInstance().autoConnectToDevices(this);
-		TelinkLog.d("main resume -- service created: " + isServiceCreated);
 		if (!LeBluetooth.getInstance().isEnabled()) {
 			showBleOpenDialog();
-		} else {
-			if (isServiceCreated) {
-				this.autoConnect(false);
-			}
 		}
 
-//		MobclickAgent.onResume(this);
+		reconnectTelink();
+	}
+
+
+	private void reconnectTelink(){
+
+		if(MeshService.getInstance() != null && MeshService.getInstance().isDeviceConnected()){
+			return;
+		}else{
+			myHandler.sendEmptyMessageDelayed(MSG_RECONNECT_TELINK_SDK, 5000);
+			getTelinkOnOff();
+
+			TelinkApiManager.getInstance().autoConnectToDevices(this);
+			TelinkLog.d("main resume -- service created: " + isServiceCreated);
+		}
+
 	}
 
 	android.support.v7.app.AlertDialog.Builder mDialogBuilder;
@@ -569,6 +585,13 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		refreshListView();
 		if(opr.isGotLightStatus()){
 			setVisibilityOnTip(false, 0);
+		}
+	}
+
+	@Subscribe
+	public void reconnectTelinkDevices(TelinkOperation operation){
+		if(operation.getOpr() == TelinkOperation.RECONNECT_TELINK_DEVICES){
+			reconnectTelink();
 		}
 	}
 
@@ -830,6 +853,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 							if (pif.getConnectType() == PinmInterface.TYPE_CSRMESH) {
 								setVisibilityOnTip(true, R.string.home_connect_ble_tip);
 								Foreground.exitToHome();
+								myHandler.sendEmptyMessageDelayed(MSG_RECONNECT_TELINK_SDK, 3000);
 							}
 						}
 						break;

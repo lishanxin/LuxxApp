@@ -83,6 +83,8 @@ public class MeshService extends Service {
 
     private int localAddress = 1;
 
+    private OnCheckConnectedListener checkConnectedListener;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -108,6 +110,19 @@ public class MeshService extends Service {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
+    public void setCheckConnectedListener(OnCheckConnectedListener listener){
+        checkConnectedListener = listener;
+    }
+
+    public void checkDeviceConnected(){
+        if(checkConnectedListener != null){
+            checkConnectedListener.onCheckConnected(mMeshController.isDeviceConnected());
+        }
+    }
+
+    public boolean isDeviceConnected(){
+        return mMeshController.isDeviceConnected();
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -386,6 +401,7 @@ public class MeshService extends Service {
      * @return if command will be sent
      */
     public boolean sendMeshCommand(MeshCommand meshCommand) {
+        checkDeviceConnected();
         return mMeshController.sendMeshCommand(meshCommand);
     }
 
@@ -397,7 +413,12 @@ public class MeshService extends Service {
      * @see #sendMeshCommand(MeshCommand)
      */
     public void sendOpByINI(byte[] params) {
+        checkDeviceConnected();
         mMeshController.sendOpByINI(params);
+    }
+
+    public interface OnCheckConnectedListener{
+        void onCheckConnected(boolean isConnected);
     }
 
     /********************* generic *********************/

@@ -2343,9 +2343,19 @@ public class MeshController {
     };
 
 
+    public boolean isDeviceConnected(){
+        if(mDevice == null || !mDevice.isConnected()){
+            return false;
+        }
+        return true;
+    }
+
+
     boolean sendMeshCommand(MeshCommand command) {
         saveLog("Send Mesh Command : " + command.toString());
-        if (mDevice == null || !mDevice.isConnected()) {
+        if (!isDeviceConnected()) {
+            // 新设备有可能因为旧sdk导致变成不可用
+
             return false;
         }
         byte[] params = command.toBytes();
