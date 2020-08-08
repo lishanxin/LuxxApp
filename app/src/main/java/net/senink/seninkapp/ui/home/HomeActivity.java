@@ -183,8 +183,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 	// 刷新页面
 	private static final int MSG_UPDATE_VIEW = 6;
 
-	private static final int MSG_RECONNECT_TELINK_SDK = 8;
-
 	// 添加设备或者分组的弹出框
 	private PopupWindow addDialog = null;
 
@@ -247,9 +245,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-				case MSG_RECONNECT_TELINK_SDK:
-					reconnectTelink();
-					break;
 				case MSG_HIDE_TIP:
 					removeMessages(MSG_HIDE_TIP);
 					setVisibilityOnTip(false, 0);
@@ -344,10 +339,20 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		// 开启Telink的sdk
 		TelinkApiManager.getInstance().startMeshService(HomeActivity.this, HomeActivity.this);
 	}
+
+	Runnable reconnectTelinkRunnable = new Runnable() {
+		@Override
+		public void run() {
+//			reconnectTelink();
+			myHandler.postDelayed(reconnectTelinkRunnable, 5000);
+		}
+	};
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		myHandler.postDelayed(reconnectTelinkRunnable, 10000);
+
 		EventBus.getDefault().register(this);
 		/**初始化蒲公英SDK*/
 		pgyerInit();
@@ -498,15 +503,11 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		reconnectTelink();
 	}
 
-
 	private void reconnectTelink(){
-
 		if(MeshService.getInstance() != null && MeshService.getInstance().isDeviceConnected()){
 			return;
 		}else{
-			myHandler.sendEmptyMessageDelayed(MSG_RECONNECT_TELINK_SDK, 5000);
 			getTelinkOnOff();
-
 			TelinkApiManager.getInstance().autoConnectToDevices(this);
 			TelinkLog.d("main resume -- service created: " + isServiceCreated);
 		}
@@ -588,12 +589,14 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		}
 	}
 
-	@Subscribe
-	public void reconnectTelinkDevices(TelinkOperation operation){
-		if(operation.getOpr() == TelinkOperation.RECONNECT_TELINK_DEVICES){
-			reconnectTelink();
-		}
-	}
+
+
+//	@Subscribe
+//	public void reconnectTelinkDevices(TelinkOperation operation){
+//		if(operation.getOpr() == TelinkOperation.RECONNECT_TELINK_DEVICES){
+//			reconnectTelink();
+//		}
+//	}
 
 	@Override
 	protected void onDestroy() {
@@ -853,7 +856,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 							if (pif.getConnectType() == PinmInterface.TYPE_CSRMESH) {
 								setVisibilityOnTip(true, R.string.home_connect_ble_tip);
 								Foreground.exitToHome();
-								myHandler.sendEmptyMessageDelayed(MSG_RECONNECT_TELINK_SDK, 3000);
 							}
 						}
 						break;

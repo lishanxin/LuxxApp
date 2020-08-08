@@ -107,7 +107,7 @@ public class TelinkApiManager implements EventListener<String> {
             @Override
             public void onCheckConnected(boolean isConnected) {
                 if(!isConnected){
-                    EventBus.getDefault().post(new TelinkOperation(TelinkOperation.RECONNECT_TELINK_DEVICES));
+
                 }
             }
         };
@@ -155,7 +155,7 @@ public class TelinkApiManager implements EventListener<String> {
             case MeshController.EVENT_TYPE_SERVICE_CREATE:
                 TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_CREATE");
                 isServiceCreated = true;
-//                MeshService.getInstance().setCheckConnectedListener(connectedListener);
+                MeshService.getInstance().setCheckConnectedListener(connectedListener);
                 autoConnect(false);
 //                _startScanTelink();
                 break;
