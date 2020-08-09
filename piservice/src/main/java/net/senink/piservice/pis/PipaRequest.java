@@ -212,13 +212,13 @@ public class PipaRequest implements Serializable{
                 ret = PisInterface.pisRequest(PairID, RequestData.Command,
                         RequestData.Length, RequestData.Data, NeedAck ? 1 : 0);
                 if (NeedAck)
-                    report_start((Activity)PISManager.getDefaultContext());
+                    report_start((Activity)PISManager.getDefaultActivityContext());
                 break;
             case SUBSCRIBE:
                 ret = PisInterface.pisSubscribe(PairID, RequestData.Command,
                         IsSubscribe);
                 if (NeedAck)
-                    report_start((Activity)PISManager.getDefaultContext());
+                    report_start((Activity)PISManager.getDefaultActivityContext());
                 break;
             default:
                 ret = (-3);    //错误的request类型

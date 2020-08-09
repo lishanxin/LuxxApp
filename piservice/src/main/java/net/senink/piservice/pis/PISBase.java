@@ -424,11 +424,11 @@ public class PISBase implements Serializable {
                                     mRequestExecutingList.remove(srvReq.originalReq);
                             }
                             LogUtils.i(TAG, "remove ------------> groupRequest() onRequestResult");
-                            srvReq.originalReq.report_finished((Activity) PISManager.getDefaultContext());
+                            srvReq.originalReq.report_finished((Activity) PISManager.getDefaultActivityContext());
                         }
                     }catch (Exception e){
                         srvReq.errorCode = PipaRequest.REQUEST_RESULT_ERROR_OBJECT;
-                        srvReq.originalReq.report_finished((Activity) PISManager.getDefaultContext());
+                        srvReq.originalReq.report_finished((Activity) PISManager.getDefaultActivityContext());
                     }
                 }
             });
@@ -579,7 +579,7 @@ public class PISBase implements Serializable {
 
         for (PipaRequest req : mRequestExecutingList) {
             req.errorCode = PipaRequest.REQUEST_RESULT_ERROR_CANCEL;
-            req.report_finished((Activity) PISManager.getDefaultContext());
+            req.report_finished((Activity) PISManager.getDefaultActivityContext());
         }
         LogUtils.i(TAG, "reportErrorForInvaildObject()");
         synchronized (requestLock) {
@@ -587,7 +587,7 @@ public class PISBase implements Serializable {
         }
         for (PipaRequest req : mRequestReserveList) {
             req.errorCode = PipaRequest.REQUEST_RESULT_ERROR_CANCEL;
-            req.report_finished((Activity) PISManager.getDefaultContext());
+            req.report_finished((Activity) PISManager.getDefaultActivityContext());
         }
         synchronized (requestLock) {
             mRequestReserveList.clear();
@@ -618,7 +618,7 @@ public class PISBase implements Serializable {
                     } else {
                         req.Status = PipaRequest.REQUEST_STATUS.INVALID;
                         req.errorCode = (-2);    //超时
-                        req.report_finished((Activity)PISManager.getDefaultContext());
+                        req.report_finished((Activity)PISManager.getDefaultActivityContext());
                     }
                 }
             }
@@ -658,7 +658,7 @@ public class PISBase implements Serializable {
                     req.errorCode = (-1);
                     req.Status = PipaRequest.REQUEST_STATUS.INVALID;
                 }
-                req.report_finished((Activity) PISManager.getDefaultContext());
+                req.report_finished((Activity) PISManager.getDefaultActivityContext());
 
             }
         }

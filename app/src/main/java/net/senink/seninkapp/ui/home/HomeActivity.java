@@ -48,7 +48,7 @@ import net.senink.piservice.http.PISHttpManager;
 import net.senink.piservice.pinm.PINMoMC.PinmOverMC;
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.piservice.struct.UserInfo;
-import net.senink.seninkapp.ActivityManager;
+import net.senink.seninkapp.MyActivityManager;
 import net.senink.seninkapp.BaseActivity;
 import net.senink.seninkapp.Foreground;
 
@@ -64,8 +64,6 @@ import net.senink.seninkapp.fragment.SwitchFragment;
 import net.senink.seninkapp.telink.AppSettings;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.model.Mesh;
-import net.senink.seninkapp.telink.model.TelinkBase;
-import net.senink.seninkapp.telink.model.TelinkOperation;
 import net.senink.seninkapp.ui.activity.AddDevicesActivity;
 import net.senink.seninkapp.ui.activity.LoginActivity;
 import net.senink.seninkapp.ui.activity.MipcaCaptureActivity;
@@ -74,7 +72,6 @@ import net.senink.seninkapp.ui.util.CommonUtils;
 import net.senink.seninkapp.ui.util.Config;
 import net.senink.seninkapp.ui.util.LogUtils;
 import net.senink.seninkapp.ui.util.SharePreferenceUtils;
-import net.senink.seninkapp.ui.util.SortUtils;
 
 import net.senink.seninkapp.ui.util.StringUtils;
 import net.senink.seninkapp.ui.util.ToastUtils;
@@ -93,13 +90,11 @@ import com.telink.sig.mesh.light.MeshController;
 import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.light.parameter.AutoConnectParameters;
 import com.telink.sig.mesh.model.DeviceInfo;
-import com.telink.sig.mesh.model.Group;
 import com.telink.sig.mesh.util.MeshUtils;
 import com.telink.sig.mesh.util.TelinkLog;
 import com.telink.sig.mesh.util.UnitConvert;
 //import com.umeng.analytics.MobclickAgent;
 
-import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pinm.PINMoBLE.PinmOverBLE;
 import net.senink.piservice.pinm.PinmInterface;
 import net.senink.piservice.pis.PISBase;
@@ -432,8 +427,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 			}
 		}
 
-		Intent serviceIntent = new Intent(this, MeshService.class);
-		startService(serviceIntent);
+		startTelinkService();
 		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_DISCONNECTED, this);
 		MyApplication.getInstance().addEventListener(NotificationEvent.EVENT_TYPE_DEVICE_ON_OFF_STATUS, this);
 		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_MESH_EMPTY, this);
@@ -453,20 +447,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		super.onStart();
 
 	}
-
-	private void onPermissionChecked() {
-		TelinkLog.d("permission check pass");
-		delayHandler.removeCallbacksAndMessages(null);
-		delayHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				// 开启Telink的sdk
-				TelinkApiManager.getInstance().startMeshService(HomeActivity.this, HomeActivity.this);
-			}
-		}, 1000);
-
-	}
-
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -617,9 +597,12 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 
 		MyApplication.getInstance().removeEventListener(this);
 		handler.removeCallbacksAndMessages(null);
-		if (!ActivityManager.getInstance().isApplicationForeground()){
+		if (!MyActivityManager.getInstance().isApplicationForeground()){
 			Intent serviceIntent = new Intent(this, MeshService.class);
 			stopService(serviceIntent);
+
+			MyActivityManager.getInstance().killApplication(this);
+
 		}
 	}
 
@@ -1368,6 +1351,11 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 				break;
 			case MeshController.EVENT_TYPE_SERVICE_DESTROY:
 				TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_DESTROY");
+				if(!MyActivityManager.getInstance().isApplicationForeground()){
+					MyActivityManager.getInstance().killApplication(this);
+				}else{
+					startTelinkService();
+				}
 				break;
 			case MeshController.EVENT_TYPE_SERVICE_CREATE:
 				TelinkLog.d(TAG + "#EVENT_TYPE_SERVICE_CREATE");

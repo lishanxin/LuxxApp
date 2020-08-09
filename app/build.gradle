@@ -23,7 +23,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 26
         versionCode 1200
-        versionName "1.43"
+        versionName "1.46"
         multiDexEnabled true
         buildConfigField "boolean", "Release", "false"
 

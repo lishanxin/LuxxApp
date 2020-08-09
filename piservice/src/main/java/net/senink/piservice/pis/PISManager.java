@@ -434,6 +434,10 @@ public class PISManager implements Serializable {
     }
 
     public static Context getDefaultContext(){
+        return mContext.getApplicationContext();
+    }
+
+    public static Context getDefaultActivityContext(){
         return mContext;
     }
 

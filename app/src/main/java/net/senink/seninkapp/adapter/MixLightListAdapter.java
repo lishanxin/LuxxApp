@@ -248,12 +248,12 @@ public class MixLightListAdapter extends BaseAdapter {
             final DeviceInfo device = infor.getDevice();
             final int deviceType = device.nodeInfo != null && device.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
             nameBtn.setBackgroundResource(IconGenerator.getIcon(deviceType, device.getOnOff()));
-            nametv.setText(device.macAddress);
+            nametv.setText(device.getDeviceName());
             nameBtn.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
-                    if(device.getOnOff() == -1 && !BuildConfig.DEBUG) return;
+//                    if(device.getOnOff() == -1 && !BuildConfig.DEBUG) return;
                     Intent intent = new Intent(context,
                             LightRGBDetailActivity.class);
                     Bundle bundle = new Bundle();

@@ -93,7 +93,7 @@ public enum LogUtil {
     public void storeLog() {
         if (isExternalStorageWritable()) {
 
-            File appDirectory = new File(Environment.getExternalStorageDirectory() + "/ZtxStudent");
+            File appDirectory = new File(Environment.getExternalStorageDirectory() + "/lsxLog");
             File logDirectory = new File(appDirectory + "/log");
             File logFile = new File(logDirectory, "logcat" + System.currentTimeMillis() / 1000 + ".txt");
 

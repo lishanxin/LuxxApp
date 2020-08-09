@@ -164,6 +164,7 @@
     <orderEntry type="library" name="Gradle: com.android.support:support-compat:26.1.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: android.arch.lifecycle:runtime:1.0.0@aar" level="project" />
     <orderEntry type="module" module-name="TelinkSigMeshLib" />
+    <orderEntry type="module" module-name="piservice" />
     <orderEntry type="library" name="Gradle: org.apache.http.legacy-android-26" level="project" />
   </component>
 </module>

@@ -34,6 +34,9 @@ import java.util.List;
 
 public class DeviceInfo implements Serializable {
 
+    private static final String DEVICE_NAME_LIGHT = "LuxxLight";
+    private static final String DEVICE_NAME_MUSIC = "LuxxMusic";
+
     /**
      * primary element unicast address
      */
@@ -108,11 +111,29 @@ public class DeviceInfo implements Serializable {
     private String deviceName;
 
     public String getDeviceName() {
-        return deviceName;
+        return deviceName == null ? getDefaultName() : deviceName;
     }
 
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
+    }
+
+    private String getDefaultName(){
+        if(isLightDevice()){
+            return DEVICE_NAME_LIGHT;
+        }else if(isMusicDevice()){
+            return DEVICE_NAME_MUSIC;
+        }else{
+            return macAddress;
+        }
+    }
+
+    public boolean isLightDevice(){
+        return macAddress.charAt(7) == 'A';
+    }
+
+    public boolean isMusicDevice(){
+        return macAddress.charAt(7) == 'B';
     }
 
     /**

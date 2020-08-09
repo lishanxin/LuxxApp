@@ -1,6 +1,7 @@
 package net.senink.seninkapp.telink.api;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -78,6 +79,7 @@ public class TelinkApiManager implements EventListener<String> {
     private boolean isServiceCreated = false;
     private Context mContext;
     private List<ProvisioningDevice> devices;
+    private List<String> boundDevices;
     private Mesh mesh;
     private DeviceProvisionListAdapter mListAdapter;
     private UnprovisionedDevice targetDevice;
@@ -111,7 +113,9 @@ public class TelinkApiManager implements EventListener<String> {
                 }
             }
         };
+        addEventListener();
     }
+
 
     // 检测是否需要刷新
     private MeshService.OnCheckConnectedListener connectedListener;
@@ -122,10 +126,8 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
     public void startMeshService(Activity activity, EventListener<String> listener) {
-        Intent serviceIntent = new Intent(activity, MeshService.class);
-        activity.startService(serviceIntent);
-
-        addEventListener();
+        Intent serviceIntent = new Intent(activity.getApplicationContext(), MeshService.class);
+        activity.getApplicationContext().startService(serviceIntent);
     }
 
     public void addEventListener() {
@@ -313,16 +315,13 @@ public class TelinkApiManager implements EventListener<String> {
         delayedHandler.postDelayed(recyclerScan, timeout);
         ScanParameters parameters = ScanParameters.getDefault(false, true);
         parameters.setScanTimeout(timeout);
-        List<DeviceInfo> boundDevices = MyApplication.getInstance().getMesh().devices;
+
         List<String> excludeList = new ArrayList<>();
         for (ProvisioningDevice device : devices) {
             excludeList.add(device.macAddress);
         }
-        for (DeviceInfo boundDevice : boundDevices) {
-            if(boundDevice.getOnOff() != -1){
-                excludeList.add(boundDevice.macAddress);
-            }
-        }
+
+        excludeList.addAll(boundDevices);
         String[] excludeMacs = excludeList.toArray(new String[0]);
         if (excludeList.size() > 0) {
             parameters.setExcludeMacs(excludeMacs);
@@ -335,6 +334,12 @@ public class TelinkApiManager implements EventListener<String> {
     public void startScanTelink() {
         stopScan = false;
         TelinkApiManager.getInstance().clearFoundDevice();
+        boundDevices = new ArrayList<>();
+        for (DeviceInfo boundDevice : MyApplication.getInstance().getMesh().devices) {
+            if(boundDevice.getOnOff() != -1){
+                boundDevices.add(boundDevice.macAddress);
+            }
+        }
         _startScanTelink();
     }
 

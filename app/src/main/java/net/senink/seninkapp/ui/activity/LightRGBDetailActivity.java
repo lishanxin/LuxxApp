@@ -914,12 +914,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
             else
                 effectsBtn.setBackgroundResource(R.drawable.btn_music_play_selector);
         }
-        else{
-            effectsBtn.setVisibility(View.GONE);
-        }
-        if(isTelink){
+        else if(deviceInfo != null && deviceInfo.isMusicDevice()){
             effectsBtn.setVisibility(View.VISIBLE);
-        }else{
+        }
+        else{
             effectsBtn.setVisibility(View.GONE);
         }
 		setWhiteBar();
