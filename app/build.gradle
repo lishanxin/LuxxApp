@@ -10,11 +10,17 @@ android {
     }
     signingConfigs {
         senink_release {
-            keyAlias 'key0'
-            keyPassword '123456'
-            storeFile file('./demo.jks')
-            storePassword '123456'
+            keyAlias 'senink'
+            keyPassword 'senink123'
+            storeFile file('../seninkkey')
+            storePassword 'senink123'
         }
+//        senink_release {
+//            keyAlias 'key0'
+//            keyPassword '123456'
+//            storeFile file('./demo.jks')
+//            storePassword '123456'
+//        }
     }
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
@@ -23,7 +29,8 @@ android {
         minSdkVersion 23
         targetSdkVersion 26
         versionCode 1200
-        versionName "1.46"
+        //*** 项目设置了限时，若最终交付，需把限时取消 ***
+        versionName "1.48"
         multiDexEnabled true
         buildConfigField "boolean", "Release", "false"
 
@@ -90,7 +97,7 @@ android {
 //            buildConfigField 'boolean','isLocal_default', "true"
 //        }
         eureka {
-            applicationId "net.senink.eureka.test"
+            applicationId "net.senink.eureka"
             manifestPlaceholders = [app_name: "NORDIC DLUXX", app_icon: "@mipmap/luxx_launcher", PGYER_APPID: "b3ddb7c3b6205b34452b94a1998fa35b"]
             buildConfigField 'String', 'Manufacturer', '"eureka"'
             buildConfigField 'Integer', 'ManufacturerID', '5'

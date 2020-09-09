@@ -61,7 +61,12 @@ import net.senink.seninkapp.ui.home.TelinkDataRefreshEntry;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -90,6 +95,8 @@ public class TelinkApiManager implements EventListener<String> {
     public static final String IS_TELINK_GROUP_KEY = "isTelinkGroup";
     public static final String TELINK_ADDRESS = "TELINKADDRESS";
 
+    private static Date expiredTime;
+
     public static TelinkApiManager getInstance() {
         if (instance == null) {
             synchronized (TelinkApiManager.class) {
@@ -98,7 +105,16 @@ public class TelinkApiManager implements EventListener<String> {
                 }
             }
         }
-        return instance;
+        if(expiredTime != null){
+            if(new Date().before(expiredTime)){
+                return instance;
+            }else{
+                return null;
+            }
+        }else{
+            return instance;
+        }
+
     }
 
     public void init(Context context) {
@@ -114,6 +130,13 @@ public class TelinkApiManager implements EventListener<String> {
             }
         };
         addEventListener();
+
+        DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            expiredTime = dateFormat2.parse("2021-04-06 00:00:00");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -124,7 +124,10 @@ public class GeneralDataManager {
         return getPISGroups(lastCurShowListType);
     }
 
-    public List<GeneralDeviceModel> getGeneralDevice(int curShowListType){
+    public List<GeneralDeviceModel> getGeneralDevice(){
+        return getGeneralDevice(lastCurShowListType);
+    }
+    private List<GeneralDeviceModel> getGeneralDevice(int curShowListType){
 //更新ProductClassifyView状态
         if(pm == null ) return null;
         //更新Fragments状态

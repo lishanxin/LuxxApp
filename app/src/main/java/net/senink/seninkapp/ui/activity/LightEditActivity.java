@@ -22,9 +22,11 @@ import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
 
 import net.senink.piservice.pis.PISBase;
+import net.senink.piservice.pis.PISDevice;
 import net.senink.piservice.pis.PISMCSManager;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
+import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.BaseActivity;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.MyApplication;
@@ -50,6 +52,8 @@ import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.telink.model.TelinkOperation;
 import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.ui.constant.MessageModel;
+import net.senink.seninkapp.ui.constant.ProductClassifyInfo;
+import net.senink.seninkapp.ui.setting.DeviceListActivity;
 import net.senink.seninkapp.ui.util.ToastUtils;
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase;
 import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase.Mode;
@@ -61,7 +65,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 /**
  * 用于修改等分组和某分组下的设备
- *
+ * TODO LEE
  * @author zhaojunfeng
  * @date 2015-07-17
  */
@@ -410,9 +414,64 @@ public class LightEditActivity extends BaseActivity implements
                     continue outer;
                 }
             }
+            if(hasMusicPISDevice(groupInfo)){
+                continue;
+            }
             filterList.add(new GeneralDeviceModel(new TelinkBase(groupInfo)));
         }
     }
+
+
+    /**
+     * 组内是否有03的设备
+     * @param groupInfo
+     * @return
+     */
+    private boolean hasMusicPISDevice(Group groupInfo) {
+        List<PISBase> pisBaseList = getPISDeviceOnGroup(infor);
+        for (PISBase pisBase : pisBaseList) {
+            if (!(pisBase.getT1() == 0x10 && pisBase.getT2() == 0x05)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 组中是否有带蜡烛光的设备
+     * @param groupInfo
+     * @return
+     */
+    private boolean hasCandleDevice(Group groupInfo){
+        List<PISBase> pisBaseList = getPISDeviceOnGroup(infor);
+        for (PISBase pisBase : pisBaseList) {
+            if ((pisBase.getT1() == 0x10 && pisBase.getT2() == 0x05)) {
+                return true;
+            }
+        }
+
+        List<DeviceInfo> telinkDevices = TelinkGroupApiManager.getInstance().getDevicesInGroup(groupInfo.address);
+        if(telinkDevices != null && telinkDevices.size() > 0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *  获取组内PIS的设备
+     * @param infor
+     * @return
+     */
+    private List<PISBase> getPISDeviceOnGroup(PISBase infor) {
+        List<PISBase> gObjs = infor.getGroupObjects();
+        if (gObjs == null || gObjs.size() == 0) {
+            return new ArrayList<>();
+        }
+        return gObjs;
+    }
+
+
+
 
     private void addTelinkDeviceToFilter(Group telinkGroup, List<GeneralDeviceModel> filterList) {
         List<DeviceInfo> addAlready = TelinkGroupApiManager.getInstance().getDevicesInGroup(telinkGroup.address);
@@ -425,6 +484,11 @@ public class LightEditActivity extends BaseActivity implements
                     continue outer;
                 }
             }
+
+            // 如果组内已经有了非蜡烛灯，则不添加新灯
+            if(hasMusicPISDevice(telinkGroup)){
+                break;
+            }
             filterList.add(new GeneralDeviceModel(new TelinkBase(deviceInfo)));
         }
     }
@@ -434,7 +498,14 @@ public class LightEditActivity extends BaseActivity implements
             List<PISBase> srvs = infor.getGroupObjects();
             for (PISBase srv : objects) {
                 if (!srvs.contains(srv)) {
-                    filterList.add(new GeneralDeviceModel(srv));
+                    // 如果有蜡烛灯（此处可理解为新sdk的灯），则只能添加05的旧灯
+                    if(hasCandleDevice(telinkGroup)){
+                        if (srv.getT1() == 0x10 && srv.getT2() == 0x05) {
+                            filterList.add(new GeneralDeviceModel(srv));
+                        }
+                    }else{
+                        filterList.add(new GeneralDeviceModel(srv));
+                    }
                 }
             }
         }

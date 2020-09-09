@@ -976,6 +976,11 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
             switcher.setChecked(infor.getLightStatus()==PISxinColor.XINCOLOR_STATUS_ON);
             tvTitle.setText(infor.getName() == null ? "" : infor.getName());
+            try {
+                setPisData(infor.getPISKeyString());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 

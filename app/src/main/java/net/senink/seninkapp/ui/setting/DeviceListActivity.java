@@ -10,7 +10,9 @@ import net.senink.piservice.pis.PISDevice;
 import net.senink.piservice.pis.PISMCSManager;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
+import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.BaseActivity;
+import net.senink.seninkapp.GeneralDataManager;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.telink.model.TelinkBase;
@@ -30,6 +32,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -179,20 +182,20 @@ public class DeviceListActivity extends BaseActivity implements
 
 	// Todo lee
 	private List<GeneralDeviceModel> getAllGeneralDevices(){
-		List<com.telink.sig.mesh.model.DeviceInfo> telinkDevices = MyApplication.getInstance().getMesh().devices;
-		List<PISDevice> pisDevices = pm.AllDevices();
-		List<GeneralDeviceModel> generalDeviceModels = new ArrayList<>();
-		if(telinkDevices != null){
-			for(int i = 0; i< telinkDevices.size(); i++){
-				generalDeviceModels.add(new GeneralDeviceModel(new TelinkBase(telinkDevices.get(i))));
-			}
-		}
-		if(pisDevices != null){
-			for(int i = 0; i< pisDevices.size(); i++){
-				generalDeviceModels.add(new GeneralDeviceModel(pisDevices.get(i)));
-			}
-		}
-		return generalDeviceModels;
+//		List<com.telink.sig.mesh.model.DeviceInfo> telinkDevices = MyApplication.getInstance().getMesh().devices;
+//		List<PISDevice> pisDevices = pm.AllDevices();
+//		List<GeneralDeviceModel> generalDeviceModels = new ArrayList<>();
+//		if(telinkDevices != null){
+//			for(int i = 0; i< telinkDevices.size(); i++){
+//				generalDeviceModels.add(new GeneralDeviceModel(new TelinkBase(telinkDevices.get(i))));
+//			}
+//		}
+//		if(pisDevices != null){
+//			for(int i = 0; i< pisDevices.size(); i++){
+//				generalDeviceModels.add(new GeneralDeviceModel(pisDevices.get(i)));
+//			}
+//		}
+		return GeneralDataManager.getInstance().getGeneralDevice();
 	}
 
 	@Override
@@ -441,7 +444,8 @@ public class DeviceListActivity extends BaseActivity implements
 						com.telink.sig.mesh.model.DeviceInfo telinkDeviceInfo = mSelectedDev.getTelinkBase().getDevice();
 						telinkKickOut(telinkDeviceInfo);
 					}else{
-						PISDevice selectPisDevice = (PISDevice) mSelectedDev.getPisBase();
+						// TODO LEE 删除灯
+						PISDevice selectPisDevice = mSelectedDev.getPisBase().getDeviceObject();
 						pm = PISManager.getInstance();
 						mcm = pm.getMCSObject();
 						if (selectPisDevice == null || pm == null || mcm == null)
@@ -623,7 +627,7 @@ public class DeviceListActivity extends BaseActivity implements
 				holder.icon.setImageResource(IconGenerator.getIcon(deviceType, telinkDeviceInfo.getOnOff()));
 				holder.nameTv.setText(telinkDeviceInfo.getDeviceName());
 			}else{
-				PISDevice deviceInfo = (PISDevice) generalDeviceModel.getPisBase();
+				PISDevice deviceInfo = (PISDevice) generalDeviceModel.getPisBase().getDeviceObject();
 				try {
 					List<PISBase> srvs = deviceInfo.getPIServices();
 					if (srvs != null && srvs.size()>0){
@@ -644,13 +648,49 @@ public class DeviceListActivity extends BaseActivity implements
 						macTemp = deviceInfo.getMacString().replaceAll(":", "-");
 					}
 					holder.macTv.setText(macTemp);
-					holder.icon.setImageResource(
-							ProductClassifyInfo.getProductResourceId(deviceInfo.getClassString()));
-					if (deviceInfo.getStatus() != PISBase.SERVICE_STATUS_ONLINE) {
-						setGrayOnBackgroud(holder.icon, 0);
-					} else {
-						setGrayOnBackgroud(holder.icon, 1);
+					// TODO LEE2 灯具图标
+					try {
+						StateListDrawable sld = null;
+//			int resourceId = 0;
+						PISDevice dev;
+						PISBase infor = generalDeviceModel.getPisBase();
+						PISxinColor light = (PISxinColor) generalDeviceModel.getPisBase();
+						if (infor.ServiceType != PISBase.SERVICE_TYPE_GROUP) {
+							dev = infor.getDeviceObject();
+							if (dev != null) {
+								if (infor.getT1() == 0x10 && infor.getT2() == 0x05) {
+									sld = ProductClassifyInfo.getProductStateListDrawable(DeviceListActivity.this,
+											ProductClassifyInfo.CLASSID_EUREKA_CANDLE,
+											dev.getStatus(),
+											light.getLightStatus());
+								} else {
+									sld = ProductClassifyInfo.getProductStateListDrawable(DeviceListActivity.this,
+											dev.getClassString(),
+											dev.getStatus(),
+											light.getLightStatus());
+								}
+							} else {
+								sld = ProductClassifyInfo.getProductStateListDrawable(DeviceListActivity.this,
+										ProductClassifyInfo.CLASSID_DEFAULT,
+										0, 0);
+							}
+						} else {
+							holder.icon.setImageResource(
+									ProductClassifyInfo.getProductResourceId(deviceInfo.getClassString()));
+						}
+						if (sld != null)
+							holder.icon.setImageDrawable(sld);
+					} catch (ClassCastException e) {
+						PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+					} catch (Exception e) {
+						PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
 					}
+
+//					if (deviceInfo.getStatus() != PISBase.SERVICE_STATUS_ONLINE) {
+//						setGrayOnBackgroud(holder.icon, 0);
+//					} else {
+//						setGrayOnBackgroud(holder.icon, 1);
+//					}
 
 				}catch (Exception e){
 					PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);

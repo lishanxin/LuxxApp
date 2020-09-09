@@ -371,22 +371,6 @@ public class MixLightListAdapter extends BaseAdapter {
             }
             if (sld != null)
                 nameBtn.setBackground(sld);
-//			if (resourceId != 0) {
-//				try {
-////					nameBtn.setBackgroundResource(resourceId);
-//					if (sld != null)
-//						nameBtn.setBackground(sld);
-//
-////					if (infor.getStatus() == PISBase.SERVICE_STATUS_ONLINE)
-////						setGrayOnBackgroud(nameBtn.getBackground(), 1);
-////					else
-////						setGrayOnBackgroud(nameBtn.getBackground(), 0);
-//
-//				}catch (Exception e){
-//					PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
-//				}
-//			}
-
         } catch (ClassCastException e) {
             PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
         } catch (Exception e) {
