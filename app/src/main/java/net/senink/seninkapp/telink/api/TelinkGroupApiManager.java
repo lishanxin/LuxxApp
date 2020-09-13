@@ -66,25 +66,39 @@ public class TelinkGroupApiManager implements EventListener<String> {
 
     @Subscribe
     public void pisDeviceAdded(PISBaseAdd pisBaseAdd){
-        PISBase pisBase = pisBaseAdd.getDevice();
-        if(pisBase == null) return;
-        if(pisBase.ServiceType == PISBase.SERVICE_TYPE_GROUP){
-            addGroup(pisBase.getName(), pisBase);
-        }
+
     }
 
-    // 添加组
-    public void addGroup(String groupName, PISBase object) {
-        List<Group> groups = MyApplication.getInstance().getMesh().groups;
-        Stack<Integer> deleted = MyApplication.getInstance().getMesh().deletedGroupAddress;
+//    // 添加组
+//    public void addGroup(PISBase pisBase) {
+//        List<Group> groups = MyApplication.getInstance().getMesh().groups;
+//
+//        Group group = new Group();
+//        group.PISKeyString = pisBase.getPISKeyString();
+//        group.address = getGroupAddress(group.PISKeyString);
+//        group.name = pisBase.getName();
+//        groups.add(group);
+//
+//        TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
+//    }
 
-        Group group = new Group();
-        group.address = getGroupAddress(groups, deleted);
-        group.name = groupName;
-        group.PISKeyString = object.getPISKeyString();
-        groups.add(group);
+    /**
+     * 刷新TelinkGroups
+     * @param srvsGroup
+     * @return
+     */
+    public List<Group> refreshTelinkGroups(List<PISBase> srvsGroup) {
+        List<Group> groups = new ArrayList<>();
+        for (PISBase pisBase : srvsGroup) {
+            Group group = new Group();
+            group.PISKeyString = pisBase.getPISKeyString();
+            group.address = getGroupAddress(group.PISKeyString);
+            group.name = pisBase.getName();
+            groups.add(group);
+        }
+        MyApplication.getInstance().getMesh().groups = groups;
 
-        TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
+        return groups;
     }
 
     // 删除组
@@ -96,7 +110,6 @@ public class TelinkGroupApiManager implements EventListener<String> {
             for (DeviceInfo deviceInfo : deviceInGroup) {
                 deleteDeviceFromGroup(groupAddress, deviceInfo.meshAddress);
             }
-            MyApplication.getInstance().getMesh().deletedGroupAddress.push(groupAddress);
 
             groups.remove(group);
             TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
@@ -306,14 +319,27 @@ public class TelinkGroupApiManager implements EventListener<String> {
 
 
 
-    private int getGroupAddress(List<Group> groups, Stack<Integer> deletedGroupAddress) {
-        if (deletedGroupAddress.isEmpty()) {
-            int i = groups.size();
-            return i | 0xC000;
-        } else {
-            return deletedGroupAddress.pop();
-        }
+    private int getGroupAddress(String pisGroupKey) {
+        String[] keyArray = pisGroupKey.split("-");
+        return Integer.parseInt(keyArray[1]) | 0xC000;
     }
 
+
+    /**
+     * 获取与Pis组绑定的Telink组
+     * @param infor
+     * @return
+     */
+    public Group getGroupByPisBase(PISBase infor) {
+        if(infor == null || infor.ServiceType != PISBase.SERVICE_TYPE_GROUP) return null;
+        List<Group> allGroups = MyApplication.getInstance().getMesh().groups;
+        if(allGroups == null) return null;
+        for (Group group : allGroups) {
+            if(group.PISKeyString.equals(infor.getPISKeyString())){
+                return group;
+            }
+        }
+        return null;
+    }
 
 }

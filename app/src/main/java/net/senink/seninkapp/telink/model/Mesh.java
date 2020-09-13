@@ -62,7 +62,6 @@ public class Mesh implements Serializable, Cloneable {
 
     public List<Group> groups = new ArrayList<>();
 
-    public Stack<Integer> deletedGroupAddress = new Stack<>();
 
     public List<DeviceInfo> devices = new ArrayList<>();
 

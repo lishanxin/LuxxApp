@@ -32,6 +32,7 @@ import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
 
 import net.senink.piservice.pis.PISBase;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.telink.view.IconGenerator;
 import net.senink.seninkapp.ui.constant.ProductClassifyInfo;
@@ -175,6 +176,8 @@ public class LightDetailAdapter extends BaseAdapter {
 				}else{
 					Group group = telinkBase.getGroup();
 					name = group.name;
+					boolean isOn = TelinkGroupApiManager.getInstance().isGroupOn(group);
+					holder.ivIcon.setBackgroundResource(IconGenerator.getGroupIconRes(isOn));
 				}
 				holder.tvName.setText(name);
 			}else{

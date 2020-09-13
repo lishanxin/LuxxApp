@@ -275,6 +275,7 @@ public class LightEditActivity extends BaseActivity implements
                     public void onRefresh(
                             PullToRefreshBase<ListView> refreshView) {
                         mHandler.sendEmptyMessageDelayed(1000, 1000);
+                        if(infor == null) return;
                         if (infor.ServiceType != PISBase.SERVICE_TYPE_GROUP) {
                             //更新所有的分组信息
                             PISMCSManager mcs = PISManager.getInstance().getMCSObject();
@@ -405,7 +406,6 @@ public class LightEditActivity extends BaseActivity implements
 
     private void addTelinkGroupToFilter(DeviceInfo telinkDeviceinfo, List<GeneralDeviceModel> filterList) {
         List<Group> alreadyGroup = TelinkGroupApiManager.getInstance().getGroupsWithDevice(telinkDeviceinfo.meshAddress);
-        if (alreadyGroup.size() > 0) return;
         List<Group> allGroups = MyApplication.getInstance().getMesh().groups;
         outer:
         for (Group groupInfo : allGroups) {
@@ -428,7 +428,8 @@ public class LightEditActivity extends BaseActivity implements
      * @return
      */
     private boolean hasMusicPISDevice(Group groupInfo) {
-        List<PISBase> pisBaseList = getPISDeviceOnGroup(infor);
+        if(groupInfo == null) return false;
+        List<PISBase> pisBaseList = getPISDeviceOnGroup(PISManager.getInstance().getPISObject(groupInfo.PISKeyString));
         for (PISBase pisBase : pisBaseList) {
             if (!(pisBase.getT1() == 0x10 && pisBase.getT2() == 0x05)) {
                 return true;
@@ -437,13 +438,15 @@ public class LightEditActivity extends BaseActivity implements
         return false;
     }
 
+
     /**
      * 组中是否有带蜡烛光的设备
      * @param groupInfo
      * @return
      */
     private boolean hasCandleDevice(Group groupInfo){
-        List<PISBase> pisBaseList = getPISDeviceOnGroup(infor);
+        if(groupInfo == null) return false;
+        List<PISBase> pisBaseList = getPISDeviceOnGroup(PISManager.getInstance().getPISObject(groupInfo.PISKeyString));
         for (PISBase pisBase : pisBaseList) {
             if ((pisBase.getT1() == 0x10 && pisBase.getT2() == 0x05)) {
                 return true;
@@ -463,6 +466,7 @@ public class LightEditActivity extends BaseActivity implements
      * @return
      */
     private List<PISBase> getPISDeviceOnGroup(PISBase infor) {
+        if(infor == null) return new ArrayList<>();
         List<PISBase> gObjs = infor.getGroupObjects();
         if (gObjs == null || gObjs.size() == 0) {
             return new ArrayList<>();
@@ -471,9 +475,11 @@ public class LightEditActivity extends BaseActivity implements
     }
 
 
-
-
     private void addTelinkDeviceToFilter(Group telinkGroup, List<GeneralDeviceModel> filterList) {
+        // 如果组内已经有了非蜡烛灯，则不添加新灯
+        if(hasMusicPISDevice(telinkGroup)){
+            return;
+        }
         List<DeviceInfo> addAlready = TelinkGroupApiManager.getInstance().getDevicesInGroup(telinkGroup.address);
         List<DeviceInfo> allDevice = MyApplication.getInstance().getMesh().devices;
         outer:
@@ -485,10 +491,6 @@ public class LightEditActivity extends BaseActivity implements
                 }
             }
 
-            // 如果组内已经有了非蜡烛灯，则不添加新灯
-            if(hasMusicPISDevice(telinkGroup)){
-                break;
-            }
             filterList.add(new GeneralDeviceModel(new TelinkBase(deviceInfo)));
         }
     }
@@ -496,15 +498,36 @@ public class LightEditActivity extends BaseActivity implements
     private void addPisDeviceToFilter(List<PISBase> objects, List<GeneralDeviceModel> filterList) {
         if (infor != null && objects != null) {
             List<PISBase> srvs = infor.getGroupObjects();
+            boolean isGroup = infor.ServiceType == PISBase.SERVICE_TYPE_GROUP;
+            Group groupOfTelink =  TelinkGroupApiManager.getInstance().getGroupByPisBase(infor);
             for (PISBase srv : objects) {
                 if (!srvs.contains(srv)) {
                     // 如果有蜡烛灯（此处可理解为新sdk的灯），则只能添加05的旧灯
-                    if(hasCandleDevice(telinkGroup)){
-                        if (srv.getT1() == 0x10 && srv.getT2() == 0x05) {
+                    if(isGroup){
+                        if(hasCandleDevice(groupOfTelink)){
+                            if (srv.getT1() == 0x10 && srv.getT2() == 0x05) {
+                                filterList.add(new GeneralDeviceModel(srv));
+                            }
+                        }else if(hasMusicPISDevice(groupOfTelink)){
+                            if (!(srv.getT1() == 0x10 && srv.getT2() == 0x05)) {
+                                filterList.add(new GeneralDeviceModel(srv));
+                            }
+                        }else{
                             filterList.add(new GeneralDeviceModel(srv));
                         }
                     }else{
-                        filterList.add(new GeneralDeviceModel(srv));
+                        if(hasCandleDevice(TelinkGroupApiManager.getInstance().getGroupByPisBase(srv))){
+                            // 有蜡烛灯的组只能加蜡烛灯（05与新灯）
+                            if ((infor.getT1() == 0x10 && infor.getT2() == 0x05)) {
+                                filterList.add(new GeneralDeviceModel(srv));
+                            }
+                        }else if(hasMusicPISDevice(TelinkGroupApiManager.getInstance().getGroupByPisBase(srv))){
+                            if (!(infor.getT1() == 0x10 && infor.getT2() == 0x05)) {
+                                filterList.add(new GeneralDeviceModel(srv));
+                            }
+                        }else{
+                            filterList.add(new GeneralDeviceModel(srv));
+                        }
                     }
                 }
             }

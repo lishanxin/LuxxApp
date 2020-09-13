@@ -9,6 +9,7 @@ import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISManager;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.telink.model.TelinkBase;
 import net.senink.seninkapp.ui.util.SortUtils;
 
@@ -76,33 +77,10 @@ public class GeneralDataManager {
 
         List<GeneralDeviceModel> generalGroup = new ArrayList<>();
 
-        List<Group> telinkGroup = MyApplication.getInstance().getMesh().groups;
+        List<Group> telinkGroup = TelinkGroupApiManager.getInstance().refreshTelinkGroups(srvsGroup);
         for (Group group : telinkGroup) {
-            for (PISBase base : srvsGroup) {
-                if(base.getPISKeyString().equals(group.PISKeyString)){
-                    srvsGroup.remove(base);
-                    break;
-                }
-            }
-//            if(group.type == Group.BOUND_TYPE.TELINK_GROUP){
-//                group.isOn = false;
-//                for (Integer meshAddress : group.subList) {
-//                    DeviceInfo deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(meshAddress);
-//                    if(deviceInfo.getOnOff() == 1){
-//                        group.isOn = true;
-//                        break;
-//                    }
-//                }
-//            }
             generalGroup.add(new GeneralDeviceModel(new TelinkBase(group)));
         }
-
-        if (srvsGroup.size() > 0){
-            for (PISBase pisBase : srvsGroup) {
-                generalGroup.add(new GeneralDeviceModel(pisBase));
-            }
-        }
-
         return generalGroup;
     }
 

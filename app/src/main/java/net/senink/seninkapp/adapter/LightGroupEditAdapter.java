@@ -165,6 +165,8 @@ public class LightGroupEditAdapter extends BaseAdapter {
 				} else {
 					Group group = telinkBase.getGroup();
 					name = group.name;
+					boolean isOn = TelinkGroupApiManager.getInstance().isGroupOn(group);
+					holder.ivIcon.setBackgroundResource(IconGenerator.getGroupIconRes(isOn));
 				}
 				holder.tvName.setText(name);
 			} else {
