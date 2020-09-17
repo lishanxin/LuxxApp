@@ -60,7 +60,8 @@ public class TelinkGroupApiManager implements EventListener<String> {
     private int modelIndex = 0;
     private int opGroupAdr;
     private int opType;
-
+    // TelinkGroup
+    private List<Group> groups = new ArrayList<>();
     private static final String TAG_CMD = "TAG_CMD";
 
 
@@ -96,15 +97,26 @@ public class TelinkGroupApiManager implements EventListener<String> {
             group.name = pisBase.getName();
             groups.add(group);
         }
-        MyApplication.getInstance().getMesh().groups = groups;
-
+        this.groups = groups;
         return groups;
+    }
+
+    public List<Group> getTelinkGroups(){
+        return this.groups;
+    }
+
+    public Group getGroupByAddress(int address){
+        for (Group info : groups) {
+            if (info.address == address)
+                return info;
+        }
+        return null;
     }
 
     // 删除组
     public void deleteGroup(int groupAddress){
-        List<Group> groups = MyApplication.getInstance().getMesh().groups;
-        Group group = MyApplication.getInstance().getMesh().getGroupByAddress(groupAddress);
+        List<Group> groups = this.groups;
+        Group group = getGroupByAddress(groupAddress);
         if(group != null){
             List<DeviceInfo> deviceInGroup = getDevicesInGroup(groupAddress);
             for (DeviceInfo deviceInfo : deviceInGroup) {
@@ -125,7 +137,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
 
     private Group getTelinkGroupByPisKeyString(String pisKeyString){
         if(pisKeyString == null) return null;
-        List<Group> groups = MyApplication.getInstance().getMesh().groups;
+        List<Group> groups = this.groups;
         for (Group group : groups) {
             if(pisKeyString.equals(group.PISKeyString)){
                 return group;
@@ -225,7 +237,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
 
     private void setNextModel(DeviceInfo deviceInfo) {
         if (modelIndex > models.length - 1) {
-            Group group = MyApplication.getInstance().getMesh().getGroupByAddress(opGroupAdr);
+            Group group = getGroupByAddress(opGroupAdr);
             if (opType == 0) {
                 deviceInfo.subList.add(opGroupAdr);
                 if(group != null){
@@ -266,7 +278,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
     // 获取灯具所绑定的所有组
     public List<Group> getGroupsWithDevice(DeviceInfo deviceInfo){
         List<Group> boundGroup = new ArrayList<>();
-        List<Group> groups = MyApplication.getInstance().getMesh().groups;
+        List<Group> groups = this.groups;
         if (deviceInfo.subList == null || deviceInfo.subList.size() == 0) {
             return boundGroup;
         }
@@ -284,7 +296,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
 
     // 获取灯具所绑定的灯组信息
     private void getLocalDeviceGroupInfo(DeviceInfo deviceInfo) {
-        List<Group> groups = MyApplication.getInstance().getMesh().groups;
+        List<Group> groups = this.groups;
         if (deviceInfo.subList == null || deviceInfo.subList.size() == 0) {
             for (Group group : groups) {
                 group.selected = false;
@@ -332,7 +344,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
      */
     public Group getGroupByPisBase(PISBase infor) {
         if(infor == null || infor.ServiceType != PISBase.SERVICE_TYPE_GROUP) return null;
-        List<Group> allGroups = MyApplication.getInstance().getMesh().groups;
+        List<Group> allGroups = this.groups;
         if(allGroups == null) return null;
         for (Group group : allGroups) {
             if(group.PISKeyString.equals(infor.getPISKeyString())){

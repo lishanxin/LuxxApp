@@ -152,7 +152,7 @@ public class LightGroupEditAdapter extends BaseAdapter {
 					if(sublist != null){
 						StringBuilder groupName = new StringBuilder();
 						for (Integer integer : sublist) {
-							Group group = MyApplication.getInstance().getMesh().getGroupByAddress(integer);
+							Group group = TelinkGroupApiManager.getInstance().getGroupByAddress(integer);
 							if(group != null && group.name != null){
 								groupName.append(group.name).append(",");
 							}

@@ -60,7 +60,7 @@ public class Mesh implements Serializable, Cloneable {
 
     public int localAddress;
 
-    public List<Group> groups = new ArrayList<>();
+    private List<Group> groups = new ArrayList<>();
 
 
     public List<DeviceInfo> devices = new ArrayList<>();
@@ -135,13 +135,7 @@ public class Mesh implements Serializable, Cloneable {
         return null;
     }
 
-    public Group getGroupByAddress(int address){
-        for (Group info : groups) {
-            if (info.address == address)
-                return info;
-        }
-        return null;
-    }
+
 
     public DeviceInfo getDeviceByMacAddress(String address) {
         for (DeviceInfo info : devices) {

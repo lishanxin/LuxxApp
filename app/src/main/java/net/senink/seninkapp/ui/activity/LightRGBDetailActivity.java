@@ -256,16 +256,17 @@ public class LightRGBDetailActivity extends BaseActivity implements
 			    telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS, 0);
                 if(!isTelinkGroup && isTelink){
                     deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+                    if(deviceInfo == null) finish();
                     hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
                 }else if(isTelinkGroup){
-                    telinkGroup = MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress);
+                    telinkGroup = TelinkGroupApiManager.getInstance().getGroupByAddress(telinkAddress);
                     if(telinkGroup != null){
                         key = telinkGroup.PISKeyString;
                         PISBase tempInfor =  manager.getPISObject(key);
                         hslEleAdr = telinkGroup.address;
                         if(tempInfor == null){
-                            ToastUtils.showToast(this, "PIS 灯组为null，请排查");
                             key = null;
+                            finish();
                         }
                     }
                 }

@@ -45,6 +45,7 @@ import net.senink.seninkapp.R;
 //import com.senink.seninkapp.crmesh.MeshController;
 //import com.senink.seninkapp.crmesh.MeshController.onFeedbackListener;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.ui.constant.MessageModel;
 
 /**
@@ -145,8 +146,9 @@ public class ModifyNameActivity extends BaseActivity implements OnClickListener{
 				telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS);
 				if(!isTelinkGroup && isTelink){
 					telinkDeviceinfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+					if(telinkDeviceinfo == null) finish();
 				}else if(isTelinkGroup){
-					telinkGroup = MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress);
+					telinkGroup = TelinkGroupApiManager.getInstance().getGroupByAddress(telinkAddress);
 				}
 			}
 			String key = null;
@@ -257,7 +259,7 @@ public class ModifyNameActivity extends BaseActivity implements OnClickListener{
 					return;
 				}
 				if(isTelinkGroup && telinkGroup != null){
-					Group group = MyApplication.getInstance().getMesh().getGroupByAddress(telinkGroup.address);
+					Group group = TelinkGroupApiManager.getInstance().getGroupByAddress(telinkGroup.address);
 					group.name = text;
 					MyApplication.getInstance().getMesh().saveOrUpdate(this);
 					if(infor != null){

@@ -226,12 +226,16 @@ public class LightSettingActivity extends BaseActivity implements
                 isTelink = bundle.getBoolean(TelinkApiManager.IS_TELINK_KEY, false);
                 isTelinkGroup = bundle.getBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, false);
                 telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS, 0);
-                telinkGroup = isTelinkGroup ? MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress) : null;
+                telinkGroup = isTelinkGroup ? TelinkGroupApiManager.getInstance().getGroupByAddress(telinkAddress) : null;
                 if (isTelinkGroup && telinkGroup != null) {
                     hslEleAdr = telinkGroup.address;
                     pisKey = telinkGroup.PISKeyString;
                 } else if (isTelink) {
                     deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+                    if(deviceInfo == null){
+                        finish();
+                        return;
+                    }
                     hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
                 }
             }

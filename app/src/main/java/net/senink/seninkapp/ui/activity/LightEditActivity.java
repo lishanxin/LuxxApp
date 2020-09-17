@@ -233,7 +233,7 @@ public class LightEditActivity extends BaseActivity implements
                 if (!isTelinkGroup && isTelink) {
                     telinkDeviceinfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
                 } else if (isTelinkGroup) {
-                    telinkGroup = MyApplication.getInstance().getMesh().getGroupByAddress(telinkAddress);
+                    telinkGroup = TelinkGroupApiManager.getInstance().getGroupByAddress(telinkAddress);
                     if (telinkGroup != null) {
 						key = telinkGroup.PISKeyString;
                     }
@@ -406,7 +406,7 @@ public class LightEditActivity extends BaseActivity implements
 
     private void addTelinkGroupToFilter(DeviceInfo telinkDeviceinfo, List<GeneralDeviceModel> filterList) {
         List<Group> alreadyGroup = TelinkGroupApiManager.getInstance().getGroupsWithDevice(telinkDeviceinfo.meshAddress);
-        List<Group> allGroups = MyApplication.getInstance().getMesh().groups;
+        List<Group> allGroups = TelinkGroupApiManager.getInstance().getTelinkGroups();
         outer:
         for (Group groupInfo : allGroups) {
             for (Group group : alreadyGroup) {

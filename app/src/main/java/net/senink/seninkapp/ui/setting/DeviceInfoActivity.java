@@ -1,11 +1,13 @@
 package net.senink.seninkapp.ui.setting;
 
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -17,20 +19,26 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.util.Arrays;
+import com.telink.sig.mesh.util.MeshUtils;
 
+import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISDevice;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.BaseActivity;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 //import com.senink.seninkapp.core.PISBase;
 //import com.senink.seninkapp.core.PISDevice;
 //import com.senink.seninkapp.core.PISManager;
 //import com.senink.seninkapp.core.PISUpdate;
 //import com.senink.seninkapp.core.PipaRequest;
+import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.ui.IconUtil;
 import net.senink.seninkapp.ui.constant.MessageModel;
 import net.senink.seninkapp.ui.constant.ProductClassifyInfo;
-import net.senink.seninkapp.ui.entity.DeviceInfo;
 import net.senink.seninkapp.ui.util.HttpUtils;
 import net.senink.seninkapp.ui.util.LogUtils;
 import net.senink.seninkapp.ui.util.SDCardUtils;
@@ -51,7 +59,10 @@ public class DeviceInfoActivity extends BaseActivity implements
 	private ProgressDialog progressDialog;
 	private ProgressBar loading;
 	private PISManager pm;
+	private PISBase infor;
 	private PISDevice pisDevice;
+	private DeviceInfo mTelinkDevice;
+	private boolean isTelink;
 	@SuppressLint("HandlerLeak")
 	private Handler mHandler = new Handler(){
 		@Override
@@ -110,32 +121,40 @@ public class DeviceInfoActivity extends BaseActivity implements
 
 	private void setData() {
 		Intent intent = getIntent();
-		pisDevice = (PISDevice)pm.getPISObject(intent.getStringExtra("keystring"));
+		isTelink = intent.getBooleanExtra(TelinkApiManager.IS_TELINK_KEY, false);
+		if(isTelink){
+			int address = intent.getIntExtra(MessageModel.TELINK_BASE_KEYSTR, 0);
+			mTelinkDevice = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(address);
+			if(mTelinkDevice == null){
+				finish();
+			}
+		}else{
+			infor = pm.getPISObject(intent.getStringExtra(MessageModel.PISBASE_KEYSTR));
+			if(infor != null){
+				pisDevice = infor.getDeviceObject();
+			}
+		}
 	}
 
 	private void setViews() {
-		String positionName = setLocation();
-//		if (pisDevice.deviceInfor != null) {
-//			if (!TextUtils.isEmpty(pisDevice.deviceInfor.classid)) {
-//				String path = SharePreferenceUtils.getValue(this, pisDevice.deviceInfor.classid);
-//				if (!TextUtils.isEmpty(pisDevice.deviceInfor.classid)) {
-//					device_icon.setImageBitmap(BitmapFactory.decodeFile(path));
-//				} else {
-//					new Thread(new LoadIcon(device_icon,
-//							pisDevice.deviceInfor.img1)).start();
-//				}
-//			}
-//			if (pisDevice.deviceInfor.title != null){
-//				device_name.setText(pisDevice.deviceInfor.title);
-//			}
-//			maker.setText(pisDevice.deviceInfor.mader);
-//			xing_hao.setText(pisDevice.deviceInfor.model);
-//			product.setText(pisDevice.deviceInfor.sourced);
-//		}
 		try {
-			if (pisDevice != null && pisDevice.getMacString() != null) {
-				device_icon.setImageResource(
-						ProductClassifyInfo.getProductResourceId(pisDevice.getClassString()));
+			if(isTelink){
+				if(mTelinkDevice != null ){
+					device_icon.setImageResource(IconUtil.getTelinkDeviceIconResource(mTelinkDevice));
+					int vid = mTelinkDevice.nodeInfo.cpsData.vid;
+					byte[] vb = MeshUtils.integer2Bytes(vid, 2, ByteOrder.LITTLE_ENDIAN);
+
+					int pid = mTelinkDevice.nodeInfo.cpsData.pid;
+					byte[] pb = MeshUtils.integer2Bytes(pid, 2, ByteOrder.LITTLE_ENDIAN);
+
+					device_name.setText(mTelinkDevice.getDeviceName());
+					mac.setText(mTelinkDevice.macAddress);
+					version.setText(Arrays.bytesToHexString(pb, ":"));
+				}
+			}
+			else if (pisDevice != null && pisDevice.getMacString() != null) {
+				Drawable sld = IconUtil.getPISIcon(DeviceInfoActivity.this, infor);
+				device_icon.setImageDrawable(sld);
 				device_name.setText(pisDevice.getPIServices().get(0).getName());
 				mac.setText(pisDevice.getMacString().replaceAll(".{2}(?!$)", "$0-"));
 				version.setText(pisDevice.getVersionString());
@@ -186,35 +205,12 @@ public class DeviceInfoActivity extends BaseActivity implements
 		switch (v.getId()) {
 		case R.id.hard_version_area:
 			LogUtils.i("test", "update");
-//			if (loading.getVisibility() == View.GONE
-//					&& (pisDevice != null && pisDevice.hasNewVersion() && pisDevice
-//							.getFwUpdateProcess() == 0)) {
-//				LogUtils.i("test", "update  run");
-//				loading.setVisibility(View.VISIBLE);
-//				boolean result = pm.PisDeviceUpdate(pisDevice.getMacAddr(),
-//						pisDevice.getNewFwVersion1(),
-//						pisDevice.getNewFwVersion2(),
-//						pisDevice.getNewFwVersion3(),
-//						pisDevice.getNewFwVersionLen());
-//				if (result) {
-//					pisDevice.subscibeFwUpdateCompleted();
-//					pisDevice.subscibeFwUpdateProgress();
-//				}
-//			}
-
 			break;
 		case R.id.unbond:
 			
 			break;
 		case R.id.position_area:
-			if (pisDevice != null){
-//				PISManager.cacheMap.put(pisDevice.getMacAddr(), pisDevice);
-//			    Intent it = new Intent(this, LocationListsActivity.class);
-//			    it.putExtra("mac",pisDevice.macAddr);
-//				startActivityForResult(it, REQUEST_CODE);
-//				overridePendingTransition(R.anim.anim_in_from_right,
-//						R.anim.anim_out_to_left);
-			}
+
 			break;
 		case R.id.title_back:
 			finish();
@@ -228,128 +224,7 @@ public class DeviceInfoActivity extends BaseActivity implements
 	public void finish() {
 		super.finish();
 	}
-//
-//	@Override
-//	public void onRequestStart(PISBase pis, int reqType) {
-//		// TODO Auto-generated method stub
-//
-//	}
-//
-//	@Override
-//	public void onRequestResult(PISBase pis, int reqType, int result) {
-//		// TODO Auto-generated method stub
-//		try {
-//
-//			if (reqType == PISUpdate.PIS_CMD_FWUPDATE_CHECK) {
-//				if (result == PipaRequest.REQUEST_RESULT_COMPLETE) {
-//					if (pis instanceof PISUpdate) {
-//						// pisDevice = (PISDevice) pis;
-//						if (pisDevice.hasNewVersion()) {
-//							version.setText(getResources().getString(
-//									R.string.alert_version_update)
-//									+ pisDevice.getNewFwVersion());
-//						}
-//					}
-//				} else if (result == PipaRequest.REQUEST_RESULT_ERROR
-//						|| result == PipaRequest.REQUEST_RESULT_TIMEOUT) {
-//
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Override
-//	public void onNetworkStatusChange(int netConnStatus) {
-//
-//	}
-//
-//	@Override
-//	public void onFirmwareInfoChange() {
-//
-//	}
-//
-//	@Override
-//	public void onPIServiceInfoChange(PISBase pis) {
-//		try {
-//			if (pis instanceof PISDevice
-//					&& ((PISDevice) pis).getMacAddr().equals(
-//							pisDevice.getMacAddr())) {
-//				pisDevice = (PISDevice) pis;
-//				if (pisDevice.getFwUpdateProcess() > 0) {
-//					LogUtils.i("test", "no  no  send update ........");
-//					version.setText(getResources()
-//							.getString(R.string.update_to)
-//							+ pisDevice.getFwUpdateProcess() + "%");
-//					if (pisDevice.getFwUpdateProcess() == 100) {
-//						pm.setAllPisOffline();
-//						loading.setVisibility(View.GONE);
-//						version.setText(getResources().getString(
-//								R.string.update_complete));
-//
-//					}
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
-//
-//	@Override
-//	public void onPIDevicesChange() {
-//
-//	}
-//
-//	@Override
-//	public void onPIServicesChange(PISBase pis, boolean isNew) {
-//
-//	}
 
 	Handler handler = new Handler();
 
-	private class DeviceInforThread extends Thread{
-
-		@Override
-		public void run() {
-			if (pisDevice != null) {
-//				ArrayList<DeviceInfo> list = HttpUtils.getDeviceInfoDetial(DeviceInfoActivity.this, null, pisDevice.getClassID(), "", "","");
-//			    if (list != null && list.size() > 0) {
-//					pisDevice.deviceInfor = list.get(0);
-//					mHandler.sendEmptyMessage(MSG_GET_DEVICEINFOR_SUCCESS);
-//				}
-			}
-		}
-	}
-	class LoadIcon implements Runnable {
-		private String iconUrl;
-		private ImageView imageView;
-		Bitmap bit;
-
-		public LoadIcon(ImageView imageView, String iconUrl) {
-			this.iconUrl = iconUrl;
-			this.imageView = imageView;
-		}
-
-		@Override
-		public void run() {
-			if (iconUrl != null) {
-				bit = HttpUtils.getImage(DeviceInfoActivity.this,
-						String.valueOf(iconUrl.hashCode()), iconUrl);
-				if (bit != null) {
-					int radius = (bit.getWidth() < bit.getHeight() ? bit
-							.getWidth() : bit.getHeight()) / 2;
-					bit = SDCardUtils.getCroppedRoundBitmap(bit, radius);
-					handler.post(new Runnable() {
-
-						@Override
-						public void run() {
-							imageView.setImageBitmap(bit);
-						}
-					});
-				}
-			}
-		}
-	}
 }

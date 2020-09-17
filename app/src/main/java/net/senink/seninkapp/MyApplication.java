@@ -30,6 +30,7 @@ import com.telink.sig.mesh.model.storage.MiscStorage;
 import com.telink.sig.mesh.util.Arrays;
 import com.telink.sig.mesh.util.MeshUtils;
 import com.telink.sig.mesh.util.TelinkLog;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import net.senink.seninkapp.telink.CrashHandler;
 import net.senink.seninkapp.telink.FileSystem;
@@ -73,6 +74,8 @@ public class MyApplication extends TelinkApplication {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		CrashReport.initCrashReport(getApplicationContext(), "aa9da6efac", BuildConfig.DEBUG);
+
 		PgyCrashManager.register(this);
 		Foreground.init(this);
 		context = this;
@@ -121,15 +124,6 @@ public class MyApplication extends TelinkApplication {
 
 			mMesh.networkKey = MeshUtils.generateRandom(16);
 			mMesh.appKey = MeshUtils.generateRandom(16);
-			List<Group> groups = new ArrayList<>();
-			String[] groupNames = getResources().getStringArray(R.array.group_name);
-			for (int i = 0; i < groupNames.length; i++) {
-				Group group = new Group();
-				group.address = i | 0xC000;
-				group.name = groupNames[i];
-				groups.add(group);
-			}
-			mMesh.groups = groups;
 
 			mMesh.devices = new ArrayList<>();
 

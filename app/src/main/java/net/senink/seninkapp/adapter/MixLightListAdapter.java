@@ -26,6 +26,7 @@ import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.pis.PISDevice;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
+import net.senink.piservice.services.LuxxMusicColor;
 import net.senink.piservice.services.PISxinColor;
 import net.senink.seninkapp.BuildConfig;
 import net.senink.seninkapp.GeneralDeviceModel;
@@ -319,6 +320,7 @@ public class MixLightListAdapter extends BaseAdapter {
 //				e.printStackTrace();
             strName = "Unknow";
         }
+
         nametv.setText(strName);
 
         setTag(layout, infor, pos, index);

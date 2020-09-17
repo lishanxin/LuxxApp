@@ -351,7 +351,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		EventBus.getDefault().register(this);
 		/**初始化蒲公英SDK*/
 		pgyerInit();
-		CrashHandler.getInstance().init(this);
+//		CrashHandler.getInstance().init(this);
 		LogUtil.INSTANCE.storeLog();
 		try {
 			registerAllReceiver();

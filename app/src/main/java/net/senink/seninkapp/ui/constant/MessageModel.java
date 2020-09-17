@@ -34,6 +34,8 @@ public class MessageModel {
 	public final static String ACTIVITY_MODE = "activity_mode";
 	public final static String ACTIVITY_VALUE = "key";
 	public final static String PISBASE_KEYSTR = "keystring";
+	public final static String TELINK_BASE_KEYSTR = "telinkAddress";
+
 	public final static String PIPAREQUEST_OBJECT = "piparequest_object";
 	public final static String PIPAREQUEST_DATA = "piparequest_data";
 	// wifi设置界面返回到wifi界面之前是否修改过网关

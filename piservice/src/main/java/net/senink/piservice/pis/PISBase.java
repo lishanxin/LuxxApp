@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import net.senink.piservice.jniutil.PisInterface;
 import net.senink.piservice.pinm.PinmInterface;
+import net.senink.piservice.services.LuxxMusicColor;
 import net.senink.piservice.struct.PIAddress;
 import net.senink.piservice.struct.PIServiceInfo;
 import net.senink.piservice.struct.PipaRequestData;
@@ -246,7 +247,15 @@ public class PISBase implements Serializable {
         mServiceInfo.Location = (byte)(loc & 0xFF);
     }
     public String getName(){
-        return mServiceInfo.Name;
+        String strName = mServiceInfo.Name;
+        if(strName == null || strName.trim().length() == 0){
+            if(this instanceof LuxxMusicColor){
+                strName = "Luxxmusic";
+            }else{
+                strName = "Luxxlight";
+            }
+        }
+        return strName;
     }
     public void setName(String strName){
         mServiceInfo.Name = strName;

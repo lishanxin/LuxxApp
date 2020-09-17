@@ -218,7 +218,7 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
     }
 
     private void checkTelinkGroups() {
-        List<Group> groups = MyApplication.getInstance().getMesh().groups;
+        List<Group> groups = TelinkGroupApiManager.getInstance().getTelinkGroups();
         for (Group group : groups) {
             TelinkGroupApiManager.getInstance().deletePISGroup(group.PISKeyString, new PipaRequest.OnPipaRequestStatusListener() {
                 @Override
