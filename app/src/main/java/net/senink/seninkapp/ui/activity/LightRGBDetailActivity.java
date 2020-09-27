@@ -1053,8 +1053,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 }
                 break;
             case R.id.light_candle_layout:
-                candle_onoff = !candle_onoff;
-                if (switcher.isChecked()) {
+                candle_onoff = switcher.isChecked();
+                if (candle_onoff) {
+
                     if (isTelink) {
                         TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getCandleCommand(candle_onoff));
                     }
@@ -1062,6 +1063,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     PipaRequest req = infor.commitLightOnOff(false);
                     infor.request(req);
                     switcher.setChecked(false);
+                }else{
+                    if (isTelink) {
+                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getCandleCommand(candle_onoff));
+                    }
                 }
 
                 setCandle(candle_onoff);
