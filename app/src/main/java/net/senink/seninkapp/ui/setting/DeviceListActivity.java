@@ -459,9 +459,11 @@ public class DeviceListActivity extends BaseActivity implements
 						PISDevice selectPisDevice = mSelectedDev.getPisBase().getDeviceObject();
 						pm = PISManager.getInstance();
 						mcm = pm.getMCSObject();
-						if (selectPisDevice == null || pm == null || mcm == null)
+						if (selectPisDevice == null || pm == null || mcm == null){
 							ToastUtils.showToast(DeviceListActivity.this,
 									R.string.devicelist_error_unknow);
+							return true;
+						}
 						showDeleteDialog();
 
 						PipaRequest resetReq = mcm.unbindDevice(selectPisDevice.getMacByte());

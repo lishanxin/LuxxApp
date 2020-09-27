@@ -58,114 +58,114 @@ import java.util.List;
 
 /**
  * 用设置灯或者灯组的界面 （在主界面直接进入此界面）
- * 
+ *
  * @author zhaojunfeng
  * @date 2015-07-15
  */
 // TODO LEE 灯控界面
 public class LightRGBDetailActivity extends BaseActivity implements
-		View.OnClickListener{
+        View.OnClickListener {
     public static final String LAYOUT_RESOURCEID = "rgblight_layout";
-	private static final String TAG = "LightRGBDetailActivity";
-	protected static final int CODE_FOR_WRITE_PERMISSION = 10;
-	// 界面跳转时的请求码
+    private static final String TAG = "LightRGBDetailActivity";
+    protected static final int CODE_FOR_WRITE_PERMISSION = 10;
+    // 界面跳转时的请求码
     protected final static int REQUEST_CODE_SETTING = 2000;
-    protected final static int REQUEST_CODE_EFFECT  = 2001;
-    protected final static int REQUEST_CODE_TIMER   = 2002;
-	// 开关命令超时
+    protected final static int REQUEST_CODE_EFFECT = 2001;
+    protected final static int REQUEST_CODE_TIMER = 2002;
+    // 开关命令超时
     protected final static int MSG_SEND_CANDLE = 3;
     protected final static int MSG_SWITCH_TIMEOUT = 2;
     protected final static int MSG_TIME_OUT = 1;
     protected final static int LOADING_MAX_TIME = 10000;
-	// 界面跳转到场景模式设置界面时的请求码
-	public final static int REQUEST_SCENE_CODE = 2001;
+    // 界面跳转到场景模式设置界面时的请求码
+    public final static int REQUEST_SCENE_CODE = 2001;
     boolean isVoiceOn = false;
-	public int gpx = 0;
-	// 延迟发送冷暖色命令
+    public int gpx = 0;
+    // 延迟发送冷暖色命令
     protected final static int DELEY_TIME = 300;
-	// 发送第一条冷暖色命令的起始时间
+    // 发送第一条冷暖色命令的起始时间
     protected long START_TIME = 0;
-	// 标题名称
+    // 标题名称
     protected TextView tvTitle;
     // 标题图片
     protected ImageView ivTitle;
-	// 标题的中的返回按钮
+    // 标题的中的返回按钮
     protected Button backBtn;
-	// 开关状态
+    // 开关状态
     protected CheckBox switcher;
-	// 亮度调节器
+    // 亮度调节器
     protected SeekBar whiteBar;
-	// 冷暖度的布局
+    // 冷暖度的布局
 //    protected RelativeLayout ledLayout;
-	// 颜色圈
+    // 颜色圈
     protected ColorCircle colorCircle;
-	// 当前颜色显示的组件
+    // 当前颜色显示的组件
     protected TextView tvCurrentColor;
     protected TextView test;
-	// 白光滚动轴左边的图片
+    // 白光滚动轴左边的图片
     protected ImageView ivLeftOnBright;
-	// 白光滚动轴右边的图片
+    // 白光滚动轴右边的图片
     protected ImageView ivRightOnBright;
-//	private ImageButton moreBtn;
+    //	private ImageButton moreBtn;
     protected LinearLayout colorSelectorLayout;
-    protected LinearLayout scene1Layout, scene2Layout, scene3Layout,scene4Layout,scene5Layout;
+    protected LinearLayout scene1Layout, scene2Layout, scene3Layout, scene4Layout, scene5Layout;
     protected LinearLayout candle_light;
     protected TextView tvSceneName1, tvSceneName2, tvSceneName3, tvSceneName4, tvSceneName5;
     protected ImageView ivSelected1, ivSelected2, ivSelected3, ivSelected4, ivSelected5;
     protected ImageView ivLoadding1, ivLoadding2, ivLoadding3, ivLoadding4, ivLoadding5;
     protected AnimationDrawable anima1, anima2, anima3, anima4, anima5;
 
-	// 当前颜色值
+    // 当前颜色值
     protected int currentColor = 0;
-	// 传递过来的pisbase对象
+    // 传递过来的pisbase对象
     protected PISxinColor infor;
     protected PISxinColor inforX;
-	// 某个组的信息
+    // 某个组的信息
     protected PISBase groupInfor = null;
-	// 设置按钮
+    // 设置按钮
     protected Button settingBtn;
-	// 保存按钮
+    // 保存按钮
     protected Button saveBtn;
-	// 特效按钮
+    // 特效按钮
     protected Button effectsBtn;
     // 切换按钮
     protected Button rgbwBtn;
-	// 加载框
+    // 加载框
     protected ImageView ivLoading;
-	// 加载动画
+    // 加载动画
     protected AnimationDrawable anima;
-	// 是否是分组的
+    // 是否是分组的
     protected boolean isGroup = false;
-	// 组id
+    // 组id
     protected short groupId = -1;
     protected PISManager manager;
-	// 是否是第一次进入该界面
+    // 是否是第一次进入该界面
 //    protected boolean isFirst = true;
-	// 开关状态改变是否发送命令
+    // 开关状态改变是否发送命令
 //    protected boolean isSended = true;
-	// 蓝牙管理器
+    // 蓝牙管理器
     protected MeshController controller;
-	// 是否是定时器界面跳转过来
+    // 是否是定时器界面跳转过来
 //    protected boolean isTimer;
-	// 需要提交定时器的命令字
+    // 需要提交定时器的命令字
 //    protected short cmd;
-	// 需要提交定时器的命令内容
+    // 需要提交定时器的命令内容
 //    protected byte[] cmdContent;
-	// 最近一次保存的命令字
+    // 最近一次保存的命令字
 //    protected short tempCmd;
-	// 最近一次保存的内容
+    // 最近一次保存的内容
 //    protected byte[] tempCmdContent;
-	// 缓存管理器
+    // 缓存管理器
 //    protected CacheManager cacheManager;
-	// 常用的几种场景模式
+    // 常用的几种场景模式
     protected List<SceneBean> scenes;
-	// 存放场景模式的dao类
+    // 存放场景模式的dao类
     protected SceneDao mSceneDao;
-	// 被选中的中场景模式
+    // 被选中的中场景模式
     protected int selectedIndex = -1;
-	// 统计开关命令ack返回的数量
+    // 统计开关命令ack返回的数量
     protected int countOnStatus = 0;
-	// 统计设置颜色命令ack返回的数量
+    // 统计设置颜色命令ack返回的数量
     protected int countOnRGBW = 0;
     //传值的pisbase对象的piskeystring字符串
 //    protected String key = null;
@@ -176,15 +176,15 @@ public class LightRGBDetailActivity extends BaseActivity implements
     private int telinkAddress = 0;
     private Group telinkGroup;
     private DeviceInfo deviceInfo;
-//    private SparseBooleanArray lumEleInfo;
+    //    private SparseBooleanArray lumEleInfo;
 //    private SparseBooleanArray tempEleInfo;
     private int hslEleAdr;
 //    private List<Integer> onOffEleAdrList;
 
-	@SuppressLint("HandlerLeak")
-	protected Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(android.os.Message msg) {
+    @SuppressLint("HandlerLeak")
+    protected Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case MSG_SWITCH_TIMEOUT:
                     hideLoading();
@@ -214,57 +214,57 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
     };
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int layoutResid = 0;
         if (savedInstanceState == null || savedInstanceState.getInt(LAYOUT_RESOURCEID) == 0)
             layoutResid = R.layout.activity_lightrgbdetail;
-        else{
+        else {
             layoutResid = savedInstanceState.getInt(LAYOUT_RESOURCEID);
         }
-		setContentView(layoutResid);
-		manager = PISManager.getInstance();
-		controller = MeshController.getInstance(this);
+        setContentView(layoutResid);
+        manager = PISManager.getInstance();
+        controller = MeshController.getInstance(this);
 //		cacheManager = CacheManager.getInstance();
 //		mSceneDao = new SceneDao(this);
-		initView();
-		setData();
-		setView();
-		setListener();
-		if(isTelinkGroup){
-		    // TODO LEE 灯组的初始化
+        initView();
+        setData();
+        setView();
+        setListener();
+        if (isTelinkGroup) {
+            // TODO LEE 灯组的初始化
             initTelinkView();
-        }else if(isTelink){
+        } else if (isTelink) {
             getNodeStatus();
             initTelinkView();
         }
     }
 
-	/**
-	 * 获取传值
-	 */
-	private void setData() {
-		if (getIntent() != null) {
-			Intent intent = getIntent();
-			Bundle bundle = intent.getExtras();
+    /**
+     * 获取传值
+     */
+    private void setData() {
+        if (getIntent() != null) {
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
             String key = intent.getStringExtra("keystring");
             // TODO LEE 新增sdk
-            if(bundle != null){
-			    isTelink = bundle.getBoolean(TelinkApiManager.IS_TELINK_KEY, false);
-			    isTelinkGroup = bundle.getBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, false);
-			    telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS, 0);
-                if(!isTelinkGroup && isTelink){
+            if (bundle != null) {
+                isTelink = bundle.getBoolean(TelinkApiManager.IS_TELINK_KEY, false);
+                isTelinkGroup = bundle.getBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, false);
+                telinkAddress = bundle.getInt(TelinkApiManager.TELINK_ADDRESS, 0);
+                if (!isTelinkGroup && isTelink) {
                     deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
-                    if(deviceInfo == null) finish();
+                    if (deviceInfo == null) finish();
                     hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
-                }else if(isTelinkGroup){
+                } else if (isTelinkGroup) {
                     telinkGroup = TelinkGroupApiManager.getInstance().getGroupByAddress(telinkAddress);
-                    if(telinkGroup != null){
+                    if (telinkGroup != null) {
                         key = telinkGroup.PISKeyString;
-                        PISBase tempInfor =  manager.getPISObject(key);
+                        PISBase tempInfor = manager.getPISObject(key);
                         hslEleAdr = telinkGroup.address;
-                        if(tempInfor == null){
+                        if (tempInfor == null) {
                             key = null;
                             finish();
                         }
@@ -276,43 +276,31 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
             setPisData(key);
 
-		}
-	}
+        }
+    }
 
-	private void setPisData(String key){
-        if (key != null){
+    private void setPisData(String key) {
+        if (key != null) {
             infor = (PISxinColor) manager.getPISObject(key);
             // NextApp.tw
-            if ( infor.getServiceId() != 0 )
-            {
-                if ( infor.getT1() == 0x10 && infor.getT2() == 0x05 )
-                {
+            if (infor.getServiceId() != 0) {
+                if (infor.getT1() == 0x10 && infor.getT2() == 0x05) {
                     candle_light.setVisibility(View.VISIBLE);
 
-                }
-                else
-                {
+                } else {
 
                     candle_light.setVisibility(View.GONE);
                 }
-            }
-            else
-            {
-                if ( infor.getGroupObjects().size() > 0 )
-                {
-                    if ( infor.getGroupObjects().get(0).getT1() == 0x10 && infor.getGroupObjects().get(0).getT2() == 0x05 )
-                    {
+            } else {
+                if (infor.getGroupObjects().size() > 0) {
+                    if (infor.getGroupObjects().get(0).getT1() == 0x10 && infor.getGroupObjects().get(0).getT2() == 0x05) {
                         candle_light.setVisibility(View.VISIBLE);
 
-                    }
-                    else
-                    {
+                    } else {
 
                         candle_light.setVisibility(View.GONE);
                     }
-                }
-                else
-                {
+                } else {
                     candle_light.setVisibility(View.VISIBLE);
                 }
             }
@@ -321,13 +309,15 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
     /**
      * 发送RGB命令
+     *
      * @param isScened
-     *  是否是场景
+     * 是否是场景
      */
     private static final int LIGHT_MODE_RGB = 0;
     private static final int LIGHT_MODE_WHITE = 1;
     private static final int LIGHT_MODE_MIXED = 2;
     private int mCurrentRGBWMode = LIGHT_MODE_WHITE;
+
     private void sendRGBOrder(boolean isScened) {
         countOnRGBW = 0;
         if (infor == null && !isTelink) {
@@ -337,45 +327,44 @@ public class LightRGBDetailActivity extends BaseActivity implements
         if (!switcher.isChecked()) {
             switcher.setChecked(true);
         }
-        if (mCurrentRGBWMode == LIGHT_MODE_WHITE){
+        if (mCurrentRGBWMode == LIGHT_MODE_WHITE) {
             rgbwBtn.setBackgroundResource(R.drawable.icon_btn_effect_normal_nocolor);
-        }
-        else{
+        } else {
             rgbwBtn.setBackgroundResource(R.drawable.icon_btn_effect_normal);
         }
         float currentWhite = whiteBar.getProgress();
         int[] colors = Utils.getRGB(currentColor);
 
-        if (currentWhite < RGBConfigUtils.MAX_VALUE/20)
-            currentWhite = RGBConfigUtils.MAX_VALUE/20;
-        colors[0] = (int)(colors[0] * (currentWhite/RGBConfigUtils.MAX_VALUE));
-        colors[1] = (int)(colors[1] * (currentWhite/RGBConfigUtils.MAX_VALUE));
-        colors[2] = (int)(colors[2] * (currentWhite/RGBConfigUtils.MAX_VALUE));
+        if (currentWhite < RGBConfigUtils.MAX_VALUE / 20)
+            currentWhite = RGBConfigUtils.MAX_VALUE / 20;
+        colors[0] = (int) (colors[0] * (currentWhite / RGBConfigUtils.MAX_VALUE));
+        colors[1] = (int) (colors[1] * (currentWhite / RGBConfigUtils.MAX_VALUE));
+        colors[2] = (int) (colors[2] * (currentWhite / RGBConfigUtils.MAX_VALUE));
 
-        int tempColor = Color.rgb(colors[0],colors[1],colors[2]);
+        int tempColor = Color.rgb(colors[0], colors[1], colors[2]);
         tvCurrentColor.setBackgroundColor(tempColor);
-        if(isTelink){
-            if(isTelinkGroup && infor != null){
+        if (isTelink) {
+            if (isTelinkGroup && infor != null) {
                 setPisColor(colors, isScened, currentWhite);
             }
-            if(mCurrentRGBWMode == LIGHT_MODE_WHITE){
-                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getYellowCommand((currentWhite/RGBConfigUtils.MAX_VALUE)));
-            }else{
+            if (mCurrentRGBWMode == LIGHT_MODE_WHITE) {
+                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getYellowCommand((currentWhite / RGBConfigUtils.MAX_VALUE)));
+            } else {
                 TelinkApiManager.getInstance().setDevicesColor(hslEleAdr, colors);
             }
-        }else{
+        } else {
             setPisColor(colors, isScened, currentWhite);
         }
 
     }
 
-    private void setPisColor(int[] colorsSource, boolean isScened, float currentWhiteSource){
+    private void setPisColor(int[] colorsSource, boolean isScened, float currentWhiteSource) {
         float currentWhite = currentWhiteSource;
-         int[] colors = new int[3];
+        int[] colors = new int[3];
         colors[0] = colorsSource[0];
-        colors[1] =colorsSource[1];
+        colors[1] = colorsSource[1];
         colors[2] = colorsSource[2];
-        switch(mCurrentRGBWMode){
+        switch (mCurrentRGBWMode) {
             case LIGHT_MODE_RGB:
                 currentWhite = 0;
                 break;
@@ -387,8 +376,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 break;
         }
         PipaRequest req = infor.commitLightColor(colors[0], colors[1], colors[2],
-                (int)currentWhite, true);
-        if (isScened){
+                (int) currentWhite, true);
+        if (isScened) {
             req.setRetry(1);
             req.NeedAck = true;
             req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
@@ -400,9 +389,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 @Override
                 public void onRequestResult(PipaRequest req) {
                     setEnable(true);
-                    if (req.errorCode != PipaRequest.REQUEST_RESULT_SUCCESSED){
+                    if (req.errorCode != PipaRequest.REQUEST_RESULT_SUCCESSED) {
                         stopLoadding(false);
-                    }else
+                    } else
                         stopLoadding(true);
                 }
             });
@@ -418,7 +407,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
     }
 
     private void getNodeStatus() {
-        if (deviceInfo.nodeInfo.cpsData.lowPowerSupport()) {
+        if (deviceInfo == null || deviceInfo.nodeInfo == null
+                || deviceInfo.nodeInfo.cpsData == null || deviceInfo.nodeInfo.cpsData.lowPowerSupport()) {
             //skip lpn
             return;
         }
@@ -426,6 +416,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
         int modelEleAdr = deviceInfo.getTargetEleAdr(modelId);
         String desc = null;
 
+        if(MeshService.getInstance() == null){
+            return;
+        }
         if (modelEleAdr != -1) {
             MeshService.getInstance().getCtl(modelEleAdr, 1, null);
             return;
@@ -483,7 +476,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
     }
 
     protected void startLoadding() {
-        switch(selectedIndex) {
+        switch (selectedIndex) {
             case 0:
                 ivLoadding1.setVisibility(View.VISIBLE);
                 anima1.start();
@@ -586,7 +579,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 ivSelected4.setImageDrawable(new ColorDrawable(
                         Color.TRANSPARENT));
             }
-        }else if (selectedIndex == 4) {
+        } else if (selectedIndex == 4) {
             if (anima5 != null) {
                 anima5.stop();
             }
@@ -605,7 +598,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 ivSelected5.setImageDrawable(new ColorDrawable(
                         Color.TRANSPARENT));
             }
-        }else {
+        } else {
             ivSelected1.setImageDrawable(new ColorDrawable(
                     Color.TRANSPARENT));
             ivSelected2.setImageDrawable(new ColorDrawable(
@@ -659,9 +652,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
         colorList.put(R.id.light_color5_loadding, 0x00ffff);
         colorList.put(R.id.light_color7_loadding, 0xff00ff);
 
-        for (int i = 0; i < colorList.size(); i++){
-            View colorView = (ImageView)findViewById(colorList.keyAt(i));
-            if(colorView instanceof ImageView){
+        for (int i = 0; i < colorList.size(); i++) {
+            View colorView = (ImageView) findViewById(colorList.keyAt(i));
+            if (colorView instanceof ImageView) {
                 colorView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -681,10 +674,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
                                          boolean isChecked) {
 
                 if (buttonView.isPressed()) {
-                    if(isTelink){
+                    if (isTelink) {
                         TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
                     }
-                    if(infor == null) return;
+                    if (infor == null) return;
 //                    PipaRequest req = infor.commitCandleLight(isChecked);
                     PipaRequest req = infor.commitLightOnOff(isChecked);
 
@@ -697,7 +690,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                         @Override
                         public void onRequestResult(PipaRequest req) {
                             hideLoading();
-                            if (req.errorCode != PipaRequest.REQUEST_RESULT_SUCCESSED){
+                            if (req.errorCode != PipaRequest.REQUEST_RESULT_SUCCESSED) {
                                 ToastUtils.showToast(LightRGBDetailActivity.this,
                                         R.string.switch_set_failed);
                             }
@@ -706,9 +699,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     if (activityMode == Constant.REQUEST_CODE_TIMER_ACTION) {
                         saveBtn.setVisibility(View.VISIBLE);
                         lastRequest = req;
-                    }
-                    else
-                    {
+                    } else {
                         showLoading();
                         mHandler.sendEmptyMessageDelayed(MSG_SWITCH_TIMEOUT, 5000);
                     }
@@ -718,7 +709,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //                    {
 //                        setCandle(false);
 //                    }
-                    candle_onoff=false;
+                    candle_onoff = false;
                     mHandler.sendEmptyMessage(MessageModel.MSG_SEND_CANDLE);
                 }
             }
@@ -727,7 +718,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if(seekBar.isPressed()){
+                if (seekBar.isPressed()) {
                     START_TIME = 0;
                     mHandler.removeMessages(MessageModel.MSG_SEND_ORDER);
                     mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
@@ -736,7 +727,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                if(seekBar.isPressed()){
+                if (seekBar.isPressed()) {
                     START_TIME = System.currentTimeMillis();
                     mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
                 }
@@ -745,7 +736,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress,
                                           boolean fromUser) {
-                if(seekBar.isPressed()){
+                if (seekBar.isPressed()) {
                     if (progress == 0)
                         seekBar.setProgress(1);
                     if (System.currentTimeMillis() - START_TIME >= DELEY_TIME) {
@@ -780,7 +771,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                         tvCurrentColor.setBackgroundColor(pixelColor);
                         int maxColor = 0;
                         int[] colors = Utils.getRGB(pixelColor);
-                        for (int i : colors){
+                        for (int i : colors) {
                             if (i > maxColor)
                                 maxColor = i;
                         }
@@ -792,8 +783,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                                 mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
                             }
                         }
-                    }
-                    else
+                    } else
                         return false;
                     if (Color.alpha(pixelColor) < 0xFF) {
                         return true;
@@ -812,7 +802,6 @@ public class LightRGBDetailActivity extends BaseActivity implements
             }
         });
     }
-
 
 
     /**
@@ -835,7 +824,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
         rgbwBtn = (Button) findViewById(R.id.light_mode);
 //        settingBtn = (Button) findViewById(R.id.title_setting);
 //        ledLayout = (RelativeLayout) findViewById(R.id.lightdetail_led_layout);
-        ivLeftOnBright  = (ImageView) findViewById(R.id.light_bright_left);
+        ivLeftOnBright = (ImageView) findViewById(R.id.light_bright_left);
         ivRightOnBright = (ImageView) findViewById(R.id.light_bright_right);
         ivSelected1 = (ImageView) findViewById(R.id.light_scene1_selected);
         ivSelected2 = (ImageView) findViewById(R.id.light_scene2_selected);
@@ -877,10 +866,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
         setAnimaDrawable();
     }
 
-	/**
-	 * 设置标题的组件
-	 */
-	private void setView() {
+    /**
+     * 设置标题的组件
+     */
+    private void setView() {
 //		ledLayout.setVisibility(View.GONE);
         tvTitle.setVisibility(View.GONE);
         ivTitle.setVisibility(View.VISIBLE);
@@ -894,54 +883,51 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //            ivTitle.setVisibility(View.GONE);
 //			tvTitle.setText(infor.getName());
 //		}
-		updateView();
-		backBtn.setVisibility(View.VISIBLE);
+        updateView();
+        backBtn.setVisibility(View.VISIBLE);
 
-		if (activityMode == Constant.REQUEST_CODE_TIMER_ACTION) {
+        if (activityMode == Constant.REQUEST_CODE_TIMER_ACTION) {
             settingBtn.setVisibility(View.GONE);
-			saveBtn.setBackgroundColor(Color.TRANSPARENT);
-			saveBtn.setText(R.string.finish);
-		}
-        else
-        {
-			settingBtn.setVisibility(View.VISIBLE);
-		}
+            saveBtn.setBackgroundColor(Color.TRANSPARENT);
+            saveBtn.setText(R.string.finish);
+        } else {
+            settingBtn.setVisibility(View.VISIBLE);
+        }
         saveBtn.setVisibility(View.GONE);
 
-        if (infor instanceof LuxxMusicColor){
-            LuxxMusicColor musicInfor = (LuxxMusicColor)infor;
+        if (infor instanceof LuxxMusicColor) {
+            LuxxMusicColor musicInfor = (LuxxMusicColor) infor;
             if (musicInfor.isSpeakerEnable())
                 effectsBtn.setBackgroundResource(R.drawable.btn_music_pause_selector);
             else
                 effectsBtn.setBackgroundResource(R.drawable.btn_music_play_selector);
-        }
-        else if(deviceInfo != null && deviceInfo.isMusicDevice()){
+        } else if (deviceInfo != null && deviceInfo.isMusicDevice()) {
             effectsBtn.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             effectsBtn.setVisibility(View.GONE);
         }
-		setWhiteBar();
+        setWhiteBar();
 
-	}
-	private void initTelinkView(){
-        if(deviceInfo != null){
-            int onOff =  deviceInfo.getOnOff();
+    }
+
+    private void initTelinkView() {
+        if (deviceInfo != null) {
+            int onOff = deviceInfo.getOnOff();
             switcher.setChecked(onOff == 1);
-        }else if(telinkGroup != null){
+        } else if (telinkGroup != null) {
             switcher.setChecked(TelinkGroupApiManager.getInstance().isGroupOn(telinkGroup));
         }
 
-        whiteBar.setProgress((int)(RGBConfigUtils.MAX_VALUE * 0.68));
+        whiteBar.setProgress((int) (RGBConfigUtils.MAX_VALUE * 0.68));
     }
 
 
-	/**
-	 * 设置白光滚动轴的最大值
-	 */
-	private void setWhiteBar() {
-		whiteBar.setMax(RGBConfigUtils.MAX_VALUE);
-	}
+    /**
+     * 设置白光滚动轴的最大值
+     */
+    private void setWhiteBar() {
+        whiteBar.setMax(RGBConfigUtils.MAX_VALUE);
+    }
 
     /**
      * 更新界面
@@ -949,53 +935,53 @@ public class LightRGBDetailActivity extends BaseActivity implements
     private void updateView() {
         if (infor != null) {
             List<PISBase> gObjs = infor.getGroupObjects();
-            if(infor.ServiceType  == PISBase.SERVICE_TYPE_GROUP && (gObjs == null || gObjs.size() == 0)){
+            if (infor.ServiceType == PISBase.SERVICE_TYPE_GROUP && (gObjs == null || gObjs.size() == 0)) {
                 return;
             }
             int white = 0;
             byte[] rgbBytes = infor.getColorBytes(false);
-            if (rgbBytes != null){
-                currentColor = Color.rgb(rgbBytes[0]&0xFF, rgbBytes[1]&0xFF, rgbBytes[2]&0xFF);
-                white = rgbBytes[3]&0xFF;
+            if (rgbBytes != null) {
+                currentColor = Color.rgb(rgbBytes[0] & 0xFF, rgbBytes[1] & 0xFF, rgbBytes[2] & 0xFF);
+                white = rgbBytes[3] & 0xFF;
                 tvCurrentColor.setBackgroundColor(currentColor);
                 int maxColor = 0;
-                for(byte color : rgbBytes){
-                    if ((color&0xFF) > maxColor)
-                        maxColor = color&0xFF;
+                for (byte color : rgbBytes) {
+                    if ((color & 0xFF) > maxColor)
+                        maxColor = color & 0xFF;
                 }
                 whiteBar.setProgress(maxColor);
             }
 
-            if (white == 0){
+            if (white == 0) {
                 mCurrentRGBWMode = LIGHT_MODE_WHITE;
                 rgbwBtn.setBackgroundResource(R.drawable.icon_btn_effect_normal_nocolor);
-            }
-            else{
+            } else {
                 mCurrentRGBWMode = LIGHT_MODE_RGB;
                 rgbwBtn.setBackgroundResource(R.drawable.icon_btn_effect_normal);
             }
 
-            switcher.setChecked(infor.getLightStatus()==PISxinColor.XINCOLOR_STATUS_ON);
+            switcher.setChecked(infor.getLightStatus() == PISxinColor.XINCOLOR_STATUS_ON);
             tvTitle.setText(infor.getName() == null ? "" : infor.getName());
             try {
                 setPisData(infor.getPISKeyString());
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void setEffectMode(final int idx){
+    private void setEffectMode(final int idx) {
 //        if ( candle_onoff == true)
 //        {
 //            setCandle(false);
 //        }
+        if(infor == null) return;
         PipaRequest req = infor.commitLightEffect(idx);
         req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
             @Override
             public void onRequestStart(PipaRequest req) {
-                    selectedIndex = idx;
-                    startLoadding();
+                selectedIndex = idx;
+                startLoadding();
                 if (!switcher.isChecked()) {
                     switcher.setChecked(true);
                 }
@@ -1052,7 +1038,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 setEffectMode(3);
                 break;
             case R.id.light_scene5_layout:
-                try{
+                try {
                     if (activityMode == Constant.REQUEST_CODE_TIMER_ACTION)
                         break;
                     intent = new Intent(LightRGBDetailActivity.this,
@@ -1062,18 +1048,17 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     startActivityForResult(intent, REQUEST_CODE_TIMER);
                     overridePendingTransition(R.anim.anim_in_from_right,
                             R.anim.anim_out_to_left);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.light_candle_layout:
                 candle_onoff = !candle_onoff;
-                if (switcher.isChecked())
-                {
-                    if(isTelink){
+                if (switcher.isChecked()) {
+                    if (isTelink) {
                         TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getCandleCommand(candle_onoff));
                     }
-                    if(infor == null) return;
+                    if (infor == null) return;
                     PipaRequest req = infor.commitLightOnOff(false);
                     infor.request(req);
                     switcher.setChecked(false);
@@ -1088,27 +1073,27 @@ public class LightRGBDetailActivity extends BaseActivity implements
             case R.id.title_setting:
                 // TODO LEE 灯控设置界面,//绑定灯组操作
 
-                    intent = new Intent(LightRGBDetailActivity.this,
-                            LightSettingActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
-                    bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
-                    bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
-                    intent.putExtras(bundle);
-                    if(infor != null){
-                        intent.putExtra(MessageModel.PISBASE_KEYSTR,
-                                infor.getPISKeyString());
-                    }
-                    startActivityForResult(intent, REQUEST_CODE_SETTING);
-                    overridePendingTransition(R.anim.anim_in_from_right,
-                            R.anim.anim_out_to_left);
+                intent = new Intent(LightRGBDetailActivity.this,
+                        LightSettingActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
+                bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, isTelink);
+                bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, isTelinkGroup);
+                intent.putExtras(bundle);
+                if (infor != null) {
+                    intent.putExtra(MessageModel.PISBASE_KEYSTR,
+                            infor.getPISKeyString());
+                }
+                startActivityForResult(intent, REQUEST_CODE_SETTING);
+                overridePendingTransition(R.anim.anim_in_from_right,
+                        R.anim.anim_out_to_left);
 
                 break;
             case R.id.light_effects:
-                if(isTelink){
+                if (isTelink) {
                     isVoiceOn = !isVoiceOn;
                     TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getVoiceOnOffCommand(isVoiceOn));
-                    if(infor == null) return;
+                    if (infor == null) return;
                 }
 //                intent = new Intent(LightRGBDetailActivity.this,
 //                        LightEffectsActivity.class);
@@ -1119,12 +1104,11 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //                        R.anim.anim_out_to_left);
                 if (!(infor instanceof LuxxMusicColor))
                     break;
-                final LuxxMusicColor musicInfor = (LuxxMusicColor)infor;
+                final LuxxMusicColor musicInfor = (LuxxMusicColor) infor;
                 PipaRequest playreq;
                 if (musicInfor.isSpeakerEnable()) {
                     playreq = musicInfor.commitBtAudioStatus(false);
-                }
-                else{
+                } else {
                     playreq = musicInfor.commitBtAudioStatus(true);
                 }
                 playreq.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
@@ -1168,23 +1152,22 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 sendRGBOrder(false);
                 break;
         }
-	}
+    }
 
-	private void setCandle(boolean isOn)        // NextApp.tw
+    private void setCandle(boolean isOn)        // NextApp.tw
     {
 //        candle_onoff = isOn;
 //        PipaRequest req = infor.commitCandleLight(isOn);
 //        infor.request(req);
+        if (infor == null) return;
         PipaRequest req;
 
-        if ( infor.getServiceId() == 0 )
-        {
+        if (infor.getServiceId() == 0) {
             List<PISBase> srvs = infor.getGroupObjects();
-            for (PISBase srv : srvs){
-                inforX  = (PISxinColor)srv;
+            for (PISBase srv : srvs) {
+                inforX = (PISxinColor) srv;
 
-                if ( inforX.getT1() == 0x10 && inforX.getT2() == 0x05 )
-                {
+                if (inforX.getT1() == 0x10 && inforX.getT2() == 0x05) {
                     if (isOn == true) {
                         req = inforX.commitLightOnOff(false);
                         inforX.request(req);
@@ -1194,17 +1177,14 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     inforX.request(req);
                 }
             }
-        }
-        else
-        {
+        } else {
 //            if ( isOn == true && switcher.isChecked() == true )
 //            {
 //                req = infor.commitLightOnOff(false);
 //                infor.request(req);
 //            }
 
-            if ( infor.getT1() == 0x10 && infor.getT2() == 0x05 )
-            {
+            if (infor.getT1() == 0x10 && infor.getT2() == 0x05) {
                 candle_onoff = isOn;
                 req = infor.commitCandleLight(isOn);
                 infor.request(req);
@@ -1216,8 +1196,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
     /**
      * 设置进度条的进度
-     * @param isLeft
-     * 是左边点击还是右边
+     *
+     * @param isLeft 是左边点击还是右边
      */
     private void setProgress(boolean isLeft) {
         int progress = whiteBar.getProgress();
@@ -1229,7 +1209,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
         }
         if (progress < 1) {
             progress = 1;
-        } else if(progress > max){
+        } else if (progress > max) {
             progress = max;
         }
         whiteBar.setProgress(progress);
@@ -1254,8 +1234,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 tvCurrentColor.setBackgroundColor(bean.rgb);
             }
 //            setScenes();
-        } else if (requestCode == REQUEST_CODE_SETTING){
-            if(data == null) return;
+        } else if (requestCode == REQUEST_CODE_SETTING) {
+            if (data == null) return;
             int result = data.getIntExtra("result", 0);
             if (result == 3) {//该组已经被删除
                 finish();
@@ -1392,7 +1372,6 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //			}
 //        }
 //    }
-
     @SuppressWarnings("deprecation")
 //    private void setSceneBtn(LinearLayout ib, TextView tv, ImageView iv,
 //                             SceneBean bean) {
@@ -1418,7 +1397,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 setResult(RESULT_OK, intent);
                 finish();
 //                ToastUtils.showToast(this, R.string.scene_detail_save_success);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -1446,23 +1425,21 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //		tempCmdContent = PISLightRGB.getCmdContentOnColor(red, green, blue,
 //				white);
 //	}
-
-
-	@Override
-	protected void onResume() {
-		super.onResume();
+    @Override
+    protected void onResume() {
+        super.onResume();
 //		setScenes();
 
         updateView();
-       if(!isTelink){
-           pisUpdateDataFromDevice();
-       }
+        if (!isTelink) {
+            pisUpdateDataFromDevice();
+        }
     }
 
     /**
      * Pis从设备更新数据
      */
-    private void pisUpdateDataFromDevice(){
+    private void pisUpdateDataFromDevice() {
 
         PipaRequest req = infor.updateLightStatus();
         req.setRetry(2);
@@ -1480,7 +1457,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
         });
         infor.request(req);
 
-        if (infor.getName() == null || infor.getName().length() == 0){
+        if (infor.getName() == null || infor.getName().length() == 0) {
             PipaRequest nameReq = infor.updatePISInfo();
             nameReq.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
                 @Override
@@ -1498,46 +1475,34 @@ public class LightRGBDetailActivity extends BaseActivity implements
         }
 
         // NextApp.tw
-        if ( infor.getServiceId() != 0 )
-        {
-            if ( infor.getT1() == 0x10 && infor.getT2() == 0x05 )
-            {
+        if (infor.getServiceId() != 0) {
+            if (infor.getT1() == 0x10 && infor.getT2() == 0x05) {
                 candle_light.setVisibility(View.VISIBLE);
 
-            }
-            else
-            {
+            } else {
 
                 candle_light.setVisibility(View.GONE);
             }
-        }
-        else
-        {
-            if ( infor.getGroupObjects().size() > 0 )
-            {
-                if ( infor.getGroupObjects().get(0).getT1() == 0x10 && infor.getGroupObjects().get(0).getT2() == 0x05 )
-                {
+        } else {
+            if (infor.getGroupObjects().size() > 0) {
+                if (infor.getGroupObjects().get(0).getT1() == 0x10 && infor.getGroupObjects().get(0).getT2() == 0x05) {
                     candle_light.setVisibility(View.VISIBLE);
 
-                }
-                else
-                {
+                } else {
 
                     candle_light.setVisibility(View.GONE);
                 }
-            }
-            else
-            {
+            } else {
                 candle_light.setVisibility(View.VISIBLE);
             }
         }
     }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		clearData();
-	}
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        clearData();
+    }
 
     /**
      * 清理数据
