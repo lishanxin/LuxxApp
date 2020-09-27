@@ -145,7 +145,7 @@ public class ProductClassifyInfo {
         productStateResList.put(CLASSID_EUREKA_COLOR, stateReslist);
 
         SparseArray<Integer> stateReslist2  = new SparseArray<>();
-        stateReslist2.put(PISBase.SERVICE_STATUS_OFFLINE, R.drawable.candle_off_normal);
+        stateReslist2.put(PISBase.SERVICE_STATUS_OFFLINE, R.drawable.candle_offline);
         stateReslist2.put(((PISxinColor.XINCOLOR_STATUS_ON & 0xF) << 4) | (PISBase.SERVICE_STATUS_ONLINE & 0xF),
                 R.drawable.candle_normal);
         stateReslist2.put(((PISxinColor.XINCOLOR_STATUS_OFF & 0xF) << 4) | (PISBase.SERVICE_STATUS_ONLINE & 0xF),
