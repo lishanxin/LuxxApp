@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 
+import android.os.Message;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -180,11 +181,11 @@ public class LightRGBDetailActivity extends BaseActivity implements
 //    private SparseBooleanArray tempEleInfo;
     private int hslEleAdr;
 //    private List<Integer> onOffEleAdrList;
-
+    protected final  static int MSG_TELINK_CANDLE = 2091;
     @SuppressLint("HandlerLeak")
-    protected Handler mHandler = new Handler() {
+    protected final Handler mHandler = new Handler() {
         @Override
-        public void handleMessage(android.os.Message msg) {
+        public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_SWITCH_TIMEOUT:
                     hideLoading();
@@ -206,6 +207,11 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     stopLoadding(false);
                     setEnable(true);
 //				}
+                    break;
+                case MSG_TELINK_CANDLE:
+                    if (isTelink) {
+                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getCandleCommand(candle_onoff));
+                    }
                     break;
                 default:
                     break;
@@ -1055,17 +1061,18 @@ public class LightRGBDetailActivity extends BaseActivity implements
             case R.id.light_candle_layout:
                 candle_onoff = !candle_onoff;
                 if (switcher.isChecked()) {
-                    if (isTelink) {
-                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getCandleCommand(candle_onoff));
-                    }
+                    switcher.setChecked(false);
+                    TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, false);
+                    mHandler.sendEmptyMessageDelayed(MSG_TELINK_CANDLE, 2000);
                     if (infor == null) return;
                     PipaRequest req = infor.commitLightOnOff(false);
                     infor.request(req);
-                    switcher.setChecked(false);
+                }else{
+                    if (isTelink) {
+                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getCandleCommand(candle_onoff));
+                    }
                 }
-
                 setCandle(candle_onoff);
-//                mHandler.sendEmptyMessage(MessageModel.MSG_SEND_CANDLE);
                 break;
             case R.id.title_finished:
                 save();
