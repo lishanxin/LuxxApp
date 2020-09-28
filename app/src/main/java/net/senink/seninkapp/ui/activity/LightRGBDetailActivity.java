@@ -83,7 +83,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
     boolean isVoiceOn = false;
     public int gpx = 0;
     // 延迟发送冷暖色命令
-    protected final static int DELEY_TIME = 300;
+    protected final static int DELEY_TIME = 400;
     // 发送第一条冷暖色命令的起始时间
     protected long START_TIME = 0;
     // 标题名称
