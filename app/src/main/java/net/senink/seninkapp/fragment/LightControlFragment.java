@@ -62,6 +62,7 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
     private PISManager manager;
     private Handler mHandler = null;
     private Handler mCycleHandler = new Handler();
+    private static final int REFRESH_PIS_DEVICES = 0X1234;
 
     private int isRefersh = 0;
     // 灯列表
@@ -137,6 +138,9 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
                             mHandler.sendEmptyMessageDelayed(2000, 2000);
                         else
                             isRefersh = 0;
+                        break;
+                    case REFRESH_PIS_DEVICES:
+                        mRefreshListView.setRefreshing();
                         break;
                 }
             }
@@ -308,6 +312,7 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
         EventBus.getDefault().post(new TelinkDataRefreshEntry());
     }
 
+    private boolean haveManualRefresh = false;
     /**
      * 刷新列表
      *
@@ -317,8 +322,21 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
         if (null == manager) {
             manager = PISManager.getInstance();
         }
-        if (deviceList != null)
+        if (deviceList != null){
             mLights = deviceList;
+            if(!haveManualRefresh){
+                for (GeneralDeviceModel[] generalDeviceModels : deviceList) {
+                    for (GeneralDeviceModel generalDeviceModel : generalDeviceModels) {
+                        if(!generalDeviceModel.isTelink()){
+                            if(generalDeviceModel.getPisBase().ServiceType != PISBase.SERVICE_TYPE_GROUP){
+                                mHandler.sendEmptyMessageDelayed(REFRESH_PIS_DEVICES, 1000);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         refreshListView();
         mHandler.sendEmptyMessageDelayed(2000, 2000);
