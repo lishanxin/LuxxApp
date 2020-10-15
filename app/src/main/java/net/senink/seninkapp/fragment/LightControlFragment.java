@@ -325,12 +325,16 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
         if (deviceList != null){
             mLights = deviceList;
             if(!haveManualRefresh){
+                outer:
                 for (GeneralDeviceModel[] generalDeviceModels : deviceList) {
+                    if(generalDeviceModels == null) continue;
                     for (GeneralDeviceModel generalDeviceModel : generalDeviceModels) {
+                        if(generalDeviceModel == null) continue;
                         if(!generalDeviceModel.isTelink()){
                             if(generalDeviceModel.getPisBase().ServiceType != PISBase.SERVICE_TYPE_GROUP){
                                 mHandler.sendEmptyMessageDelayed(REFRESH_PIS_DEVICES, 1000);
-                                break;
+                                haveManualRefresh = true;
+                                break outer;
                             }
                         }
                     }

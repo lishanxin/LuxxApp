@@ -356,7 +356,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
             if (mCurrentRGBWMode == LIGHT_MODE_WHITE) {
                 TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getYellowCommand((currentWhite / RGBConfigUtils.MAX_VALUE)));
             } else {
-                TelinkApiManager.getInstance().setDevicesColor(hslEleAdr, colors);
+                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getRGBCommand(colors[0], colors[1], colors[2]));
+//                TelinkApiManager.getInstance().setDevicesColor(hslEleAdr, colors);
             }
         } else {
             setPisColor(colors, isScened, currentWhite);

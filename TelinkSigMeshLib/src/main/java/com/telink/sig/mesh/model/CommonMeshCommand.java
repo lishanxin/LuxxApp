@@ -27,7 +27,7 @@ public class CommonMeshCommand {
 
     private static int BIBOO_CMD_ON = 0X01;
     private static int BIBOO_CMD_OFF = 0X00;
-    private static byte[] defaultPre = {(byte) 0x00, (byte) 0x01};
+    private static byte[] defaultPre = {(byte) 0x00, (byte) 0x01}; // 前置默认值
     private static final int paramLength = 10;
 
     public static byte[] getCandleCommand(boolean isOn){
@@ -71,6 +71,19 @@ public class CommonMeshCommand {
         }else{
             result[index++] = (byte) ( BIBOO_CMD_OFF);
         }
+        return result;
+    }
+
+    public static byte[] getRGBCommand(int r, int g, int b){
+        byte[] result = new byte[paramLength];
+        int index = 0;
+        result[index++]=defaultPre[0];
+        result[index++]=defaultPre[1];
+        result[index++] = (byte)BIBOO_CMD_RGB_SET;
+        result[index++] = (byte)r;
+        result[index++] = (byte)g;
+        result[index++] = (byte)b;
+
         return result;
     }
 }
