@@ -683,6 +683,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 if (buttonView.isPressed()) {
                     if (isTelink) {
                         TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
+                        if(isChecked){
+                            mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
+                        }
                     }
                     if (infor == null) return;
 //                    PipaRequest req = infor.commitCandleLight(isChecked);

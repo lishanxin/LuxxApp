@@ -24,6 +24,7 @@ import com.telink.sig.mesh.event.OnlineStatusEvent;
 import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.Group;
 
+import net.senink.piservice.pis.PISDevice;
 import net.senink.piservice.pis.PipaRequest;
 import net.senink.seninkapp.GeneralDeviceModel;
 import net.senink.seninkapp.MyApplication;
@@ -312,7 +313,6 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
         EventBus.getDefault().post(new TelinkDataRefreshEntry());
     }
 
-    private boolean haveManualRefresh = false;
     /**
      * 刷新列表
      *
@@ -324,18 +324,21 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
         }
         if (deviceList != null){
             mLights = deviceList;
-            if(!haveManualRefresh){
-                outer:
-                for (GeneralDeviceModel[] generalDeviceModels : deviceList) {
-                    if(generalDeviceModels == null) continue;
-                    for (GeneralDeviceModel generalDeviceModel : generalDeviceModels) {
-                        if(generalDeviceModel == null) continue;
-                        if(!generalDeviceModel.isTelink()){
-                            if(generalDeviceModel.getPisBase().ServiceType != PISBase.SERVICE_TYPE_GROUP){
+            outer:
+            for (GeneralDeviceModel[] generalDeviceModels : deviceList) {
+                if(generalDeviceModels == null) continue;
+                for (GeneralDeviceModel generalDeviceModel : generalDeviceModels) {
+                    if(generalDeviceModel == null) continue;
+                    if(!generalDeviceModel.isTelink()){
+                        PISBase infor = generalDeviceModel.getPisBase();
+                        if(infor.ServiceType != PISBase.SERVICE_TYPE_GROUP){
+                            PISDevice dev = infor.getDeviceObject();
+                            boolean isCandle = infor.getT1() == 0x10 && infor.getT2() == 0x05;
+                            // dev不存在，或者（不是蜡烛灯且类名0）
+                            if(dev == null || (!isCandle && dev.getClassString().equals("000000000000"))){
                                 mHandler.sendEmptyMessageDelayed(REFRESH_PIS_DEVICES, 1000);
-                                haveManualRefresh = true;
-                                break outer;
                             }
+                            break outer;
                         }
                     }
                 }
