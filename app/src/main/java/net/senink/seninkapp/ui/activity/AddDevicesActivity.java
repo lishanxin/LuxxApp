@@ -3,52 +3,29 @@ package net.senink.seninkapp.ui.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
-import com.telink.sig.mesh.model.Group;
 
-import net.senink.piservice.PISConstantDefine;
-import net.senink.piservice.pinm.PINMoBLE.MeshController;
-import net.senink.piservice.pinm.PinmInterface;
-import net.senink.piservice.pis.PISBase;
-import net.senink.piservice.pis.PISDevice;
 import net.senink.piservice.pis.PISMCSManager;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
-import net.senink.piservice.services.PISXinLight;
-import net.senink.piservice.services.LuxxMusicColor;
-import net.senink.piservice.services.PISxinColor;
 import net.senink.piservice.struct.PIServiceInfo;
 import net.senink.seninkapp.BaseActivity;
-import net.senink.seninkapp.BuildConfig;
 import net.senink.seninkapp.R;
 //import com.senink.seninkapp.core.PISMCSManager;
 //import com.senink.seninkapp.core.PISManager;
 //import com.senink.seninkapp.crmesh.MeshController;
-import net.senink.seninkapp.adapter.LightListAdapter;
-import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.ui.constant.ProductClassifyInfo;
-import net.senink.seninkapp.ui.home.HomeActivity;
 import net.senink.seninkapp.ui.util.ToastUtils;
-import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshBase;
-import net.senink.seninkapp.ui.view.pulltorefreshlistview.PullToRefreshListView;
-
-import org.spongycastle.LICENSE;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -155,6 +132,21 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 				}
 			}
 				break;
+			case R.id.new_light_auto:{
+				Intent intent = new Intent(AddDevicesActivity.this,
+						AddBlueToothDeviceActivity.class);
+				String[] classidFilter;
+				classidFilter = new String[1];
+				classidFilter[0] = ProductClassifyInfo.CLASSID_DEFAULT;;
+				intent.putExtra("classid", classidFilter);
+				intent.putExtra(AddBlueToothDeviceActivity.TelinkAutoConnectKey, true);
+				if (intent != null) {
+					startActivityForResult(intent, 1008);
+					overridePendingTransition(R.anim.anim_in_from_right,
+							R.anim.anim_out_to_left);
+				}
+			}
+			break;
 			case R.id.new_group:// TODO 添加灯组
 				addGroups(0x10, 0x03);
 				break;

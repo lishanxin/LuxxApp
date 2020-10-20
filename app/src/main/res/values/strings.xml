@@ -692,5 +692,6 @@
     <string name="candle_only">Candle light only</string>
     <string name="colorlight_only">Luxxlight&#038;Luxxmusic only</string>
     <string name="device_prov_desc">adr: 0x%s\nmac:%s</string>
+    <string name="add_new_device_auto">自动绑定灯</string>
 
 </resources>
