@@ -90,6 +90,8 @@ public class TelinkApiManager implements EventListener<String> {
     private UnprovisionedDevice targetDevice;
     private ProvisioningDevice pubSettingDevice;
     private Handler delayedHandler = new Handler();
+    private Handler addDeviceActivityHandler = null;
+    private boolean isAutoBind = false;
     private boolean stopScan;
     public static final String IS_TELINK_KEY = "isTelinkKey";
     public static final String IS_TELINK_GROUP_KEY = "isTelinkGroup";
@@ -290,6 +292,10 @@ public class TelinkApiManager implements EventListener<String> {
         byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
         ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, targetDevice);
 //        MeshService.getInstance().startProvision(parameters);
+
+        if(this.isAutoBind){
+            startProvision(parameters);
+        }
     }
 
     public ProvisionParameters getProvisionParameters(AdvertisingDevice device, int address) {
@@ -351,6 +357,12 @@ public class TelinkApiManager implements EventListener<String> {
         }
 //        parameters.setIncludeMacs(new String[]{"FF:FF:BB:CC:DD:53"});
         MeshService.getInstance().startScan(parameters);
+    }
+
+    public void startScanTelink(boolean isAutoBind, Handler handler) {
+        this.isAutoBind = isAutoBind;
+        addDeviceActivityHandler = handler;
+        startScanTelink();
     }
 
     // 扫描蓝牙
@@ -479,6 +491,11 @@ public class TelinkApiManager implements EventListener<String> {
 
         return setPublish(deviceInList, local);
 
+    }
+
+    private void startProvision(ProvisionParameters parameters){
+        addDeviceActivityHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_LINE_INIT);
+        MeshService.getInstance().startProvision(parameters);
     }
 
     private boolean setPublish(ProvisioningDevice provisioningDevice, DeviceInfo local) {

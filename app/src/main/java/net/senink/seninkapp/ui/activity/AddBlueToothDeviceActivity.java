@@ -144,6 +144,10 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     // 灯的适配器
     private BlueLightAdapter adapter;
 
+    // Telink自动绑定标记
+    public static final String TelinkAutoConnectKey = "autoTelinkConnect";
+    private boolean isTelinkAutoConnect = false;
+
     private PISManager manger;
     private PISMCSManager mcm;
     // 当前正在绑定的灯泡信息
@@ -501,6 +505,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
             }
 
             type = intent.getIntExtra("type", 3);
+            isTelinkAutoConnect = intent.getBooleanExtra(TelinkAutoConnectKey, false);
         }
     }
 
@@ -726,7 +731,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        if (controller != null) {
+        if (controller != null && !isTelinkAutoConnect) {
             controller.discoverDevices(true, this);
         }
     }
