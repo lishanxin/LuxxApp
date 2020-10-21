@@ -79,6 +79,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 			ibDevice.setOnClickListener(this);
 			ibGroup.setOnClickListener(this);
 			rlPage.setOnClickListener(this);
+			findViewById(R.id.new_light_auto).setOnClickListener(this);
 //			ibDevice.setOnClickListener(new View.OnClickListener() {
 //				@Override
 //				public void onClick(View v) {

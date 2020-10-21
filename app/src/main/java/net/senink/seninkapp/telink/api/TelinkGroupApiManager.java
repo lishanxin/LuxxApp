@@ -333,7 +333,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
 
     private int getGroupAddress(String pisGroupKey) {
         String[] keyArray = pisGroupKey.split("-");
-        return Integer.parseInt(keyArray[1]) | 0xC000;
+        return Integer.parseInt(keyArray[1], 16) | 0xC000;
     }
 
 

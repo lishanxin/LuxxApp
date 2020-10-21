@@ -44,6 +44,8 @@ import com.telink.sig.mesh.light.ProvisionDataGenerator;
 import com.telink.sig.mesh.light.PublicationStatusParser;
 import com.telink.sig.mesh.light.ScanParameters;
 import com.telink.sig.mesh.light.parameter.ProvisionParameters;
+import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.Group;
 import com.telink.sig.mesh.model.NotificationInfo;
 import com.telink.sig.mesh.util.TelinkLog;
 
@@ -63,6 +65,7 @@ import net.senink.seninkapp.adapter.BlueLightAdapter;
 //import net.senink.seninkapp.interfaces.AssociationListener;
 import net.senink.seninkapp.telink.AppSettings;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.telink.model.Mesh;
 import net.senink.seninkapp.telink.model.ProvisioningDevice;
 import net.senink.seninkapp.telink.view.DeviceProvisionListAdapter;
@@ -106,6 +109,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     public final static int MSG_TELINK_UPDATEVIEW = 23;
     public static final int MSG_TELINK_DEVBIND_SUCCESS = 24;
     public static final int MSG_TELINK_DEVBIND_FAILED = 25;
+    public static final int MSG_TELINK_CONFIG_SUCCESS_AUTO_CONNECT = 29;
 
 
     // 返回按钮
@@ -155,6 +159,10 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     private List<String> classFilter;
 
     private RecyclerView telinkListView;
+
+    private List<String> startGroupPISKey = new ArrayList<>();
+    private List<Group> endGroups = new ArrayList<>();
+    private Group autoConnectGroup = null;
     /**
      * 添加设备的类型 1:led灯 2：网关 3:RGB灯 4：遥控器 6:智能鞋垫
      */
@@ -218,15 +226,24 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 }
                 break;
                 case MSG_TELINK_CONFIG_SUCCESS: {
-                    mHandler.removeMessages(MSG_TELINK_CONFIG_SUCCESS);
-                    stopAnima3();
-                    setSteps(3, true);
-                    isConfiging = false;
-                    //考虑如何在新设备添加后直接转换为PISDevice置入列表中保存
-                    configSuccess(false);
+                    if(!isTelinkAutoConnect){
+                        mHandler.removeMessages(MSG_TELINK_CONFIG_SUCCESS);
+                        stopAnima3();
+                        setSteps(3, true);
+                        isConfiging = false;
+                        //考虑如何在新设备添加后直接转换为PISDevice置入列表中保存
+                        configSuccess(false);
+                    }
                 }
                 break;
-
+                case MSG_TELINK_CONFIG_SUCCESS_AUTO_CONNECT:
+                    if(isTelinkAutoConnect){
+                        DeviceInfo bindTelinkDevice = (DeviceInfo) msg.obj;
+                        if(autoConnectGroup != null){
+                            TelinkGroupApiManager.getInstance().addDeviceToGroup(autoConnectGroup.address, bindTelinkDevice.meshAddress);
+                        }
+                    }
+                    break;
                 case MSG_TELINK_CONFIG_FAILED: {
                     isConfiging = false;
                     stopAnima3();
@@ -407,11 +424,14 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 ToastUtils.showToast(getApplicationContext(),
                         R.string.addbubble_step2_tip);
                 backBtn.performClick();
+            }else{
+                TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
             }
-            TelinkApiManager.getInstance().startScanTelink();
         }
         setListViewVisible(View.VISIBLE);
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -421,7 +441,6 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         manger = PISManager.getInstance();
 //		threadPool = Executors.newFixedThreadPool(1);
         mcm = manger.getMCSObject();
-        TelinkApiManager.getInstance().startScanTelink();
 //		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_SUCCESS, this);
 //		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_PROVISION_FAIL, this);
 //		MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS, this);
@@ -429,6 +448,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         setData();
         initView();
         setListener();
+        TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
     }
 
     private void startAnima1() {
@@ -507,6 +527,50 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
             type = intent.getIntExtra("type", 3);
             isTelinkAutoConnect = intent.getBooleanExtra(TelinkAutoConnectKey, false);
         }
+
+        // 自动绑定操作
+        if(isTelinkAutoConnect){
+            startGroupPISKey.clear();
+            endGroups.clear();
+            autoConnectGroup = null;
+            for (Group telinkGroup : TelinkGroupApiManager.getInstance().getTelinkGroups()) {
+                startGroupPISKey.add(telinkGroup.PISKeyString);
+            }
+
+            try{
+                int t1 = 0x10; int t2 = 0x03;
+                // TODO LEE 添加灯组->往sdk里面添加灯组，界面收到消息后，刷新灯组
+                mcm = PISManager.getInstance().getMCSObject();
+                PipaRequest req = mcm.addGroup(getString(R.string.default_group_name), t1, t2);
+                req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                    @Override
+                    public void onRequestStart(PipaRequest req) {
+
+                    }
+
+                    @Override
+                    public void onRequestResult(PipaRequest req) {
+                        if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED) {
+                            endGroups.addAll(TelinkGroupApiManager.getInstance().getTelinkGroups());
+                            for (Group group : endGroups) {
+                                if(startGroupPISKey.indexOf(group.PISKeyString) == -1){
+                                    autoConnectGroup = group;
+                                }
+                            }
+                            if(autoConnectGroup == null){
+                                backBtn.performClick();
+                            }
+                        }else{
+                            ToastUtils.showToast(AddBlueToothDeviceActivity.this, R.string.add_group_error_tip);
+                            backBtn.performClick();
+                        }
+                    }
+                });
+                mcm.request(req);
+            }catch (Exception e){
+                PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+            }
+        }
     }
 
     @Override
@@ -577,6 +641,8 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         setTitle();
         setListView();
         startAnima1();
+
+
     }
 
     /**

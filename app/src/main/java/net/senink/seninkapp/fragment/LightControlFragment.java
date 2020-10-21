@@ -337,8 +337,8 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
                             // dev不存在，或者（不是蜡烛灯且类名0）
                             if(dev == null || (!isCandle && dev.getClassString().equals("000000000000"))){
                                 mHandler.sendEmptyMessageDelayed(REFRESH_PIS_DEVICES, 1000);
+                                break outer;
                             }
-                            break outer;
                         }
                     }
                 }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Message;
 import android.os.ParcelUuid;
 import android.support.v4.graphics.ColorUtils;
 import android.util.Log;
@@ -192,7 +193,6 @@ public class TelinkApiManager implements EventListener<String> {
             case ScanEvent.DEVICE_FOUND:
                 AdvertisingDevice device = ((ScanEvent) event).advertisingDevice;
                 onDeviceFound(device);
-                _startScanTelink();
                 break;
             case ScanEvent.SCAN_TIMEOUT:
                 if(devices != null && devices.size() > 0) return;
@@ -488,6 +488,15 @@ public class TelinkApiManager implements EventListener<String> {
         local.boundModels = remote.boundModels;
         local.nodeInfo = remote.nodeInfo;
         mesh.saveOrUpdate(mContext);
+
+        if(this.isAutoBind){
+            if(addDeviceActivityHandler != null){
+                Message message = new Message();
+                message.what = AddBlueToothDeviceActivity.MSG_TELINK_CONFIG_SUCCESS_AUTO_CONNECT;
+                message.obj = local;
+                addDeviceActivityHandler.sendMessageDelayed(message, 1000);
+            }
+        }
 
         return setPublish(deviceInList, local);
 
