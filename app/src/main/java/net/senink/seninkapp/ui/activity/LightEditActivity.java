@@ -153,14 +153,14 @@ public class LightEditActivity extends BaseActivity implements
                         TelinkBase telinkBase = (TelinkBase) msg.obj;
                         if (telinkBase.isDevice()) {
                             if (telinkGroup != null) {
-                                TelinkGroupApiManager.getInstance().addDeviceToGroup(telinkGroup.address, telinkBase.getDevice().meshAddress);
+                                TelinkGroupApiManager.getInstance().addDeviceToGroup(telinkGroup.address, telinkBase.getDevice().meshAddress, null);
                                 setTelinkGroup(telinkGroup);
                             } else {
                                 hideLoadingDialog();
                             }
                         } else {
                             if (telinkDeviceinfo != null) {
-                                TelinkGroupApiManager.getInstance().addDeviceToGroup(telinkBase.getGroup().address, telinkDeviceinfo.meshAddress);
+                                TelinkGroupApiManager.getInstance().addDeviceToGroup(telinkBase.getGroup().address, telinkDeviceinfo.meshAddress, null);
                                 setTelinkGroup(telinkBase.getGroup());
                             } else {
                                 hideLoadingDialog();

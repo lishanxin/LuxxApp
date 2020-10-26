@@ -6,30 +6,70 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/new_light"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="39dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:layout_below="@+id/new_light_title"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/icon_light_new"
-        android:layout_marginLeft="36dp">
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/new_light_title"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/new_light_name"
+            android:textColor="@color/text_color_normal"
+            android:textAlignment="viewStart" />
+        <ImageButton
+            android:id="@+id/new_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/icon_light_new">
+        </ImageButton>
 
-    </ImageButton>
+        <TextView
+            android:layout_marginTop="15dp"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/regular_set_up"
+            android:textColor="@color/text_color_normal"
+            android:textAlignment="viewStart" />
+    </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/new_light_auto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:layout_below="@+id/new_light_title"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="39dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/icon_light_new"
-        android:layout_marginRight="36dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/new_light_auto_title"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/new_light_name"
+            android:textColor="@color/text_color_normal"
+            android:textAlignment="viewStart" />
+        <ImageButton
+            android:id="@+id/new_light_auto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/icon_light_new">
 
-    </ImageButton>
+        </ImageButton>
+
+        <TextView
+            android:layout_marginTop="15dp"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/quick_setup"
+            android:textColor="@color/text_color_normal"
+            android:textAlignment="viewStart" />
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/new_group"
@@ -43,30 +83,7 @@
 
     </ImageButton>
 
-    <TextView
-        android:id="@+id/new_light_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_new_device"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="39dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/text_color_normal"
-        android:textAlignment="viewStart" />
 
-    <TextView
-        android:id="@+id/new_light_auto_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@id/new_light_auto"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="39dp"
-        android:layout_marginLeft="39dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/add_new_device_auto"
-        android:textAlignment="viewStart"
-        android:textColor="@color/text_color_normal" />
 
     <TextView
         android:id="@+id/new_group_title"

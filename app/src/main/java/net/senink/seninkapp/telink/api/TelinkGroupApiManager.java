@@ -35,6 +35,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
     private static final String TAG = TelinkGroupApiManager.class.getSimpleName();
     private static TelinkGroupApiManager instance;
     private Context mContext;
+    private AddDeviceToGroupSucceedCallback addDeviceToGroupSucceedCallback;
     public static TelinkGroupApiManager getInstance() {
         if (instance == null) {
             synchronized (TelinkGroupApiManager.class) {
@@ -162,9 +163,10 @@ public class TelinkGroupApiManager implements EventListener<String> {
     }
 
     // 添加组内设备
-    public void addDeviceToGroup(int groupAddress, int deviceMeshAddress){
+    public void addDeviceToGroup(int groupAddress, int deviceMeshAddress, AddDeviceToGroupSucceedCallback callback){
         waitBindDeviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(deviceMeshAddress);
         setDeviceGroupInfo(groupAddress, 0, waitBindDeviceInfo);
+        addDeviceToGroupSucceedCallback = callback;
     }
 
     // 删除组内设备
@@ -250,6 +252,9 @@ public class TelinkGroupApiManager implements EventListener<String> {
                 }
             }
             TelinkApiManager.getInstance().saveOrUpdateMesh(mContext);
+            if(addDeviceToGroupSucceedCallback != null){
+                addDeviceToGroupSucceedCallback.onAddDeviceToGroupSucceed();
+            }
             EventBus.getDefault().post(new TelinkOperation(TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_SUCCEED));
 //            getLocalDeviceGroupInfo(deviceInfo);
 
@@ -354,4 +359,7 @@ public class TelinkGroupApiManager implements EventListener<String> {
         return null;
     }
 
+    public interface AddDeviceToGroupSucceedCallback{
+        void onAddDeviceToGroupSucceed();
+    }
 }

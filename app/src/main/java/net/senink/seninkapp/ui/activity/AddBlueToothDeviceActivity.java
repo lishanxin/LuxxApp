@@ -10,13 +10,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -70,6 +74,7 @@ import net.senink.seninkapp.telink.model.Mesh;
 import net.senink.seninkapp.telink.model.ProvisioningDevice;
 import net.senink.seninkapp.telink.view.DeviceProvisionListAdapter;
 import net.senink.seninkapp.ui.entity.BlueToothBubble;
+import net.senink.seninkapp.ui.home.HomeActivity;
 import net.senink.seninkapp.ui.util.HttpUtils;
 import net.senink.seninkapp.ui.util.LogUtils;
 import net.senink.seninkapp.ui.util.ToastUtils;
@@ -163,6 +168,21 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     private List<String> startGroupPISKey = new ArrayList<>();
     private List<Group> endGroups = new ArrayList<>();
     private Group autoConnectGroup = null;
+
+    private long lastTelinkStatusUpdateTime = 0;
+    private Runnable checkTelinkAutoConnectRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if(SystemClock.elapsedRealtime() - lastTelinkStatusUpdateTime > 15 * 1000){
+                // 超过15秒就自动退出
+                ToastUtils.showToast(getApplicationContext(),
+                        R.string.finish_bind_telink);
+                backBtn.performClick();
+            }else{
+                mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
+            }
+        }
+    };
     /**
      * 添加设备的类型 1:led灯 2：网关 3:RGB灯 4：遥控器 6:智能鞋垫
      */
@@ -226,21 +246,24 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 }
                 break;
                 case MSG_TELINK_CONFIG_SUCCESS: {
-                    if(!isTelinkAutoConnect){
-                        mHandler.removeMessages(MSG_TELINK_CONFIG_SUCCESS);
-                        stopAnima3();
-                        setSteps(3, true);
-                        isConfiging = false;
-                        //考虑如何在新设备添加后直接转换为PISDevice置入列表中保存
-                        configSuccess(false);
-                    }
+                    mHandler.removeMessages(MSG_TELINK_CONFIG_SUCCESS);
+                    stopAnima3();
+                    setSteps(3, true);
+                    isConfiging = false;
+                    //考虑如何在新设备添加后直接转换为PISDevice置入列表中保存
+                    configSuccess(false);
                 }
                 break;
                 case MSG_TELINK_CONFIG_SUCCESS_AUTO_CONNECT:
                     if(isTelinkAutoConnect){
                         DeviceInfo bindTelinkDevice = (DeviceInfo) msg.obj;
                         if(autoConnectGroup != null){
-                            TelinkGroupApiManager.getInstance().addDeviceToGroup(autoConnectGroup.address, bindTelinkDevice.meshAddress);
+                            TelinkGroupApiManager.getInstance().addDeviceToGroup(autoConnectGroup.address, bindTelinkDevice.meshAddress, new TelinkGroupApiManager.AddDeviceToGroupSucceedCallback() {
+                                @Override
+                                public void onAddDeviceToGroupSucceed() {
+                                    TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+                                }
+                            });
                         }
                     }
                     break;
@@ -420,13 +443,18 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 }
             }
         }else{
-            if(telinkListAdapter.getItemCount() <= 1 && adapter.getCount() == 0){
-                ToastUtils.showToast(getApplicationContext(),
-                        R.string.addbubble_step2_tip);
-                backBtn.performClick();
+            if(isTelinkAutoConnect){
+//                TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
             }else{
-                TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+                if(telinkListAdapter.getItemCount() <= 1 && adapter.getCount() == 0){
+                    ToastUtils.showToast(getApplicationContext(),
+                            R.string.addbubble_step2_tip);
+                    backBtn.performClick();
+                }else{
+                    TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+                }
             }
+
         }
         setListViewVisible(View.VISIBLE);
     }
@@ -449,6 +477,11 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         initView();
         setListener();
         TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+
+        if(isTelinkAutoConnect){
+            refreshLastTelinkStatusUpdateTime();
+            mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
+        }
     }
 
     private void startAnima1() {
@@ -816,6 +849,36 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         super.onDestroy();
         clearData();
         TelinkApiManager.getInstance().stopScan();
+
+        checkTelinkAutoConnectGroup();
+    }
+
+    /**
+     * 检测Group组是否有添加灯具成功
+     */
+    private void checkTelinkAutoConnectGroup(){
+        if(autoConnectGroup != null){
+            List<DeviceInfo> deviceInfos = TelinkGroupApiManager.getInstance().getDevicesInGroup(autoConnectGroup.address);
+            if(deviceInfos.size() == 0){
+                deleteGroup(autoConnectGroup);
+            }
+        }
+    }
+
+    private void deleteGroup(Group group){
+        PISBase infor = PISManager.getInstance().getPISObject(group.PISKeyString);
+        if(infor == null) return;
+        PipaRequest req = mcm.removeGroup(infor.getGroupId());
+        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+            @Override
+            public void onRequestStart(PipaRequest req) {
+            }
+
+            @Override
+            public void onRequestResult(PipaRequest req) {
+            }
+        });
+        mcm.request(req);
     }
 
     /**
@@ -918,23 +981,58 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
 
     }
 
+    private void refreshLastTelinkStatusUpdateTime(){
+        if(isTelinkAutoConnect){
+            lastTelinkStatusUpdateTime = SystemClock.elapsedRealtime();
+        }
+    }
+
+    /**
+     * 自动绑定失败
+     */
+    private void showTelinkAutoConnectErrorAlert(){
+        if(!isTelinkAutoConnect)return;
+        try {
+            mHandler.removeCallbacks(checkTelinkAutoConnectRunnable);
+            Dialog alertDialog = new AlertDialog.Builder(this)
+                    .setMessage(R.string.addbubble_bind_failed)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            backBtn.performClick();
+                        }
+                    })
+                    .setCancelable(false)
+                    .create();
+            alertDialog.show();
+        }catch (Exception e){
+            PgyCrashManager.reportCaughtException(this, e);
+        }
+    }
+
     @Override
     public void performed(Event<String> event) {
         switch (event.getType()) {
             case MeshEvent.EVENT_TYPE_PROVISION_SUCCESS:
                 mHandler.sendEmptyMessage(MSG_TELINK_DEVBIND_SUCCESS);
+                refreshLastTelinkStatusUpdateTime();
                 break;
             case MeshEvent.EVENT_TYPE_PROVISION_FAIL:
                 mHandler.sendEmptyMessage(MSG_TELINK_DEVBIND_FAILED);
+                showTelinkAutoConnectErrorAlert();
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS:
+                refreshLastTelinkStatusUpdateTime();
                 mHandler.sendEmptyMessage(MSG_TELINK_CONFIG_SUCCESS);
                 TelinkApiManager.getInstance().autoConnectToDevices(this);
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_FAIL:
                 mHandler.sendEmptyMessage(MSG_TELINK_CONFIG_FAILED);
+                showTelinkAutoConnectErrorAlert();
                 break;
-
+            case ScanEvent.DEVICE_FOUND:
+                refreshLastTelinkStatusUpdateTime();
+                break;
         }
     }
 

@@ -682,4 +682,7 @@
     <string name="candle_only">Candle light only</string>
     <string name="colorlight_only">Luxxlight&#038;Luxxmusic only</string>
     <string name="add_new_device_auto">自动绑定灯</string>
+    <string name="quick_setup">快速绑定</string>
+    <string name="regular_set_up">正常绑定</string>
+    <string name="finish_bind_telink">绑定结束</string>
 </resources>
