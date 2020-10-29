@@ -1,7 +1,9 @@
 package net.senink.seninkapp.fragment;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 //import android.annotation.SuppressLint;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,6 +33,7 @@ import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 
 import net.senink.seninkapp.adapter.MixLightListAdapter;
+import net.senink.seninkapp.telink.SharedPreferenceHelper;
 import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.ui.home.HomeActivity;
 import net.senink.seninkapp.ui.home.TelinkDataRefreshEntry;
@@ -313,6 +316,7 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
         EventBus.getDefault().post(new TelinkDataRefreshEntry());
     }
 
+    Set<String> pisKeyStringSet = new HashSet<>();
     /**
      * 刷新列表
      *
@@ -323,25 +327,31 @@ public class LightControlFragment extends Fragment implements EventListener<Stri
             manager = PISManager.getInstance();
         }
         if (deviceList != null){
+            boolean needRefresh = false;
             mLights = deviceList;
-            outer:
             for (GeneralDeviceModel[] generalDeviceModels : deviceList) {
                 if(generalDeviceModels == null) continue;
                 for (GeneralDeviceModel generalDeviceModel : generalDeviceModels) {
                     if(generalDeviceModel == null) continue;
                     if(!generalDeviceModel.isTelink()){
                         PISBase infor = generalDeviceModel.getPisBase();
+                        if(!pisKeyStringSet.contains(infor.getPISKeyString())){
+                            needRefresh = true;
+                        }
+                        pisKeyStringSet.add(infor.getPISKeyString());
                         if(infor.ServiceType != PISBase.SERVICE_TYPE_GROUP){
                             PISDevice dev = infor.getDeviceObject();
                             boolean isCandle = infor.getT1() == 0x10 && infor.getT2() == 0x05;
                             // dev不存在，或者（不是蜡烛灯且类名0）
                             if(dev == null || (!isCandle && dev.getClassString().equals("000000000000"))){
-                                mHandler.sendEmptyMessageDelayed(REFRESH_PIS_DEVICES, 1000);
-                                break outer;
+                                needRefresh = true;
                             }
                         }
                     }
                 }
+            }
+            if(needRefresh){
+                mHandler.sendEmptyMessageDelayed(REFRESH_PIS_DEVICES, 1000);
             }
         }
 

@@ -31,6 +31,7 @@ import com.telink.sig.mesh.light.UuidInfo;
 import com.telink.sig.mesh.light.parameter.AutoConnectParameters;
 import com.telink.sig.mesh.light.parameter.KeyBindParameters;
 import com.telink.sig.mesh.light.parameter.ProvisionParameters;
+import com.telink.sig.mesh.model.CommonMeshCommand;
 import com.telink.sig.mesh.model.DeviceBindState;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
@@ -497,7 +498,7 @@ public class TelinkApiManager implements EventListener<String> {
                 addDeviceActivityHandler.sendMessageDelayed(message, 1000);
             }
         }
-
+        getInstance().setCommonCommand(local.meshAddress, CommonMeshCommand.getSyncTimeCommand());
         return setPublish(deviceInList, local);
 
     }

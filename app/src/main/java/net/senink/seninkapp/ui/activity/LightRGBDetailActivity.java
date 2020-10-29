@@ -245,6 +245,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
             getNodeStatus();
             initTelinkView();
         }
+        if(isTelinkGroup || isTelink){
+            TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getSyncTimeCommand());
+        }
     }
 
     /**
@@ -1035,16 +1038,19 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 break;
             case R.id.light_scene1_layout:
                 setEffectMode(0);
+                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getTwinkleCommand(CommonMeshCommand.EFFECT_SPA_MODE));
                 break;
             case R.id.light_scene2_layout:
                 setEffectMode(1);
-
+                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getTwinkleCommand(CommonMeshCommand.EFFECT_SUNRICE_MODE));
                 break;
             case R.id.light_scene3_layout:
                 setEffectMode(2);
+                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getTwinkleCommand(CommonMeshCommand.EFFECT_BREATHING_MODE));
                 break;
 
             case R.id.light_scene4_layout:
+                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getTwinkleCommand(CommonMeshCommand.EFFECT_RANDOM_MODE));
                 setEffectMode(3);
                 break;
             case R.id.light_scene5_layout:
@@ -1055,6 +1061,12 @@ public class LightRGBDetailActivity extends BaseActivity implements
                             LightTimerListActivity.class);
                     intent.putExtra(MessageModel.PISBASE_KEYSTR,
                             infor.getPISKeyString());
+//                    intent.putExtra(TelinkApiManager.IS_TELINK_KEY,
+//                            isTelink);
+//                    intent.putExtra(TelinkApiManager.IS_TELINK_GROUP_KEY,
+//                            isTelinkGroup);
+//                    intent.putExtra(TelinkApiManager.TELINK_ADDRESS,
+//                            telinkAddress);
                     startActivityForResult(intent, REQUEST_CODE_TIMER);
                     overridePendingTransition(R.anim.anim_in_from_right,
                             R.anim.anim_out_to_left);

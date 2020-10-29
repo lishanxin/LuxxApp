@@ -42,6 +42,7 @@ public class SharedPreferenceHelper {
     private static final String KEY_LOCATION_IGNORE = "com.telink.bluetooth.light.KEY_LOCATION_IGNORE";
 
     private static final String KEY_LOG_ENABLE = "com.telink.bluetooth.light.KEY_LOG_ENABLE";
+    private static final String KEY_APP_FIRST_OPEN = "com.telink.bluetooth.light.KEY_APP_FIRST_OPEN";
 
     /**
      * scan device by private mode
@@ -95,6 +96,18 @@ public class SharedPreferenceHelper {
         SharedPreferences sharedPreferences = context.getSharedPreferences(DEFAULT_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().putBoolean(KEY_LOG_ENABLE, enable).apply();
     }
+
+    public static boolean isAppFirstOpen(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(DEFAULT_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(KEY_APP_FIRST_OPEN, false);
+    }
+
+    public static void setIsAppFirstOpen(Context context, boolean isFirstOpen) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(DEFAULT_NAME, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putBoolean(KEY_APP_FIRST_OPEN, isFirstOpen).apply();
+    }
+
+
 
     public static boolean isPrivateMode(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(DEFAULT_NAME, Context.MODE_PRIVATE);

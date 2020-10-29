@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.SigMeshModel;
 
 import net.senink.piservice.pis.PICommandProperty;
 import net.senink.piservice.pis.PISDevice;
@@ -29,7 +31,9 @@ import net.senink.piservice.services.PISxinColor;
 import net.senink.piservice.struct.LightTimerItem;
 import net.senink.piservice.struct.PipaRequestData;
 import net.senink.seninkapp.BaseActivity;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
+import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.ui.constant.Constant;
 import net.senink.seninkapp.ui.constant.MessageModel;
 import net.senink.seninkapp.ui.util.LogUtils;
@@ -87,7 +91,10 @@ public class LightTimerListActivity extends BaseActivity implements
     private PISDevice inforDevice;
 
     private PipaRequestData requestData;
-
+    private boolean isTelink = false;
+    private boolean isTelinkGroup = false;
+    private int telinkAddress = 0;
+    private int hslEleAdr;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -132,13 +139,27 @@ public class LightTimerListActivity extends BaseActivity implements
             return;
         }
         try {
-            String key = getIntent()
-                    .getStringExtra(MessageModel.PISBASE_KEYSTR);
-            infor = (PISxinColor) PISManager.getInstance().getPISObject(key);
-            inforDevice = infor.getDeviceObject();
-
-            if (infor == null || inforDevice == null)
+            isTelink = getIntent().getBooleanExtra(TelinkApiManager.IS_TELINK_KEY, false);
+            isTelinkGroup = getIntent().getBooleanExtra(TelinkApiManager.IS_TELINK_GROUP_KEY, false);
+            telinkAddress = getIntent().getIntExtra(TelinkApiManager.TELINK_ADDRESS, 0);
+            if(!isTelink){
+                String key = getIntent()
+                        .getStringExtra(MessageModel.PISBASE_KEYSTR);
+                infor = (PISxinColor) PISManager.getInstance().getPISObject(key);
+                inforDevice = infor.getDeviceObject();
+            }
+            if (!isTelinkGroup && isTelink) {
+                DeviceInfo deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+                if (deviceInfo == null){
+                    finish();
+                }else{
+                    hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
+                }
+            }else if(isTelinkGroup){
                 finish();
+            }else if (infor == null || inforDevice == null){
+                finish();
+            }
         }catch (Exception e){
             PgyCrashManager.reportCaughtException(LightTimerListActivity.this, e);
             finish();
