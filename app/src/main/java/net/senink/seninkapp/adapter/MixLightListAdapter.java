@@ -341,7 +341,7 @@ public class MixLightListAdapter extends BaseAdapter {
                                 light.getLightStatus());
                     } else {
                         sld = ProductClassifyInfo.getProductStateListDrawable(this.context,
-                                dev.getClassString(),
+                                ProductClassifyInfo.CLASSID_EUREKA_COLOR,
                                 dev.getStatus(),
                                 light.getLightStatus());
                     }
