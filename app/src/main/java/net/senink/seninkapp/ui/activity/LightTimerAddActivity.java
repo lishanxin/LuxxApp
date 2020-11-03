@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -23,6 +24,10 @@ import com.bigkoo.pickerview.adapter.NumericWheelAdapter;
 import com.contrarywind.view.WheelView;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.TelinkApplication;
+import com.telink.sig.mesh.model.CommonMeshCommand;
+import com.telink.sig.mesh.model.DeviceInfo;
+import com.telink.sig.mesh.model.SigMeshModel;
 
 import net.senink.piservice.pis.PICommandProperty;
 import net.senink.piservice.pis.PISDevice;
@@ -32,8 +37,10 @@ import net.senink.piservice.services.PISxinColor;
 import net.senink.piservice.struct.LightTimerItem;
 import net.senink.piservice.struct.PipaRequestData;
 import net.senink.seninkapp.BaseActivity;
+import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.R;
 
+import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.ui.constant.Constant;
 import net.senink.seninkapp.ui.constant.MessageModel;
 import net.senink.seninkapp.ui.util.LogUtils;
@@ -58,6 +65,9 @@ public class LightTimerAddActivity extends BaseActivity implements
     private final static int MSG_TIMER_MODIFY_SUCCESS = 12;
     // 修改失败
     private final static int MSG_TIMER_MODIFY_FAILED = 13;
+
+    // 执行定时器的设置
+    private final static int MSG_TELINK_TIMER_MODIFY_EXE = 100;
 
     // 加载框显示的最长时间
     private final static int SHOW_MAX_TIME = 30000;
@@ -90,6 +100,13 @@ public class LightTimerAddActivity extends BaseActivity implements
     private int editMode = 0;   //0 - 新增, 1 - 修改
     // 定时器任务id
     private int timerid = 0;
+
+    private boolean isTelinkDevice = false;
+    private int telinkAddress = 0;
+    private int hslEleAdr;
+    private DeviceInfo telinkDevice;
+    private byte[] lastTelinkAction;
+    private byte[] telinkScheduleWholeCommand;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -126,6 +143,13 @@ public class LightTimerAddActivity extends BaseActivity implements
                     ToastUtils.showToast(LightTimerAddActivity.this,
                             R.string.addtimer_modify_failed);
                     break;
+                case MSG_TELINK_TIMER_MODIFY_EXE:
+                    if(telinkScheduleWholeCommand != null){
+                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, telinkScheduleWholeCommand);
+                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, telinkScheduleWholeCommand);
+                        finish();
+                    }
+                    break;
             }
         }
     };
@@ -144,11 +168,15 @@ public class LightTimerAddActivity extends BaseActivity implements
     @Override
     protected  void onStop(){
         super.onStop();
-
         //设置完毕定时器，关闭灯光
-        if (lastRequestData != null){
-            infor.request(infor.commitLightOnOff(false));
+        if(isTelinkDevice){
+            TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getOnOffCommand(false));
+        }else{
+            if (lastRequestData != null){
+                infor.request(infor.commitLightOnOff(false));
+            }
         }
+
     }
 
     /**
@@ -171,8 +199,20 @@ public class LightTimerAddActivity extends BaseActivity implements
                 editMode = intent.getIntExtra(MessageModel.ACTIVITY_MODE, 0xFF);
                 timerid = intent.getIntExtra(MessageModel.TIMER_ID, 0xFF);
 
-                infor = (PISxinColor)PISManager.getInstance().getPISObject(key);
-                inforDevice = infor.getDeviceObject();
+                isTelinkDevice = getIntent().getBooleanExtra(TelinkApiManager.IS_TELINK_DEVICE_KEY, false);
+                telinkAddress = getIntent().getIntExtra(TelinkApiManager.TELINK_ADDRESS, 0);
+
+                if (isTelinkDevice) {
+                    telinkDevice = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+                    if (telinkDevice == null){
+                        finish();
+                    }else{
+                        hslEleAdr = telinkDevice.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
+                    }
+                }else{
+                    infor = (PISxinColor)PISManager.getInstance().getPISObject(key);
+                    inforDevice = infor.getDeviceObject();
+                }
 
             } catch (Exception e) {
                 PgyCrashManager.reportCaughtException(this, e);
@@ -206,16 +246,21 @@ public class LightTimerAddActivity extends BaseActivity implements
     private void initTimePicker() {
         int curHours;
         int curMinutes;
-        LightTimerItem ti = null;
         Calendar c = Calendar.getInstance();
+        if(isTelinkDevice){
 
-        if (timerid != 0xFF){
-            ti = inforDevice.getTimerItem(timerid);
+        }else{
+            LightTimerItem ti = null;
+
+            if (timerid != 0xFF){
+                ti = inforDevice.getTimerItem(timerid);
+            }
+
+            if (ti != null){
+                c.setTime(new Date(ti.getTime()));
+            }
         }
 
-        if (ti != null){
-            c.setTime(new Date(ti.getTime()));
-        }
         curHours = c.get(Calendar.HOUR_OF_DAY);
         curMinutes = c.get(Calendar.MINUTE);
 
@@ -309,6 +354,12 @@ public class LightTimerAddActivity extends BaseActivity implements
     R.string.effect_sunrise,
     R.string.effect_breath,
     R.string.effect_random};
+
+    private int[] telinkEffectResid = { R.string.effect_sunrise,
+            R.string.effect_breath,
+            R.string.effect_random,
+            R.string.effect_spa
+    };
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
@@ -320,56 +371,89 @@ public class LightTimerAddActivity extends BaseActivity implements
                 }
             } else if (requestCode == Constant.REQUEST_CODE_TIMER_ACTION) {
                 if (resultCode == RESULT_OK) {
-                    lastRequestData = (PipaRequestData) data.getSerializableExtra(MessageModel.PIPAREQUEST_DATA);
-                    PICommandProperty prop = infor.getCommandProperty(lastRequestData.Command);
-                    actionName.setBackgroundColor(Color.TRANSPARENT);
-                    actionName.setText("");
-                    switch(lastRequestData.Command){
-                        case PISxinColor.PIS_CMD_EFFECT_SET:{
-                            int effectMode = lastRequestData.Data[0];
-                            int actionResid= effectResid[effectMode];
-                            actionName.setText(actionResid);
-                        }
-                            break;
-                        case PISxinColor.PIS_CMD_LIGHT_ONOFF_SET:{
-                            int onoff = lastRequestData.Data[0];
-                            int actionResid;
-                            if (onoff == 0){
-                                actionResid = R.string.close;
-                            }else
-                                actionResid = R.string.open;
-                            actionName.setText(actionResid);
-                        }
-                            break;
-                        case PISxinColor.PIS_CMD_LIGHT_RGBW_SET:{
-                            int maxColor = 0;
-                            int tmpColor = 0;
-                            byte[] rgbColor = new byte[3];
-
-                            for (int i = 0; i < 3; i++) {
-                                tmpColor = 0xFF & lastRequestData.Data[i];
-                                if (tmpColor > maxColor)
-                                    maxColor = tmpColor;
-                            }
-                            byte coef = (byte)(0xFF/maxColor);
-                            rgbColor[0] = (byte)((coef * lastRequestData.Data[0])&0xFF);
-                            rgbColor[1] = (byte)((coef * lastRequestData.Data[1])&0xFF);
-                            rgbColor[2] = (byte)((coef * lastRequestData.Data[2])&0xFF);
-
-                            int currentColor = Color.rgb((rgbColor[0] & 0xFF),
-                                    (rgbColor[1] & 0xFF),
-                                    (rgbColor[2]) & 0xFF);
-                            actionName.setBackgroundColor(currentColor);
-                        }
-                            break;
-                        default:
-                            if (prop != null){
-                                actionName.setText(prop.PICmdName);
-                                actionName.setHint(prop.PICmdTips);
+                    if(isTelinkDevice){
+                        lastTelinkAction = data.getByteArrayExtra(TelinkApiManager.TELINK_Timer_Action_Data);
+                        actionName.setBackgroundColor(Color.TRANSPARENT);
+                        actionName.setText("");
+                        switch(lastTelinkAction[0]){
+                            case CommonMeshCommand.TWINKLE_CMD:{
+                                int effectMode = lastTelinkAction[1];
+                                int actionResid= effectResid[effectMode];
+                                actionName.setText(actionResid);
                             }
                             break;
+                            case CommonMeshCommand.ON_OFF_SET:{
+                                int onoff = lastTelinkAction[1];
+                                int actionResid;
+                                if (onoff == 0){
+                                    actionResid = R.string.close;
+                                }else
+                                    actionResid = R.string.open;
+                                actionName.setText(actionResid);
+                            }
+                            break;
+                            case CommonMeshCommand.BIBOO_CMD_RGB_SET:{
+
+                                int currentColor = Color.rgb((lastTelinkAction[1] & 0xFF),
+                                        (lastTelinkAction[2] & 0xFF),
+                                        (lastTelinkAction[3]) & 0xFF);
+                                actionName.setBackgroundColor(currentColor);
+                            }
+                            break;
+                            default:
+                                break;
+                        }
+                    }else{
+                        lastRequestData = (PipaRequestData) data.getSerializableExtra(MessageModel.PIPAREQUEST_DATA);
+                        PICommandProperty prop = infor.getCommandProperty(lastRequestData.Command);
+                        actionName.setBackgroundColor(Color.TRANSPARENT);
+                        actionName.setText("");
+                        switch(lastRequestData.Command){
+                            case PISxinColor.PIS_CMD_EFFECT_SET:{
+                                int effectMode = lastRequestData.Data[0];
+                                int actionResid= effectResid[effectMode];
+                                actionName.setText(actionResid);
+                            }
+                            break;
+                            case PISxinColor.PIS_CMD_LIGHT_ONOFF_SET:{
+                                int onoff = lastRequestData.Data[0];
+                                int actionResid;
+                                if (onoff == 0){
+                                    actionResid = R.string.close;
+                                }else
+                                    actionResid = R.string.open;
+                                actionName.setText(actionResid);
+                            }
+                            break;
+                            case PISxinColor.PIS_CMD_LIGHT_RGBW_SET:{
+                                int maxColor = 0;
+                                int tmpColor = 0;
+                                byte[] rgbColor = new byte[3];
+
+                                for (int i = 0; i < 3; i++) {
+                                    tmpColor = 0xFF & lastRequestData.Data[i];
+                                    if (tmpColor > maxColor)
+                                        maxColor = tmpColor;
+                                }
+                                byte coef = (byte)(0xFF/maxColor);
+                                rgbColor[0] = (byte)((coef * lastRequestData.Data[0])&0xFF);
+                                rgbColor[1] = (byte)((coef * lastRequestData.Data[1])&0xFF);
+                                rgbColor[2] = (byte)((coef * lastRequestData.Data[2])&0xFF);
+
+                                int currentColor = Color.rgb((rgbColor[0] & 0xFF),
+                                        (rgbColor[1] & 0xFF),
+                                        (rgbColor[2]) & 0xFF);
+                                actionName.setBackgroundColor(currentColor);
+                            }
+                            break;
+                            default:
+                                if (prop != null){
+                                    actionName.setText(prop.PICmdName);
+                                    actionName.setHint(prop.PICmdTips);
+                                }
+                                break;
+                        }
                     }
-
                 }
             }
         }catch (Exception e){
@@ -394,12 +478,26 @@ public class LightTimerAddActivity extends BaseActivity implements
 
                 break;
             case R.id.addlighttime_heat_layout:
-                Intent intent = new Intent(this, LightRGBDetailActivity.class);
-                intent.putExtra(MessageModel.PISBASE_KEYSTR, infor.getPISKeyString());
-                intent.putExtra(MessageModel.ACTIVITY_MODE, Constant.REQUEST_CODE_TIMER_ACTION);
-                startActivityForResult(intent, Constant.REQUEST_CODE_TIMER_ACTION);
-                overridePendingTransition(R.anim.anim_in_from_right,
-                        R.anim.anim_out_to_left);
+                if(isTelinkDevice && telinkDevice != null){
+                    Intent intent = new Intent(this, LightRGBDetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(TelinkApiManager.TELINK_ADDRESS, telinkDevice.meshAddress);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_KEY, true);
+                    bundle.putBoolean(TelinkApiManager.IS_TELINK_GROUP_KEY, false);
+                    intent.putExtras(bundle);
+
+                    intent.putExtra(MessageModel.ACTIVITY_MODE, Constant.REQUEST_CODE_TIMER_ACTION);
+                    startActivityForResult(intent, Constant.REQUEST_CODE_TIMER_ACTION);
+                    overridePendingTransition(R.anim.anim_in_from_right,
+                            R.anim.anim_out_to_left);
+                }else{
+                    Intent intent = new Intent(this, LightRGBDetailActivity.class);
+                    intent.putExtra(MessageModel.PISBASE_KEYSTR, infor.getPISKeyString());
+                    intent.putExtra(MessageModel.ACTIVITY_MODE, Constant.REQUEST_CODE_TIMER_ACTION);
+                    startActivityForResult(intent, Constant.REQUEST_CODE_TIMER_ACTION);
+                    overridePendingTransition(R.anim.anim_in_from_right,
+                            R.anim.anim_out_to_left);
+                }
 
                 break;
             default:
@@ -411,43 +509,66 @@ public class LightTimerAddActivity extends BaseActivity implements
      * 保存定时器
      */
     private void save() {
-        if (infor == null || lastRequestData == null){
-            ToastUtils.showToast(LightTimerAddActivity.this,
-                    R.string.addtimer_action_empty);
-            return;
+        if(isTelinkDevice){
+            if(telinkDevice == null || lastTelinkAction == null){
+                ToastUtils.showToast(LightTimerAddActivity.this,
+                        R.string.addtimer_action_empty);
+                return;
+            }
+            int cycle = 0;
+            if (cbRepeat.isChecked())
+                cycle = 1;
+            byte[] wholeCommand = CommonMeshCommand.getClockSetCommand(true,
+                    cycle,
+                    telinkDevice.getIndexOfCustomScheduler(),
+                    hours.getCurrentItem(),
+                    mins.getCurrentItem(),
+                    lastTelinkAction);
+            telinkDevice.addCustomSchedule(wholeCommand);
+            MyApplication.getInstance().getMesh().saveOrUpdate(this);
+            telinkScheduleWholeCommand = wholeCommand;
+            mHandler.sendEmptyMessage(MSG_TELINK_TIMER_MODIFY_EXE);
+
+        }else{
+            if (infor == null || lastRequestData == null){
+                ToastUtils.showToast(LightTimerAddActivity.this,
+                        R.string.addtimer_action_empty);
+                return;
+            }
+
+            int cycle = LightTimerItem.CYCLE_NONE;
+            if (cbRepeat.isChecked())
+                cycle = LightTimerItem.CYCLE_DAY;
+
+            PipaRequest req  = inforDevice.commitTimerItem(cycle,
+                    (hours.getCurrentItem()*3600) + (mins.getCurrentItem()*60),
+                    infor.getServiceId(),
+                    lastRequestData);
+            req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                @Override
+                public void onRequestStart(PipaRequest req) {
+                    if (loadingLayout.getVisibility() == View.GONE) {
+                        showLoadingDialog();
+                    }
+                }
+
+                @Override
+                public void onRequestResult(PipaRequest req) {
+                    if (loadingLayout.getVisibility() != View.GONE) {
+                        hideLoadingDialog();
+                    }
+                    if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED){
+                        finish();
+                    }
+                    else
+                        ToastUtils.showToast(LightTimerAddActivity.this,
+                                R.string.retry_tips);
+                }
+            });
+            req.setRetry(3);
+            inforDevice.request(req);
         }
 
-        int cycle = LightTimerItem.CYCLE_NONE;
-        if (cbRepeat.isChecked())
-            cycle = LightTimerItem.CYCLE_DAY;
-
-        PipaRequest req  = inforDevice.commitTimerItem(cycle,
-                (hours.getCurrentItem()*3600) + (mins.getCurrentItem()*60),
-                infor.getServiceId(),
-                lastRequestData);
-        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-            @Override
-            public void onRequestStart(PipaRequest req) {
-                if (loadingLayout.getVisibility() == View.GONE) {
-                    showLoadingDialog();
-                }
-            }
-
-            @Override
-            public void onRequestResult(PipaRequest req) {
-                if (loadingLayout.getVisibility() != View.GONE) {
-                    hideLoadingDialog();
-                }
-                if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED){
-                    finish();
-                }
-                else
-                    ToastUtils.showToast(LightTimerAddActivity.this,
-                            R.string.retry_tips);
-            }
-        });
-        req.setRetry(3);
-        inforDevice.request(req);
     }
 
     @Override

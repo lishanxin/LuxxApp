@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.model.CommonMeshCommand;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
 import com.telink.sig.mesh.model.SigMeshModel;
@@ -413,7 +414,7 @@ public class LightSettingActivity extends BaseActivity implements
 //				if (!needRequest)
 //					return;
                 if (isTelink) {
-                    TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
+                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getOnOffCommand(isChecked));
                 }
                 if(infor == null) return;
                 PipaRequest req = null;

@@ -30,6 +30,8 @@ import com.telink.sig.mesh.util.TelinkLog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class DeviceInfo implements Serializable {
@@ -90,6 +92,50 @@ public class DeviceInfo implements Serializable {
 
     // 本地保存的闹钟列表
     public List<Scheduler> schedulers = new ArrayList<>();
+
+    // 自定义闹钟列表
+    private List<CustomScheduler> customSchedulers = new ArrayList<>();
+    public List<CustomScheduler> getCustomSchedulers(){
+        return customSchedulers;
+    }
+    // 添加自定义闹钟
+    public void addCustomSchedule(byte[] wholeCommand){
+        try {
+            customSchedulers.add(new CustomScheduler(wholeCommand));
+            Collections.sort(customSchedulers, new Comparator<CustomScheduler>() {
+                @Override
+                public int compare(CustomScheduler scheduler1, CustomScheduler scheduler2) {
+                    return scheduler1.getHours() * 60 + scheduler1.getMinutes() - scheduler2.getHours() * 60 - scheduler2.getMinutes();
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    // 删除自定义闹钟
+    public void removeCustomSchedule(CustomScheduler scheduler){
+        customSchedulers.remove(scheduler);
+    }
+
+    // 获取自定义闹钟新增编号
+    public int getIndexOfCustomScheduler(){
+        int num = 0;
+        for(; num < customSchedulers.size() + 1; num++){
+            boolean exist = false;
+            for (CustomScheduler customScheduler : customSchedulers) {
+                if (customScheduler.getNum() == num) {
+                    exist = true;
+                    break;
+                }
+            }
+            if(!exist){
+                break;
+            }
+        }
+        return num;
+    }
+
 
 
     public NodeInfo nodeInfo = null;

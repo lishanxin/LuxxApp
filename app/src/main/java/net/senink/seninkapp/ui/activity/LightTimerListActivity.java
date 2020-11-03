@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.model.CommonMeshCommand;
+import com.telink.sig.mesh.model.CustomScheduler;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.SigMeshModel;
 
@@ -84,6 +86,8 @@ public class LightTimerListActivity extends BaseActivity implements
     private SwipeMenuListView timerListView;
     // 列表组件的适配器
     private LightTimerAdater timerAdapter;
+    // Telink列表适配器
+    private TelinkLightTimerAdater telinkLightTimerAdater;
 
     private List<LightTimerItem> timerList;
 
@@ -93,8 +97,10 @@ public class LightTimerListActivity extends BaseActivity implements
     private PipaRequestData requestData;
     private boolean isTelink = false;
     private boolean isTelinkGroup = false;
+    private boolean isTelinkDevice = false;
     private int telinkAddress = 0;
     private int hslEleAdr;
+    private DeviceInfo telinkDevice;
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
@@ -148,12 +154,13 @@ public class LightTimerListActivity extends BaseActivity implements
                 infor = (PISxinColor) PISManager.getInstance().getPISObject(key);
                 inforDevice = infor.getDeviceObject();
             }
-            if (!isTelinkGroup && isTelink) {
-                DeviceInfo deviceInfo = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
-                if (deviceInfo == null){
+            isTelinkDevice = !isTelinkGroup && isTelink;
+            if (isTelinkDevice) {
+                telinkDevice = MyApplication.getInstance().getMesh().getDeviceByMeshAddress(telinkAddress);
+                if (telinkDevice == null){
                     finish();
                 }else{
-                    hslEleAdr = deviceInfo.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
+                    hslEleAdr = telinkDevice.getTargetEleAdr(SigMeshModel.SIG_MD_LIGHT_HSL_S.modelId);
                 }
             }else if(isTelinkGroup){
                 finish();
@@ -171,25 +178,32 @@ public class LightTimerListActivity extends BaseActivity implements
      * 更新列表信息
      */
     private void refreshTimers() {
-        //对timerList排序
-        timerList =inforDevice.getTimerList();
-        Collections.sort(timerList, new Comparator<LightTimerItem>() {
-            @Override
-            public int compare(LightTimerItem lhs, LightTimerItem rhs) {
-                return lhs.getTime() - rhs.getTime();
+        if(inforDevice != null){
+            //对timerList排序
+            timerList =inforDevice.getTimerList();
+            Collections.sort(timerList, new Comparator<LightTimerItem>() {
+                @Override
+                public int compare(LightTimerItem lhs, LightTimerItem rhs) {
+                    return lhs.getTime() - rhs.getTime();
 //                int t1 = lhs.getTime()%(3600*24);
 //                int t2 = rhs.getTime()%(3600*24);
 //                if (t1 > t2)
 //                    return 1;
 //                else
 //                    return 0;
-            }
-        });
+                }
+            });
 
-        if (timerAdapter == null)
-            timerAdapter = new LightTimerAdater();
-        timerListView.setAdapter(timerAdapter);
-        timerAdapter.notifyDataSetChanged();
+            if (timerAdapter == null)
+                timerAdapter = new LightTimerAdater();
+            timerListView.setAdapter(timerAdapter);
+            timerAdapter.notifyDataSetChanged();
+        }else if(isTelinkDevice){
+            if (telinkLightTimerAdater == null)
+                telinkLightTimerAdater = new TelinkLightTimerAdater(telinkDevice.getCustomSchedulers());
+            timerListView.setAdapter(telinkLightTimerAdater);
+            telinkLightTimerAdater.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -252,30 +266,38 @@ public class LightTimerListActivity extends BaseActivity implements
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu,
                                            int index) {
-                LightTimerItem ti = timerAdapter.getItem(position);
-                switch (index) {
-                    case 0: {//delete
-                        PipaRequest req = inforDevice.removeTimerItem(ti.getTimerId());
-                        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-                            @Override
-                            public void onRequestStart(PipaRequest req) {
-                                showLoadingDialog();
-                            }
-
-                            @Override
-                            public void onRequestResult(PipaRequest req) {
-                                hideLoadingDialog();
-                                if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED)
-                                    refreshTimers();
-                                else{
-                                    ToastUtils.showToast(LightTimerListActivity.this,
-                                            R.string.del_smart_fail);
+                if(inforDevice!= null){
+                    LightTimerItem ti = timerAdapter.getItem(position);
+                    switch (index) {
+                        case 0: {//delete
+                            PipaRequest req = inforDevice.removeTimerItem(ti.getTimerId());
+                            req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                                @Override
+                                public void onRequestStart(PipaRequest req) {
+                                    showLoadingDialog();
                                 }
-                            }
-                        });
-                        inforDevice.request(req);
-                    }
+
+                                @Override
+                                public void onRequestResult(PipaRequest req) {
+                                    hideLoadingDialog();
+                                    if (req.errorCode == PipaRequest.REQUEST_RESULT_SUCCESSED)
+                                        refreshTimers();
+                                    else{
+                                        ToastUtils.showToast(LightTimerListActivity.this,
+                                                R.string.del_smart_fail);
+                                    }
+                                }
+                            });
+                            inforDevice.request(req);
+                        }
                         break;
+                    }
+                }else if(isTelinkDevice && telinkDevice != null){
+                    CustomScheduler scheduler = telinkLightTimerAdater.getItem(position);
+                    telinkDevice.removeCustomSchedule(scheduler);
+                    scheduler.setEnable(false);
+                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, scheduler.getWholeCommand());
+                    refreshTimers();
                 }
                 return false;
             }
@@ -304,17 +326,32 @@ public class LightTimerListActivity extends BaseActivity implements
                 break;
             case R.id.title_add:
                 try {
-                    if (inforDevice == null || inforDevice.getTimerList().size() >= TIMER_MAX_COUNT){
-                        ToastUtils.showToast(LightTimerListActivity.this,
-                                R.string.addtimer_maximum_count);
-                        break;
+                    if(isTelinkDevice){
+                        if (telinkDevice == null || telinkDevice.getCustomSchedulers().size() >= TIMER_MAX_COUNT){
+                            ToastUtils.showToast(LightTimerListActivity.this,
+                                    R.string.addtimer_maximum_count);
+                            break;
+                        }
+                        Intent intent = new Intent(LightTimerListActivity.this, LightTimerAddActivity.class);
+                        intent.putExtra(TelinkApiManager.IS_TELINK_DEVICE_KEY, isTelinkDevice);
+                        intent.putExtra(TelinkApiManager.TELINK_ADDRESS, telinkAddress);
+                        intent.putExtra(MessageModel.ACTIVITY_MODE, 0);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_ADDTIMER);
+                        overridePendingTransition(R.anim.anim_in_from_right,
+                                R.anim.anim_out_to_left);
+                    }else{
+                        if (inforDevice == null || inforDevice.getTimerList().size() >= TIMER_MAX_COUNT){
+                            ToastUtils.showToast(LightTimerListActivity.this,
+                                    R.string.addtimer_maximum_count);
+                            break;
+                        }
+                        Intent intent = new Intent(LightTimerListActivity.this, LightTimerAddActivity.class);
+                        intent.putExtra(MessageModel.PISBASE_KEYSTR, infor.getPISKeyString());
+                        intent.putExtra(MessageModel.ACTIVITY_MODE, 0);
+                        startActivityForResult(intent, Constant.REQUEST_CODE_ADDTIMER);
+                        overridePendingTransition(R.anim.anim_in_from_right,
+                                R.anim.anim_out_to_left);
                     }
-                    Intent intent = new Intent(LightTimerListActivity.this, LightTimerAddActivity.class);
-                    intent.putExtra(MessageModel.PISBASE_KEYSTR, infor.getPISKeyString());
-                    intent.putExtra(MessageModel.ACTIVITY_MODE, 0);
-                    startActivityForResult(intent, Constant.REQUEST_CODE_ADDTIMER);
-                    overridePendingTransition(R.anim.anim_in_from_right,
-                            R.anim.anim_out_to_left);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
@@ -329,45 +366,50 @@ public class LightTimerListActivity extends BaseActivity implements
     protected void onResume() {
         super.onResume();
 
-        if (inforDevice.getTimerList() != null) {
-            refreshTimers();
+        if(infor != null && inforDevice != null){
+            if (inforDevice.getTimerList() != null) {
+                refreshTimers();
+            }
+
+            PipaRequest req = inforDevice.fecthTimerCount();
+            req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                @Override
+                public void onRequestStart(PipaRequest req) {
+
+                }
+
+                @Override
+                public void onRequestResult(PipaRequest req) {
+                    if (req.errorCode != PipaRequest.REQUEST_RESULT_SUCCESSED)
+                        return;
+                    List<LightTimerItem> tls = inforDevice.getTimerList();
+                    for (LightTimerItem ti : tls){
+                        PipaRequest tiReq = inforDevice.fecthTimer(ti.getTimerId());
+                        tiReq.setRetry(2);
+                        tiReq.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
+                            @Override
+                            public void onRequestStart(PipaRequest req) {
+
+                            }
+
+                            @Override
+                            public void onRequestResult(PipaRequest req) {
+                                if (req.errorCode != PipaRequest.REQUEST_RESULT_SUCCESSED)
+                                    return;
+//                            timerList = new ArrayList<>(inforDevice.getTimerList());
+                                refreshTimers();
+                            }
+                        });
+                        inforDevice.request(tiReq);
+                    }
+                }
+            });
+            inforDevice.request(req);
         }
 
-        PipaRequest req = inforDevice.fecthTimerCount();
-        req.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-            @Override
-            public void onRequestStart(PipaRequest req) {
-
-            }
-
-            @Override
-            public void onRequestResult(PipaRequest req) {
-                if (req.errorCode != PipaRequest.REQUEST_RESULT_SUCCESSED)
-                    return;
-                List<LightTimerItem> tls = inforDevice.getTimerList();
-                for (LightTimerItem ti : tls){
-                    PipaRequest tiReq = inforDevice.fecthTimer(ti.getTimerId());
-                    tiReq.setRetry(2);
-                    tiReq.setOnPipaRequestStatusListener(new PipaRequest.OnPipaRequestStatusListener() {
-                        @Override
-                        public void onRequestStart(PipaRequest req) {
-
-                        }
-
-                        @Override
-                        public void onRequestResult(PipaRequest req) {
-                            if (req.errorCode != PipaRequest.REQUEST_RESULT_SUCCESSED)
-                                return;
-//                            timerList = new ArrayList<>(inforDevice.getTimerList());
-                            refreshTimers();
-                        }
-                    });
-                    inforDevice.request(tiReq);
-                }
-            }
-        });
-        inforDevice.request(req);
-
+        if(isTelinkDevice){
+            refreshTimers();
+        }
     }
 
     @Override
@@ -547,5 +589,108 @@ public class LightTimerListActivity extends BaseActivity implements
             TextView repeatTv;
         }
     }
+
+    public class TelinkLightTimerAdater extends BaseAdapter {
+        private List<CustomScheduler> schedulers;
+        public TelinkLightTimerAdater(List<CustomScheduler> data) {
+            schedulers = data;
+        }
+
+        @Override
+        public int getCount() {
+            if (null == schedulers) {
+               return 0;
+            }
+
+            return schedulers.size();
+        }
+
+        @Override
+        public CustomScheduler getItem(int position) {
+            return schedulers.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        public void removeItem(CustomScheduler ti) {
+            schedulers.remove(ti);
+            notifyDataSetChanged();
+        }
+
+        private int[] effectResid = { R.string.effect_sunrise,
+                R.string.effect_breath,
+                R.string.effect_random,
+                R.string.effect_spa
+                };
+        @SuppressLint("InflateParams")
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Holder holder;
+            CustomScheduler ti = getItem(position);
+            if (convertView == null) {
+                holder = new Holder();
+                convertView = LayoutInflater.from(LightTimerListActivity.this)
+                        .inflate(R.layout.item_lighttimer, null);
+                holder.actionTv = (TextView) convertView.findViewById(R.id.timer_action);
+                holder.timeTv = (TextView) convertView.findViewById(R.id.timer_time);
+                holder.repeatTv = (TextView) convertView.findViewById(R.id.timer_repeat);
+                convertView.setTag(holder);
+            } else {
+                holder = (Holder) convertView.getTag();
+            }
+            try {
+                holder.timeTv.setText(ti.getHours() + ":" + ti.getMinutes());
+                if (ti.getMode() == CustomScheduler.CYCLE_NONE)
+                    holder.repeatTv.setText(R.string.repeat_once);
+                else
+                    holder.repeatTv.setText(R.string.repeat_day);
+
+                holder.actionTv.setBackgroundColor(Color.TRANSPARENT);
+                holder.actionTv.setText("");
+                byte[] action = ti.getAction();
+                switch(action[0]){
+                    case CommonMeshCommand.TWINKLE_CMD:{
+                        int effectMode = action[1];
+                        int actionResid= effectResid[effectMode];
+                        holder.actionTv.setText(actionResid);
+                    }
+                    break;
+                    case CommonMeshCommand.ON_OFF_SET:{
+                        int onoff = action[1];
+                        int actionResid;
+                        if (onoff == 0){
+                            actionResid = R.string.close;
+                        }else
+                            actionResid = R.string.open;
+                        holder.actionTv.setText(actionResid);
+                    }
+                    break;
+                    case CommonMeshCommand.BIBOO_CMD_RGB_SET:{
+
+                        int currentColor = Color.rgb((action[1] & 0xFF),
+                                (action[2] & 0xFF),
+                                (action[3]) & 0xFF);
+                        holder.actionTv.setBackgroundColor(currentColor);
+                    }
+                    break;
+                    default:
+                        break;
+                }
+            }catch (Exception e){
+                PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
+            }
+            return convertView;
+        }
+
+        public class Holder {
+            TextView actionTv;
+            TextView timeTv;
+            TextView repeatTv;
+        }
+    }
+
 
 }

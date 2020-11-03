@@ -182,6 +182,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
     private int hslEleAdr;
 //    private List<Integer> onOffEleAdrList;
     protected final  static int MSG_TELINK_CANDLE = 2091;
+    private byte[] lastTelinkAction = new byte[4];
     @SuppressLint("HandlerLeak")
     protected final Handler mHandler = new Handler() {
         @Override
@@ -357,10 +358,13 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 setPisColor(colors, isScened, currentWhite);
             }
             if (mCurrentRGBWMode == LIGHT_MODE_WHITE) {
-                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getYellowCommand((currentWhite / RGBConfigUtils.MAX_VALUE)));
+                byte[] command = CommonMeshCommand.getYellowCommand((currentWhite / RGBConfigUtils.MAX_VALUE));
+                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+                setTelinkTimerByteAction(command);
             } else {
-                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getRGBCommand(colors[0], colors[1], colors[2]));
-//                TelinkApiManager.getInstance().setDevicesColor(hslEleAdr, colors);
+                byte[] command = CommonMeshCommand.getRGBCommand(colors[0], colors[1], colors[2]);
+                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+                setTelinkTimerByteAction(command);
             }
         } else {
             setPisColor(colors, isScened, currentWhite);
@@ -685,10 +689,13 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
                 if (buttonView.isPressed()) {
                     if (isTelink) {
-                        TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
-                        if(isChecked){
-                            mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
-                        }
+                        byte[] command = CommonMeshCommand.getOnOffCommand(isChecked);
+                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+                        setTelinkTimerByteAction(command);
+                        // Todo 测试 待确认是否需要屏蔽这个代码
+//                        if(isChecked){
+//                            mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
+//                        }
                     }
                     if (infor == null) return;
 //                    PipaRequest req = infor.commitCandleLight(isChecked);
@@ -1038,38 +1045,47 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 break;
             case R.id.light_scene1_layout:
                 setEffectMode(0);
-                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getTwinkleCommand(CommonMeshCommand.EFFECT_SPA_MODE));
+                setTelinkTwinkleCommand(CommonMeshCommand.EFFECT_SPA_MODE);
                 break;
             case R.id.light_scene2_layout:
                 setEffectMode(1);
-                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getTwinkleCommand(CommonMeshCommand.EFFECT_SUNRICE_MODE));
+                setTelinkTwinkleCommand(CommonMeshCommand.EFFECT_SUNRICE_MODE);
                 break;
             case R.id.light_scene3_layout:
                 setEffectMode(2);
-                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getTwinkleCommand(CommonMeshCommand.EFFECT_BREATHING_MODE));
+                setTelinkTwinkleCommand(CommonMeshCommand.EFFECT_BREATHING_MODE);
                 break;
 
             case R.id.light_scene4_layout:
-                TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getTwinkleCommand(CommonMeshCommand.EFFECT_RANDOM_MODE));
+                setTelinkTwinkleCommand(CommonMeshCommand.EFFECT_RANDOM_MODE);
                 setEffectMode(3);
                 break;
             case R.id.light_scene5_layout:
                 try {
                     if (activityMode == Constant.REQUEST_CODE_TIMER_ACTION)
                         break;
-                    intent = new Intent(LightRGBDetailActivity.this,
-                            LightTimerListActivity.class);
-                    intent.putExtra(MessageModel.PISBASE_KEYSTR,
-                            infor.getPISKeyString());
-//                    intent.putExtra(TelinkApiManager.IS_TELINK_KEY,
-//                            isTelink);
-//                    intent.putExtra(TelinkApiManager.IS_TELINK_GROUP_KEY,
-//                            isTelinkGroup);
-//                    intent.putExtra(TelinkApiManager.TELINK_ADDRESS,
-//                            telinkAddress);
-                    startActivityForResult(intent, REQUEST_CODE_TIMER);
-                    overridePendingTransition(R.anim.anim_in_from_right,
-                            R.anim.anim_out_to_left);
+                    if(isTelink && !isTelinkGroup){
+                        intent = new Intent(LightRGBDetailActivity.this,
+                                LightTimerListActivity.class);
+                        intent.putExtra(TelinkApiManager.IS_TELINK_KEY,
+                                isTelink);
+                        intent.putExtra(TelinkApiManager.IS_TELINK_GROUP_KEY,
+                                isTelinkGroup);
+                        intent.putExtra(TelinkApiManager.TELINK_ADDRESS,
+                                telinkAddress);
+                        startActivityForResult(intent, REQUEST_CODE_TIMER);
+                        overridePendingTransition(R.anim.anim_in_from_right,
+                                R.anim.anim_out_to_left);
+                    }else if(infor != null){
+                        intent = new Intent(LightRGBDetailActivity.this,
+                                LightTimerListActivity.class);
+                        intent.putExtra(MessageModel.PISBASE_KEYSTR,
+                                infor.getPISKeyString());
+                        startActivityForResult(intent, REQUEST_CODE_TIMER);
+                        overridePendingTransition(R.anim.anim_in_from_right,
+                                R.anim.anim_out_to_left);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1078,7 +1094,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 candle_onoff = !candle_onoff;
                 if (switcher.isChecked()) {
                     switcher.setChecked(false);
-                    TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, false);
+                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getOnOffCommand(false));
                     mHandler.sendEmptyMessageDelayed(MSG_TELINK_CANDLE, 2000);
                     if (infor == null) return;
                     PipaRequest req = infor.commitLightOnOff(false);
@@ -1115,7 +1131,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
             case R.id.light_effects:
                 if (isTelink) {
                     isVoiceOn = !isVoiceOn;
-                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getVoiceOnOffCommand(isVoiceOn));
+                    byte[] command = CommonMeshCommand.getVoiceOnOffCommand(isVoiceOn);
+                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+                    setTelinkTimerByteAction(command);
                     if (infor == null) return;
                 }
 //                intent = new Intent(LightRGBDetailActivity.this,
@@ -1176,6 +1194,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 break;
         }
     }
+
+
 
     private void setCandle(boolean isOn)        // NextApp.tw
     {
@@ -1424,6 +1444,18 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 e.printStackTrace();
             }
         }
+
+        if(isTelink && !isTelinkGroup){
+            try {
+                Intent intent = new Intent();
+                intent.putExtra(TelinkApiManager.TELINK_Timer_Action_Data, lastTelinkAction);
+                setResult(RESULT_OK, intent);
+                finish();
+//                ToastUtils.showToast(this, R.string.scene_detail_save_success);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -1549,6 +1581,18 @@ public class LightRGBDetailActivity extends BaseActivity implements
     }
 
 
+    private void setTelinkTimerByteAction(byte[] command){
+        if (activityMode == Constant.REQUEST_CODE_TIMER_ACTION) {
+            saveBtn.setVisibility(View.VISIBLE);
+            System.arraycopy(command, 2, lastTelinkAction, 0, lastTelinkAction.length);
+        }
+    }
+
+    private void setTelinkTwinkleCommand(int effectMode) {
+        byte[] command = CommonMeshCommand.getTwinkleCommand(effectMode);
+        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+        setTelinkTimerByteAction(command);
+    }
     /**
      * 移除开关设置超时的消息
      */

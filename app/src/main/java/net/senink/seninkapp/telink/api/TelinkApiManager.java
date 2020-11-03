@@ -96,8 +96,10 @@ public class TelinkApiManager implements EventListener<String> {
     private boolean isAutoBind = false;
     private boolean stopScan;
     public static final String IS_TELINK_KEY = "isTelinkKey";
+    public static final String IS_TELINK_DEVICE_KEY = "isTelinkDeviceKey";
     public static final String IS_TELINK_GROUP_KEY = "isTelinkGroup";
     public static final String TELINK_ADDRESS = "TELINKADDRESS";
+    public static final String TELINK_Timer_Action_Data = "telink_timer_action_data";
 
     private static Date expiredTime;
 
@@ -575,21 +577,6 @@ public class TelinkApiManager implements EventListener<String> {
         return null;
     }
 
-    // 设置设备颜色
-    public void setDevicesColor(int hslEleAdr, int[] rgbColor) {
-        int red = rgbColor[0];
-        int green = rgbColor[1];
-        int blue = rgbColor[2];
-        int color = 0xFF000000 | ((red & 0xFF) << 16) | ((green & 0xFF) << 8) | (blue & 0xFF);
-
-        float[] hslValue = new float[3];
-        ColorUtils.colorToHSL(color, hslValue);
-        MeshService.getInstance().setHSL(hslEleAdr, (int) (hslValue[0] * 65535 / 360),
-                (int) (hslValue[1] * 65535),
-                (int) (hslValue[2] * 65535),
-                false, 0, 0, (byte) 0, null);
-    }
-
     public void setCommonCommand(int hslEleAdr, byte[] command) {
         MeshService.getInstance().setCommonCommand(hslEleAdr,
                 false, command);
@@ -602,6 +589,7 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
     // 灯具开关
+    @Deprecated
     public void setSwitchLightOnOff(int hslEleAdr, boolean isOn) {
         if(MeshService.getInstance() != null){
             MeshService.getInstance().setOnOff(hslEleAdr, (byte) (isOn ? 1 : 0), !AppSettings.ONLINE_STATUS_ENABLE, !AppSettings.ONLINE_STATUS_ENABLE ? 1 : 0, 0, (byte) 0, null);
