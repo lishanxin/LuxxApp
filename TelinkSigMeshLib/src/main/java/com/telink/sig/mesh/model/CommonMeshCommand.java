@@ -127,7 +127,7 @@ public class CommonMeshCommand {
         result[index++] = defaultPre[0];
         result[index++] = defaultPre[1];
         result[index++] = (byte) SYNC_TIME_CMD;
-        String time16 = X64Trans.DeciamlToThirtySix((System.currentTimeMillis() + 8 * 3600 * 1000) / 1000, 16);
+        String time16 = X64Trans.DeciamlToThirtySix((System.currentTimeMillis()) / 1000, 16);
         ;
         String timeFormat = String.format("%8s", time16).replace(" ", "0");
         result[index++] = (byte) (int) Integer.valueOf(timeFormat.substring(0, 2), 16);
@@ -165,7 +165,6 @@ public class CommonMeshCommand {
         result[index++] = (byte) (hours);
         result[index++] = (byte) (minutes);
         for (int i = 0; i < command.length; i++) {
-            if (i < 3) continue;
             result[index++] = (byte) (command[i]);
         }
         return result;

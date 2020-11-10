@@ -1553,6 +1553,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
         }
     }
 
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

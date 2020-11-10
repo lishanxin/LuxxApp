@@ -146,7 +146,6 @@ public class LightTimerAddActivity extends BaseActivity implements
                 case MSG_TELINK_TIMER_MODIFY_EXE:
                     if(telinkScheduleWholeCommand != null){
                         TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, telinkScheduleWholeCommand);
-                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, telinkScheduleWholeCommand);
                         finish();
                     }
                     break;
@@ -170,7 +169,7 @@ public class LightTimerAddActivity extends BaseActivity implements
         super.onStop();
         //设置完毕定时器，关闭灯光
         if(isTelinkDevice){
-            TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getOnOffCommand(false));
+//            TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getOnOffCommand(false));
         }else{
             if (lastRequestData != null){
                 infor.request(infor.commitLightOnOff(false));

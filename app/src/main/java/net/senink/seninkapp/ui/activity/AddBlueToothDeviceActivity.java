@@ -72,6 +72,7 @@ import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
 import net.senink.seninkapp.telink.model.Mesh;
 import net.senink.seninkapp.telink.model.ProvisioningDevice;
+import net.senink.seninkapp.telink.model.TelinkOperation;
 import net.senink.seninkapp.telink.view.DeviceProvisionListAdapter;
 import net.senink.seninkapp.ui.entity.BlueToothBubble;
 import net.senink.seninkapp.ui.home.HomeActivity;
@@ -84,6 +85,9 @@ import net.senink.piservice.pinm.PINMoBLE.MeshController;
 import net.senink.piservice.pis.PISMCSManager;
 import net.senink.piservice.pis.PISManager;
 import net.senink.piservice.pis.PipaRequest;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * 用于添加不同类型的设备
@@ -156,6 +160,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     // Telink自动绑定标记
     public static final String TelinkAutoConnectKey = "autoTelinkConnect";
     private boolean isTelinkAutoConnect = false;
+    private boolean isOnBindingGroup = false;
 
     private PISManager manger;
     private PISMCSManager mcm;
@@ -173,10 +178,13 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     private Runnable checkTelinkAutoConnectRunnable = new Runnable() {
         @Override
         public void run() {
-            if(SystemClock.elapsedRealtime() - lastTelinkStatusUpdateTime > 15 * 1000){
+            if(isOnBindingGroup){
+                lastTelinkStatusUpdateTime = SystemClock.elapsedRealtime();
+                mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
+            }else if(SystemClock.elapsedRealtime() - lastTelinkStatusUpdateTime > 15 * 1000){
                 // 超过15秒就自动退出
                 ToastUtils.showToast(getApplicationContext(),
-                        R.string.finish_bind_telink);
+                        R.string.addbubble_step2_tip);
                 backBtn.performClick();
             }else{
                 mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
@@ -258,12 +266,8 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                     if(isTelinkAutoConnect){
                         DeviceInfo bindTelinkDevice = (DeviceInfo) msg.obj;
                         if(autoConnectGroup != null){
-                            TelinkGroupApiManager.getInstance().addDeviceToGroup(autoConnectGroup.address, bindTelinkDevice.meshAddress, new TelinkGroupApiManager.AddDeviceToGroupSucceedCallback() {
-                                @Override
-                                public void onAddDeviceToGroupSucceed() {
-                                    TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
-                                }
-                            });
+                            isOnBindingGroup = true;
+                            TelinkGroupApiManager.getInstance().addDeviceToGroup(autoConnectGroup.address, bindTelinkDevice.meshAddress);
                         }
                     }
                     break;
@@ -465,6 +469,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addbubble);
+        EventBus.getDefault().register(this);
         controller = MeshController.getInstance(this);
         manger = PISManager.getInstance();
 //		threadPool = Executors.newFixedThreadPool(1);
@@ -843,9 +848,20 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
             controller.setonFeedbackListener(null);
         }
     }
-
+    @Subscribe
+    public void listenTelinkDeviceAddToGroup(TelinkOperation operation){
+        if(isTelinkAutoConnect){
+            if(operation.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_FAIL){
+                showTelinkAutoConnectErrorAlert();
+            }else if(operation.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_SUCCEED){
+                TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+                isOnBindingGroup = false;
+            }
+        }
+    }
     @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
         clearData();
         TelinkApiManager.getInstance().stopScan();
