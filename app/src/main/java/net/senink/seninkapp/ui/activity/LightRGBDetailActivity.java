@@ -689,13 +689,14 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
                 if (buttonView.isPressed()) {
                     if (isTelink) {
-                        byte[] command = CommonMeshCommand.getOnOffCommand(isChecked);
-                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
-                        setTelinkTimerByteAction(command);
+//                        byte[] command = CommonMeshCommand.getOnOffCommand(isChecked);
+//                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+//                        setTelinkTimerByteAction(command);
                         // Todo 测试 待确认是否需要屏蔽这个代码
-//                        if(isChecked){
-//                            mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
-//                        }
+                        TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
+                        if(isChecked){
+                            mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
+                        }
                     }
                     if (infor == null) return;
 //                    PipaRequest req = infor.commitCandleLight(isChecked);
@@ -1094,7 +1095,8 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 candle_onoff = !candle_onoff;
                 if (switcher.isChecked()) {
                     switcher.setChecked(false);
-                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getOnOffCommand(false));
+                    TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, false);
+//                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getOnOffCommand(false));
                     mHandler.sendEmptyMessageDelayed(MSG_TELINK_CANDLE, 2000);
                     if (infor == null) return;
                     PipaRequest req = infor.commitLightOnOff(false);

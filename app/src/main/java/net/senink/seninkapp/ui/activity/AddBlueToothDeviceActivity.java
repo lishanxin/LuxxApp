@@ -6,13 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -35,8 +32,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
-import com.telink.sig.mesh.ble.AdvertisingDevice;
-import com.telink.sig.mesh.ble.UnprovisionedDevice;
 import com.telink.sig.mesh.event.CommandEvent;
 import com.telink.sig.mesh.event.Event;
 import com.telink.sig.mesh.event.EventListener;
@@ -44,21 +39,13 @@ import com.telink.sig.mesh.event.MeshEvent;
 import com.telink.sig.mesh.event.NotificationEvent;
 import com.telink.sig.mesh.event.ScanEvent;
 import com.telink.sig.mesh.light.MeshService;
-import com.telink.sig.mesh.light.ProvisionDataGenerator;
-import com.telink.sig.mesh.light.PublicationStatusParser;
-import com.telink.sig.mesh.light.ScanParameters;
-import com.telink.sig.mesh.light.parameter.ProvisionParameters;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
-import com.telink.sig.mesh.model.NotificationInfo;
-import com.telink.sig.mesh.util.TelinkLog;
 
-import net.senink.piservice.PISConstantDefine;
 import net.senink.piservice.http.HttpDeviceInfo;
 import net.senink.piservice.http.HttpRequest;
 import net.senink.piservice.http.PISHttpManager;
 import net.senink.piservice.pinm.PINMoBLE.interfaces.AssociationListener;
-import net.senink.piservice.pinm.PINMoBLE.interfaces.BlueToothLightListener;
 import net.senink.piservice.pis.PISBase;
 import net.senink.piservice.util.ByteUtilBigEndian;
 import net.senink.seninkapp.BaseActivity;
@@ -67,16 +54,11 @@ import net.senink.seninkapp.R;
 import net.senink.seninkapp.adapter.BlueLightAdapter;
 
 //import net.senink.seninkapp.interfaces.AssociationListener;
-import net.senink.seninkapp.telink.AppSettings;
 import net.senink.seninkapp.telink.api.TelinkApiManager;
 import net.senink.seninkapp.telink.api.TelinkGroupApiManager;
-import net.senink.seninkapp.telink.model.Mesh;
-import net.senink.seninkapp.telink.model.ProvisioningDevice;
 import net.senink.seninkapp.telink.model.TelinkOperation;
 import net.senink.seninkapp.telink.view.DeviceProvisionListAdapter;
 import net.senink.seninkapp.ui.entity.BlueToothBubble;
-import net.senink.seninkapp.ui.home.HomeActivity;
-import net.senink.seninkapp.ui.util.HttpUtils;
 import net.senink.seninkapp.ui.util.LogUtils;
 import net.senink.seninkapp.ui.util.ToastUtils;
 import net.senink.seninkapp.ui.view.StepsView;
@@ -481,11 +463,13 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         setData();
         initView();
         setListener();
-        TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
 
         if(isTelinkAutoConnect){
             refreshLastTelinkStatusUpdateTime();
             mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
+            TelinkApiManager.getInstance().startAutoBindOnCreate(mHandler);
+        }else{
+            TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
         }
     }
 

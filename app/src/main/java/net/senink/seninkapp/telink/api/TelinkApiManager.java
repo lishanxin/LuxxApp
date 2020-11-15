@@ -1,15 +1,11 @@
 package net.senink.seninkapp.telink.api;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.os.ParcelUuid;
-import android.support.v4.graphics.ColorUtils;
-import android.util.Log;
 
 import com.telink.sig.mesh.ble.AdvertisingDevice;
 import com.telink.sig.mesh.ble.MeshScanRecord;
@@ -23,7 +19,6 @@ import com.telink.sig.mesh.event.ScanEvent;
 import com.telink.sig.mesh.light.LeBluetooth;
 import com.telink.sig.mesh.light.MeshController;
 import com.telink.sig.mesh.light.MeshService;
-import com.telink.sig.mesh.light.Opcode;
 import com.telink.sig.mesh.light.ProvisionDataGenerator;
 import com.telink.sig.mesh.light.PublicationStatusParser;
 import com.telink.sig.mesh.light.ScanParameters;
@@ -34,21 +29,15 @@ import com.telink.sig.mesh.light.parameter.ProvisionParameters;
 import com.telink.sig.mesh.model.CommonMeshCommand;
 import com.telink.sig.mesh.model.DeviceBindState;
 import com.telink.sig.mesh.model.DeviceInfo;
-import com.telink.sig.mesh.model.Group;
-import com.telink.sig.mesh.model.MeshCommand;
 import com.telink.sig.mesh.model.NodeInfo;
 import com.telink.sig.mesh.model.NotificationInfo;
 import com.telink.sig.mesh.model.PublishModel;
 import com.telink.sig.mesh.model.SigMeshModel;
-import com.telink.sig.mesh.model.message.HSLMessage;
-import com.telink.sig.mesh.model.message.TransitionTime;
 import com.telink.sig.mesh.model.message.config.PubSetMessage;
-import com.telink.sig.mesh.util.Arrays;
 import com.telink.sig.mesh.util.MeshUtils;
 import com.telink.sig.mesh.util.TelinkLog;
 import com.telink.sig.mesh.util.UnitConvert;
 
-import net.senink.piservice.pinm.PinmInterface;
 import net.senink.seninkapp.MyApplication;
 import net.senink.seninkapp.telink.AppSettings;
 import net.senink.seninkapp.telink.SharedPreferenceHelper;
@@ -67,12 +56,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * @author: Li Shanxin
@@ -94,7 +81,7 @@ public class TelinkApiManager implements EventListener<String> {
     private Handler delayedHandler = new Handler();
     private Handler addDeviceActivityHandler = null;
     private boolean isAutoBind = false;
-    private boolean stopScan;
+    private boolean isStopScan;
     public static final String IS_TELINK_KEY = "isTelinkKey";
     public static final String IS_TELINK_DEVICE_KEY = "isTelinkDeviceKey";
     public static final String IS_TELINK_GROUP_KEY = "isTelinkGroup";
@@ -102,6 +89,8 @@ public class TelinkApiManager implements EventListener<String> {
     public static final String TELINK_Timer_Action_Data = "telink_timer_action_data";
 
     private static Date expiredTime;
+
+    private ProvisioningDevice tempFoundDevice;
 
     public static TelinkApiManager getInstance() {
         if (instance == null) {
@@ -176,9 +165,7 @@ public class TelinkApiManager implements EventListener<String> {
         MyApplication.getInstance().addEventListener(MeshEvent.EVENT_TYPE_KEY_BIND_FAIL, this);
         MyApplication.getInstance().addEventListener(ScanEvent.DEVICE_FOUND, this);
         MyApplication.getInstance().addEventListener(ScanEvent.SCAN_TIMEOUT, this);
-
     }
-
 
     @Override
     public void performed(Event<String> event) {
@@ -199,7 +186,7 @@ public class TelinkApiManager implements EventListener<String> {
                 break;
             case ScanEvent.SCAN_TIMEOUT:
                 if(devices != null && devices.size() > 0) return;
-                if(stopScan) return;
+                if(isStopScan) return;
                 _startScanTelink();
                 break;
             case MeshEvent.EVENT_TYPE_PROVISION_SUCCESS:
@@ -251,7 +238,8 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
     public void stopScan(){
-        this.stopScan = true;
+        MeshService.getInstance().stopScan();
+        this.isStopScan = true;
     }
 
     public void sendTimeStatus() {
@@ -269,6 +257,7 @@ public class TelinkApiManager implements EventListener<String> {
 
 
     private void onDeviceFound(AdvertisingDevice device) {
+        EventBus.getDefault().post(new TelinkOperation(TelinkOperation.DEVICE_FOUND));
         EventBus.getDefault().post(new TelinkDataRefreshEntry(true));
         if (mesh == null) {
             mesh = MyApplication.getInstance().getMesh();
@@ -295,7 +284,7 @@ public class TelinkApiManager implements EventListener<String> {
         byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
         ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, targetDevice);
 //        MeshService.getInstance().startProvision(parameters);
-
+        tempFoundDevice = pvDevice;
         if(this.isAutoBind){
             startProvision(parameters);
         }
@@ -312,11 +301,12 @@ public class TelinkApiManager implements EventListener<String> {
     /**
      * 绑定蓝牙
      *
-     * @param device  pvDevice.advertisingDevice
-     * @param address pvDevice.unicastAddress
      */
-    private void bindBlue(AdvertisingDevice device, int address) {
-        stopScan = true;
+    private void bindBlue(ProvisioningDevice proDevice){
+        if (proDevice == null) return;
+        AdvertisingDevice device = proDevice.advertisingDevice;
+        int address = proDevice.unicastAddress;
+        isStopScan = true;
         targetDevice = new UnprovisionedDevice(device, address);
         byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
         ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, new UnprovisionedDevice(device, address));
@@ -331,8 +321,7 @@ public class TelinkApiManager implements EventListener<String> {
             public void onItemClick(int position) {
                 if (devices == null || position >= devices.size()) return;
                 ProvisioningDevice device = devices.get(position);
-                if (device == null) return;
-                bindBlue(device.advertisingDevice, device.unicastAddress);
+                bindBlue(device);
             }
         });
         return this.mListAdapter;
@@ -341,7 +330,7 @@ public class TelinkApiManager implements EventListener<String> {
     private int timeout = 7 * 1000;
     private void _startScanTelink(){
         delayedHandler.removeCallbacks(recyclerScan);
-        if(stopScan){
+        if(isStopScan){
             return;
         }
         delayedHandler.postDelayed(recyclerScan, timeout);
@@ -363,14 +352,22 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
     public void startScanTelink(boolean isAutoBind, Handler handler) {
+        tempFoundDevice = null;
         this.isAutoBind = isAutoBind;
         addDeviceActivityHandler = handler;
         startScanTelink();
     }
 
+    public void startAutoBindOnCreate(Handler handler){
+        this.isAutoBind = true;
+        addDeviceActivityHandler = handler;
+        addDeviceActivityHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_LINE_INIT);
+        bindBlue(tempFoundDevice);
+    }
+
     // 扫描蓝牙
     public void startScanTelink() {
-        stopScan = false;
+        isStopScan = false;
         TelinkApiManager.getInstance().clearFoundDevice();
         boundDevices = new ArrayList<>();
         for (DeviceInfo boundDevice : MyApplication.getInstance().getMesh().devices) {
@@ -545,7 +542,7 @@ public class TelinkApiManager implements EventListener<String> {
     private Runnable recyclerScan = new Runnable() {
         @Override
         public void run() {
-            if(!stopScan && devices.size() == 0){
+            if(!isStopScan && devices.size() == 0){
                 _startScanTelink();
             }
         }

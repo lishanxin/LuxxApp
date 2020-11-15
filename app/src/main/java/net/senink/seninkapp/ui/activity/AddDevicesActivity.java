@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +26,13 @@ import net.senink.seninkapp.R;
 //import com.senink.seninkapp.core.PISMCSManager;
 //import com.senink.seninkapp.core.PISManager;
 //import com.senink.seninkapp.crmesh.MeshController;
+import net.senink.seninkapp.telink.api.TelinkApiManager;
+import net.senink.seninkapp.telink.model.TelinkOperation;
 import net.senink.seninkapp.ui.constant.ProductClassifyInfo;
 import net.senink.seninkapp.ui.util.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +52,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 
 	private ImageButton ibDevice;
 	private ImageButton ibGroup;
+	private ViewGroup ibDeviceAutoContainer;
 	private RelativeLayout rlPage;
 
 //	private ListView newDeviceListView;
@@ -56,11 +64,13 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 	private PISMCSManager mcm;
 	private PISManager manager;
 
+	private final static int NEW_TELINK_DEVICE_FOUND = 0X01;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		try {
 			super.onCreate(savedInstanceState);
-
+			EventBus.getDefault().register(this);
 			setContentView(R.layout.activity_new_device);
 			manager = PISManager.getInstance();
 			mcm = manager.getMCSObject();
@@ -71,6 +81,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 
 			ibDevice = (ImageButton) findViewById(R.id.new_light);
 			ibGroup = (ImageButton) findViewById(R.id.new_group);
+			ibDeviceAutoContainer = (ViewGroup) findViewById(R.id.new_light_auto_container);
 
 			rlPage = (RelativeLayout) findViewById(R.id.activity_new_device);
 
@@ -103,6 +114,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 //					addGroups(0x13, 0x03);
 //				}
 //			});
+			TelinkApiManager.getInstance().startScanTelink();
 
 		}catch (Exception e){
 			PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
@@ -112,6 +124,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		TelinkApiManager.getInstance().stopScan();
 		overridePendingTransition(R.anim.anim_in_from_left,
 				R.anim.anim_out_to_right);
 	}
@@ -133,6 +146,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 				}
 			}
 				break;
+			// TODO LEE 自动添加灯
 			case R.id.new_light_auto:{
 				Intent intent = new Intent(AddDevicesActivity.this,
 						AddBlueToothDeviceActivity.class);
@@ -156,6 +170,13 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 				overridePendingTransition(R.anim.anim_in_from_left,
 						R.anim.anim_out_to_right);
 				break;
+		}
+	}
+
+	@Subscribe
+	public void onTelinkDeviceFound(TelinkOperation operation){
+		if(operation.getOpr() == TelinkOperation.DEVICE_FOUND){
+			ibDeviceAutoContainer.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -186,6 +207,12 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 		}catch (Exception e){
 			PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		EventBus.getDefault().unregister(this);
+		super.onDestroy();
 	}
 
 	public class NewDeviceListAdapter extends BaseAdapter {

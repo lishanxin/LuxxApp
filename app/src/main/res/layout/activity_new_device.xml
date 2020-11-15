@@ -39,6 +39,8 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/new_light_auto_container"
+        android:visibility="gone"
         android:orientation="vertical"
         android:layout_marginTop="40dp"
         android:layout_marginLeft="39dp"

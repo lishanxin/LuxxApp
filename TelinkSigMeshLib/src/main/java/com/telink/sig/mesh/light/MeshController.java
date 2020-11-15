@@ -772,6 +772,10 @@ public class MeshController {
         LeBluetooth.getInstance().stopScan();
     }
 
+    public void stopScanManual(){
+        stopScan();
+    }
+
     private void startScan() {
         saveLog("start scan check");
         stopScan();
