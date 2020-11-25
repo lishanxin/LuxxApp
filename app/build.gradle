@@ -30,7 +30,7 @@ android {
         targetSdkVersion 26
         versionCode 1200
         //*** 项目设置了限时，若最终交付，需把限时取消 ***
-        versionName "1.61"
+        versionName "1.64"
         multiDexEnabled true
         buildConfigField "boolean", "Release", "false"
 

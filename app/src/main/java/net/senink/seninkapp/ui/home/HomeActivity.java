@@ -477,7 +477,7 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 			PgyCrashManager.reportCaughtException(HomeActivity.this, e);
 		}
 		if (!LeBluetooth.getInstance().isEnabled()) {
-			showBleOpenDialog();
+			LeBluetooth.getInstance().enable(HomeActivity.this);
 		}
 
 		reconnectTelink();
@@ -492,30 +492,6 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 			TelinkLog.d("main resume -- service created: " + isServiceCreated);
 		}
 
-	}
-
-	android.support.v7.app.AlertDialog.Builder mDialogBuilder;
-
-	private void showBleOpenDialog() {
-		if (mDialogBuilder == null) {
-			mDialogBuilder = new android.support.v7.app.AlertDialog.Builder(this);
-			mDialogBuilder.setCancelable(false);
-			mDialogBuilder.setMessage("Enable Bluetooth!");
-			mDialogBuilder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					finish();
-				}
-			});
-			mDialogBuilder.setPositiveButton("enable", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					LeBluetooth.getInstance().enable(HomeActivity.this);
-				}
-			});
-		}
-
-		mDialogBuilder.show();
 	}
 
 	long preTime = 0;

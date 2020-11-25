@@ -252,7 +252,21 @@ public class LoginActivity extends BaseActivity implements
                 login_username.setHint(R.string.input_password);
                 login_password.setHint(R.string.re_input_password);
 
-                login_username.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                login_username.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                login_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+
+                Activity home = Foreground.getHomeActivity();
+                if (home != null){
+                    final String userPath = SharePreferenceUtils.getUserDataPath(home,
+                            SharePreferenceUtils.FILENAME_PISMANAGER,
+                            getString(R.string.local_user_name));
+                    PISManager mgr = PISManager.loadPISManagerObject(home, userPath);
+                    String pwd = mgr.getUserObject().pwd;
+                    if(pwd != null){
+                        login_username.setText(pwd);
+                        login_password.setText(pwd);
+                    }
+                }
             }
             else {
                 login_username.setEnabled(false);

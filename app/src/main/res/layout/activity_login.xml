@@ -142,6 +142,7 @@
                 android:layout_marginTop="20dp" >
 
                 <TextView
+                    android:visibility="gone"
                     android:id="@+id/btn_forget_password"
                     style="@style/TextStyle"
                     android:layout_width="wrap_content"
