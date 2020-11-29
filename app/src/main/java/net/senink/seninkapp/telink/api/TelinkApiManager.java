@@ -238,7 +238,6 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
     public void stopScan(){
-        MeshService.getInstance().stopScan();
         this.isStopScan = true;
     }
 

@@ -129,6 +129,8 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 				R.anim.anim_out_to_right);
 	}
 
+
+
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -212,6 +214,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 	@Override
 	protected void onDestroy() {
 		EventBus.getDefault().unregister(this);
+		TelinkApiManager.getInstance().stopScan();
 		super.onDestroy();
 	}
 
