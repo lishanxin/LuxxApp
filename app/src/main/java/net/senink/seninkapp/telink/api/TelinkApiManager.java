@@ -309,7 +309,7 @@ public class TelinkApiManager implements EventListener<String> {
         targetDevice = new UnprovisionedDevice(device, address);
         byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
         ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, new UnprovisionedDevice(device, address));
-        MeshService.getInstance().startProvision(parameters);
+        startProvision(parameters);
     }
 
 
@@ -351,7 +351,6 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
     public void startScanTelink(boolean isAutoBind, Handler handler) {
-        tempFoundDevice = null;
         this.isAutoBind = isAutoBind;
         addDeviceActivityHandler = handler;
         startScanTelink();
@@ -364,10 +363,30 @@ public class TelinkApiManager implements EventListener<String> {
         bindBlue(tempFoundDevice);
     }
 
+    public boolean checkHaveTelinkDevice(){
+        return tempFoundDevice != null;
+    }
+
+    public void startScanTelinkOnCreate(boolean isTelinkAutoConnect, Handler mHandler) {
+        this.isAutoBind = isTelinkAutoConnect;
+        addDeviceActivityHandler = mHandler;
+        if(tempFoundDevice != null){
+            if(!devices.contains(tempFoundDevice)){
+                devices.add(tempFoundDevice);
+            }
+            if (mListAdapter != null) {
+                mListAdapter.notifyDataSetChanged();
+            }
+        }else{
+            startScanTelink();
+        }
+    }
+
     // 扫描蓝牙
     public void startScanTelink() {
         isStopScan = false;
         TelinkApiManager.getInstance().clearFoundDevice();
+
         boundDevices = new ArrayList<>();
         for (DeviceInfo boundDevice : MyApplication.getInstance().getMesh().devices) {
             if(boundDevice.getOnOff() != -1){
@@ -502,6 +521,7 @@ public class TelinkApiManager implements EventListener<String> {
     }
 
     private void startProvision(ProvisionParameters parameters){
+        tempFoundDevice = null;
         addDeviceActivityHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_LINE_INIT);
         MeshService.getInstance().startProvision(parameters);
     }
@@ -640,4 +660,5 @@ public class TelinkApiManager implements EventListener<String> {
     public void saveOrUpdateMesh(Context context){
         MyApplication.getInstance().getMesh().saveOrUpdate(context);
     }
+
 }

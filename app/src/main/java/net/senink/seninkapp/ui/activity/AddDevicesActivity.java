@@ -150,6 +150,11 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 				break;
 			// TODO LEE 自动添加灯
 			case R.id.new_light_auto:{
+				if(!TelinkApiManager.getInstance().checkHaveTelinkDevice()){
+					ibDeviceAutoContainer.setVisibility(View.GONE);
+					TelinkApiManager.getInstance().startScanTelink();
+					return;
+				}
 				Intent intent = new Intent(AddDevicesActivity.this,
 						AddBlueToothDeviceActivity.class);
 				String[] classidFilter;

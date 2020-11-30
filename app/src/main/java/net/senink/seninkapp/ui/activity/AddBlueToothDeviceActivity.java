@@ -142,7 +142,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     // Telink自动绑定标记
     public static final String TelinkAutoConnectKey = "autoTelinkConnect";
     private boolean isTelinkAutoConnect = false;
-    private boolean isOnBindingGroup = false;
+    private boolean isTelinkOnBinding = false;
 
     private PISManager manger;
     private PISMCSManager mcm;
@@ -160,7 +160,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     private Runnable checkTelinkAutoConnectRunnable = new Runnable() {
         @Override
         public void run() {
-            if(isOnBindingGroup){
+            if(isTelinkOnBinding){
                 lastTelinkStatusUpdateTime = SystemClock.elapsedRealtime();
                 mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
             }else if(SystemClock.elapsedRealtime() - lastTelinkStatusUpdateTime > 15 * 1000){
@@ -200,19 +200,20 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                     isConfiging = true;
                     setListViewVisible(View.GONE);
                     setSteps(0, true);
-
                     mHandler.removeMessages(AddBlueToothDeviceActivity.MSG_TELINK_START_BINDING);
                     mHandler.removeMessages(AddBlueToothDeviceActivity.MSG_TELINK_DEVBIND_FAILED);
                     mHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_START_BINDING);
                 }
                 break;
                 case MSG_TELINK_START_BINDING: {
+                    isTelinkOnBinding = true;
                     mHandler.removeMessages(MSG_TELINK_START_BINDING);
                     setListViewVisible(View.GONE);
                     startAnima2();
                 }
                 break;
                 case MSG_TELINK_DEVBIND_SUCCESS: {
+                    isTelinkOnBinding = true;
                     mHandler.removeMessages(MSG_TELINK_DEVBIND_SUCCESS);
                     isConfiging = true;
                     setSteps(1, true);
@@ -222,6 +223,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 }
                 break;
                 case MSG_TELINK_DEVBIND_FAILED: {
+                    isTelinkOnBinding = false;
                     mHandler.removeMessages(MSG_TELINK_DEVBIND_FAILED);
                     isConfiging = false;
                     stopAnima2();
@@ -230,12 +232,14 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 }
                 break;
                 case MSG_TELINK_START_CONFIGING: {
+                    isTelinkOnBinding = true;
                     stopAnima2();
                     startAnima3();
                     setSteps(2, true);
                 }
                 break;
                 case MSG_TELINK_CONFIG_SUCCESS: {
+                    isTelinkOnBinding = true;
                     mHandler.removeMessages(MSG_TELINK_CONFIG_SUCCESS);
                     stopAnima3();
                     setSteps(3, true);
@@ -248,13 +252,14 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                     if(isTelinkAutoConnect){
                         DeviceInfo bindTelinkDevice = (DeviceInfo) msg.obj;
                         if(autoConnectGroup != null){
-                            isOnBindingGroup = true;
+                            isTelinkOnBinding = true;
                             TelinkGroupApiManager.getInstance().addDeviceToGroup(autoConnectGroup.address, bindTelinkDevice.meshAddress);
                         }
                     }
                     break;
                 case MSG_TELINK_CONFIG_FAILED: {
                     isConfiging = false;
+                    isTelinkOnBinding = false;
                     stopAnima3();
                     mHandler.removeMessages(MSG_TELINK_CONFIG_FAILED);
                     setListViewVisible(View.VISIBLE);
@@ -469,7 +474,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
             mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
             TelinkApiManager.getInstance().startAutoBindOnCreate(mHandler);
         }else{
-            TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+            TelinkApiManager.getInstance().startScanTelinkOnCreate(isTelinkAutoConnect, mHandler);
         }
     }
 
@@ -837,9 +842,10 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         if(isTelinkAutoConnect){
             if(operation.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_FAIL){
                 showTelinkAutoConnectErrorAlert();
+                isTelinkOnBinding = false;
             }else if(operation.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_SUCCEED){
                 TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
-                isOnBindingGroup = false;
+                isTelinkOnBinding = false;
             }
         }
     }
