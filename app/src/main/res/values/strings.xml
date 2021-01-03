@@ -11,6 +11,7 @@
 <!--        <item>others</item>-->
     </string-array>
     <!-- <string name="app_name">Senink Router</string> -->
+    <string name="candlelight">CandleLight</string>
     <string name="company">senink</string>
     <string name="app_name">ILife</string>
     <string name="username_hint">mobile/email/username</string>
@@ -171,8 +172,8 @@
     <string name="floor"> floor </string>
     <string name="update_succe"> Modify success </string>
     <string name="update_password_fail"> Change Password failed </string>
-    <string name="no_switch_password"> Password inconsistent, please re-input </string>
-    <string name="alert_password_no_null"> password can not be null </string>
+    <string name="no_switch_password"> Wrong Password!!! </string>
+    <string name="alert_password_no_null"> Key in Password!!! </string>
     <string name="alert_password_no_too_long"> password is too long, please enter less than 16 byte characters </string>
     <string name="alert_cancel_shou_quan"> to confirm the cancellation of the authorization? </string>
     <string name="cancel_shou_quan"> to cancel the authorization </string>

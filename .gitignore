@@ -6,3 +6,4 @@ app/build/
 build/
 TelinkSigMeshLib/.externalNativeBuild
 sig_mesh_sdk_3.1.3/
+sig_mesh_sdk/

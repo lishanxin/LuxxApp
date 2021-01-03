@@ -5,9 +5,7 @@
     android:label="${app_name}"
     android:icon="${app_icon}" >
 
-     <uses-sdk
-        android:minSdkVersion="17"
-        android:targetSdkVersion="23" />
+     <uses-sdk android:targetSdkVersion="23" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -410,11 +408,11 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme" />
-        <activity
-            android:name="net.senink.seninkapp.ui.setting.AboutActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme" />
+<!--        <activity-->
+<!--            android:name="net.senink.seninkapp.ui.setting.AboutActivity"-->
+<!--            android:launchMode="singleTask"-->
+<!--            android:screenOrientation="portrait"-->
+<!--            android:theme="@style/Theme" />-->
         <activity
             android:name="net.senink.seninkapp.ui.setting.LocationListsActivity"
             android:launchMode="singleTop"
