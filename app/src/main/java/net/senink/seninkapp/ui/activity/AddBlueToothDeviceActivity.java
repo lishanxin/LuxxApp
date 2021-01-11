@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.UUID;
 
 import android.annotation.SuppressLint;
@@ -143,8 +142,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     // Telink自动绑定标记
     public static final String TelinkAutoConnectKey = "autoTelinkConnect";
     private boolean isTelinkAutoConnect = false;
-    private boolean isTelinkOnBinding = false; // 是否正在绑定设备
-    private boolean startTelinkGroupBinding = false; // 是否开始绑定灯组
+    private boolean isTelinkOnBinding = false;
 
     private PISManager manger;
     private PISMCSManager mcm;
@@ -157,31 +155,22 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     private List<String> startGroupPISKey = new ArrayList<>();
     private List<Group> endGroups = new ArrayList<>();
     private Group autoConnectGroup = null;
-    private Stack<DeviceInfo> waitBindToGroup = new Stack<>();// 已连接，等待绑定到灯组的Telink灯具
 
     private long lastTelinkStatusUpdateTime = 0;
     private Runnable checkTelinkAutoConnectRunnable = new Runnable() {
         @Override
         public void run() {
-           if(isTelinkOnBinding){
-               lastTelinkStatusUpdateTime = SystemClock.elapsedRealtime();
+            if(isTelinkOnBinding){
+                lastTelinkStatusUpdateTime = SystemClock.elapsedRealtime();
                 mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
-           }else if(SystemClock.elapsedRealtime() - lastTelinkStatusUpdateTime > 15 * 1000){
-                   bindDeviceToGroup();
-           }else{
+            }else if(SystemClock.elapsedRealtime() - lastTelinkStatusUpdateTime > 15 * 1000){
+                // 超过15秒就自动退出
+                ToastUtils.showToast(getApplicationContext(),
+                        R.string.addbubble_step2_tip);
+                backBtn.performClick();
+            }else{
                 mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
             }
-//            if(isTelinkOnBinding){
-//                lastTelinkStatusUpdateTime = SystemClock.elapsedRealtime();
-//                mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
-//            }else if(SystemClock.elapsedRealtime() - lastTelinkStatusUpdateTime > 15 * 1000){
-//                // 超过15秒就自动退出
-//                ToastUtils.showToast(getApplicationContext(),
-//                        R.string.addbubble_step2_tip);
-//                backBtn.performClick();
-//            }else{
-//                mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
-//            }
         }
     };
     /**
@@ -217,14 +206,14 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 }
                 break;
                 case MSG_TELINK_START_BINDING: {
-                    setTelinkOnBinding(true);
+                    isTelinkOnBinding = true;
                     mHandler.removeMessages(MSG_TELINK_START_BINDING);
                     setListViewVisible(View.GONE);
                     startAnima2();
                 }
                 break;
                 case MSG_TELINK_DEVBIND_SUCCESS: {
-                    setTelinkOnBinding(true);
+                    isTelinkOnBinding = true;
                     mHandler.removeMessages(MSG_TELINK_DEVBIND_SUCCESS);
                     isConfiging = true;
                     setSteps(1, true);
@@ -234,7 +223,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 }
                 break;
                 case MSG_TELINK_DEVBIND_FAILED: {
-                    setTelinkOnBinding(false);
+                    isTelinkOnBinding = false;
                     mHandler.removeMessages(MSG_TELINK_DEVBIND_FAILED);
                     isConfiging = false;
                     stopAnima2();
@@ -243,14 +232,14 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 }
                 break;
                 case MSG_TELINK_START_CONFIGING: {
-                    setTelinkOnBinding(true);
+                    isTelinkOnBinding = true;
                     stopAnima2();
                     startAnima3();
                     setSteps(2, true);
                 }
                 break;
                 case MSG_TELINK_CONFIG_SUCCESS: {
-                    setTelinkOnBinding(false);
+                    isTelinkOnBinding = true;
                     mHandler.removeMessages(MSG_TELINK_CONFIG_SUCCESS);
                     stopAnima3();
                     setSteps(3, true);
@@ -262,12 +251,15 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 case MSG_TELINK_CONFIG_SUCCESS_AUTO_CONNECT:
                     if(isTelinkAutoConnect){
                         DeviceInfo bindTelinkDevice = (DeviceInfo) msg.obj;
-                        waitBindToGroup.push(bindTelinkDevice);
+                        if(autoConnectGroup != null){
+                            isTelinkOnBinding = true;
+                            TelinkGroupApiManager.getInstance().addDeviceToGroup(autoConnectGroup.address, bindTelinkDevice.meshAddress);
+                        }
                     }
                     break;
                 case MSG_TELINK_CONFIG_FAILED: {
                     isConfiging = false;
-                    setTelinkOnBinding(false);
+                    isTelinkOnBinding = false;
                     stopAnima3();
                     mHandler.removeMessages(MSG_TELINK_CONFIG_FAILED);
                     setListViewVisible(View.VISIBLE);
@@ -417,37 +409,6 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         }
 
     };
-
-    /**
-     * Telink灯具是否正在进行绑定
-     * 如果正在绑定，则不做其他操作；
-     * 如果没有正在绑定灯，且超过一定的时间，则开始进行绑定灯组的操作
-     * @param isOnBinding
-     */
-    private void setTelinkOnBinding(boolean isOnBinding){
-        isTelinkOnBinding = isOnBinding;
-        if(isOnBinding){
-
-        }else {
-
-        }
-    }
-
-    /**
-     * Telink灯组是否正在绑定灯具
-     * 如果正在绑定灯，则不进行其他操作；若没有正在绑定灯具，则操作一定的时间，退出自动绑定界面。
-     */
-    private void bindDeviceToGroup(){
-        try {
-            DeviceInfo deviceInfo = waitBindToGroup.pop();
-            if(autoConnectGroup != null){
-                startTelinkGroupBinding = true;
-                TelinkGroupApiManager.getInstance().addDeviceToGroup(autoConnectGroup.address, deviceInfo.meshAddress);
-            }
-        }catch (Exception e){
-            onBackPressed();
-        }
-    }
     private DeviceProvisionListAdapter telinkListAdapter;
 
     private void configSuccess(boolean isPis) {
@@ -474,7 +435,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
             }
         }else{
             if(isTelinkAutoConnect){
-                TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+//                TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
             }else{
                 if(telinkListAdapter.getItemCount() <= 1 && adapter.getCount() == 0){
                     ToastUtils.showToast(getApplicationContext(),
@@ -881,8 +842,10 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         if(isTelinkAutoConnect){
             if(operation.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_FAIL){
                 showTelinkAutoConnectErrorAlert();
+                isTelinkOnBinding = false;
             }else if(operation.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_SUCCEED){
-                bindDeviceToGroup();
+                TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+                isTelinkOnBinding = false;
             }
         }
     }
@@ -1062,9 +1025,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 break;
             case MeshEvent.EVENT_TYPE_PROVISION_FAIL:
                 mHandler.sendEmptyMessage(MSG_TELINK_DEVBIND_FAILED);
-                if(!isTelinkAutoConnect){
-                    showTelinkAutoConnectErrorAlert();
-                }
+                showTelinkAutoConnectErrorAlert();
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS:
                 refreshLastTelinkStatusUpdateTime();
@@ -1073,9 +1034,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_FAIL:
                 mHandler.sendEmptyMessage(MSG_TELINK_CONFIG_FAILED);
-                if(!isTelinkAutoConnect){
-                    showTelinkAutoConnectErrorAlert();
-                }
+                showTelinkAutoConnectErrorAlert();
                 break;
             case ScanEvent.DEVICE_FOUND:
                 refreshLastTelinkStatusUpdateTime();
