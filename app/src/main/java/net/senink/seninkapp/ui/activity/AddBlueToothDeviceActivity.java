@@ -143,6 +143,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     public static final String TelinkAutoConnectKey = "autoTelinkConnect";
     private boolean isTelinkAutoConnect = false;
     private boolean isTelinkOnBinding = false;
+    private int retryTime = 2;
 
     private PISManager manger;
     private PISMCSManager mcm;
@@ -1016,6 +1017,8 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         }
     }
 
+
+
     @Override
     public void performed(Event<String> event) {
         switch (event.getType()) {
@@ -1025,7 +1028,9 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 break;
             case MeshEvent.EVENT_TYPE_PROVISION_FAIL:
                 mHandler.sendEmptyMessage(MSG_TELINK_DEVBIND_FAILED);
-                showTelinkAutoConnectErrorAlert();
+                if(!isTelinkAutoConnect){
+                    showTelinkAutoConnectErrorAlert();
+                }
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_SUCCESS:
                 refreshLastTelinkStatusUpdateTime();
@@ -1034,7 +1039,9 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
                 break;
             case MeshEvent.EVENT_TYPE_KEY_BIND_FAIL:
                 mHandler.sendEmptyMessage(MSG_TELINK_CONFIG_FAILED);
-                showTelinkAutoConnectErrorAlert();
+                if(!isTelinkAutoConnect){
+                    showTelinkAutoConnectErrorAlert();
+                }
                 break;
             case ScanEvent.DEVICE_FOUND:
                 refreshLastTelinkStatusUpdateTime();
