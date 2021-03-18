@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
 
@@ -146,6 +148,11 @@ public class LightGroupEditAdapter extends BaseAdapter {
 				if (telinkBase.isDevice()) {
 					DeviceInfo deviceInfo = telinkBase.getDevice();
 					name = deviceInfo.getDeviceName();
+					if(MeshService.getInstance().isMainDevice(deviceInfo.macAddress)){
+						holder.tvName.setTextColor(Color.RED);
+					}else{
+						holder.tvName.setTextColor(Color.WHITE);
+					}
 					final int deviceType = deviceInfo.nodeInfo != null && deviceInfo.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
 					holder.ivIcon.setBackgroundResource(IconGenerator.getIcon(deviceType, deviceInfo.getOnOff()));
 					List<Integer> sublist = deviceInfo.subList;

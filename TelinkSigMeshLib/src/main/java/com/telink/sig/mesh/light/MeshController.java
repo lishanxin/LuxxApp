@@ -21,6 +21,7 @@
  *******************************************************************************************************/
 package com.telink.sig.mesh.light;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattService;
 import android.content.Context;
@@ -444,6 +445,7 @@ public class MeshController {
         }
     }
 
+
     public void setMeshOtaFirmware(byte[] meshOtaFirmware) {
         this.meshOtaFirmware = meshOtaFirmware;
     }
@@ -732,6 +734,15 @@ public class MeshController {
         } else {
             startScan();
         }
+    }
+
+    /**
+     * 是否是主设备
+     * @param macAddress
+     * @return
+     */
+    public boolean isMainDevice(String macAddress){
+        return mDevice != null && mDevice.isMainAddress(macAddress);
     }
 
     public boolean getOnlineStatus() {

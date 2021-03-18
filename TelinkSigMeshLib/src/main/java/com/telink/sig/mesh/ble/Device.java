@@ -23,6 +23,7 @@
 
 package com.telink.sig.mesh.ble;
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -35,6 +36,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.telink.sig.mesh.light.UuidInfo;
+import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.util.Arrays;
 import com.telink.sig.mesh.util.TelinkLog;
 
@@ -114,11 +116,11 @@ public class Device extends BluetoothGattCallback {
     private static final int MTU_SIZE_MIN = 23;
 
     private static final int MTU_SIZE_MAX = 517;
-
     /**
      * default 20
      */
     private int pktSize = MTU_SIZE_MIN - 3;
+    private String mainDeviceAddress = "";//主设备mac地址
 
     private Context mContext;
 
@@ -133,6 +135,31 @@ public class Device extends BluetoothGattCallback {
         this.scanRecord = scanRecord;
         this.rssi = rssi;
         this.connect(mContext);
+    }
+
+    /**
+     * 是否是主设备
+     * @param macAddress
+     * @return
+     */
+    public boolean isMainAddress(String macAddress){
+        return mainDeviceAddress.equals(macAddress);
+    }
+
+    public void connectTest(BluetoothDevice device){
+        this.device = device;
+        TelinkLog.w("connect " + this.getDeviceName() + " -- " + this.getMacAddress());
+        this.mConnState.set(CONN_STATE_CONNECTING);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            this.gatt = device.connectGatt(mContext, false, this, BluetoothDevice.TRANSPORT_LE);
+        } else {
+            this.gatt = device.connectGatt(mContext, false, this);
+        }
+        if (this.gatt == null) {
+            this.disconnect();
+            this.mConnState.set(CONN_STATE_IDLE);
+            this.onDisconnect();
+        }
     }
 
 
@@ -1092,6 +1119,7 @@ public class Device extends BluetoothGattCallback {
         }
 
         enableNotification(UuidInfo.SERVICE_UUID_ONLINE_STATUS, UuidInfo.CHARACTERISTIC_UUID_ONLINE_STATUS);
+        enableNotification(UuidInfo.MAIN_DEVICE_SIGN_SERVICE_UUID, UuidInfo.MAIN_DEVICE_SIGN_CHARACTERISTIC_UUID);
     }
 
 
@@ -1260,11 +1288,25 @@ public class Device extends BluetoothGattCallback {
         }
     }
 
+
     @Override
     public void onCharacteristicChanged(BluetoothGatt gatt,
                                         BluetoothGattCharacteristic characteristic) {
         super.onCharacteristicChanged(gatt, characteristic);
         this.onNotify(characteristic.getUuid(), characteristic.getValue());
+        if(UuidInfo.MAIN_DEVICE_SIGN_CHARACTERISTIC_UUID.equals(characteristic.getUuid())){
+            try {
+                BluetoothDevice myMainDevice = gatt.getDevice();
+                String address = myMainDevice.getAddress();
+                byte[] mySign = characteristic.getValue();
+                if(mySign[0] == 10 && mySign[1] == 1){
+                    mainDeviceAddress = address;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
     }
 
     @Override

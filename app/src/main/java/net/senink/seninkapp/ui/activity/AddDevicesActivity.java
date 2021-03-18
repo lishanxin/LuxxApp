@@ -151,8 +151,7 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 			// TODO LEE 自动添加灯
 			case R.id.new_light_auto:{
 				if(!TelinkApiManager.getInstance().checkHaveTelinkDevice()){
-					ibDeviceAutoContainer.setVisibility(View.GONE);
-					TelinkApiManager.getInstance().startScanTelink();
+					hideAutoContainer();
 					return;
 				}
 				Intent intent = new Intent(AddDevicesActivity.this,
@@ -217,11 +216,36 @@ public class AddDevicesActivity extends BaseActivity implements View.OnClickList
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		if(!TelinkApiManager.getInstance().checkHaveTelinkDevice()){
+			hideAutoContainer();
+		}else{
+			showAutoContainer();
+		}
+	}
+
+	private void showAutoContainer() {
+		ibDeviceAutoContainer.setVisibility(View.VISIBLE);
+	}
+
+	/**
+	 * 隐藏自动绑定按钮
+	 * @return
+	 */
+	private void hideAutoContainer(){
+		ibDeviceAutoContainer.setVisibility(View.GONE);
+		TelinkApiManager.getInstance().startScanTelink();
+	}
+
+	@Override
 	protected void onDestroy() {
 		EventBus.getDefault().unregister(this);
 		TelinkApiManager.getInstance().stopScan();
 		super.onDestroy();
 	}
+
+
 
 	public class NewDeviceListAdapter extends BaseAdapter {
 		private final int ITEM_COUNT_OF_LINE = 4;

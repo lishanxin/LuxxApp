@@ -438,12 +438,18 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
             if(isTelinkAutoConnect){
 //                TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
             }else{
-                if(telinkListAdapter.getItemCount() <= 1 && adapter.getCount() == 0){
-                    ToastUtils.showToast(getApplicationContext(),
-                            R.string.addbubble_step2_tip);
-                    backBtn.performClick();
-                }else{
-                    TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+                TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+                if(telinkListAdapter.getItemCount() == 0 && adapter.getCount() == 0){
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(telinkListAdapter.getItemCount() == 0 && adapter.getCount() == 0){
+                                ToastUtils.showToast(getApplicationContext(),
+                                        R.string.addbubble_step2_tip);
+                                backBtn.performClick();
+                            }
+                        }
+                    }, 8 * 1000);
                 }
             }
 
@@ -816,6 +822,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         switch (v.getId()) {
             case R.id.title_back:
                 finish();
+                mHandler.removeCallbacks(checkTelinkAutoConnectRunnable);
                 overridePendingTransition(R.anim.anim_in_from_left,
                         R.anim.anim_out_to_right);
                 break;

@@ -2,6 +2,7 @@ package net.senink.seninkapp.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
@@ -250,6 +251,11 @@ public class MixLightListAdapter extends BaseAdapter {
             final int deviceType = device.nodeInfo != null && device.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
             nameBtn.setBackgroundResource(IconGenerator.getIcon(deviceType, device.getOnOff()));
             nametv.setText(device.getDeviceName());
+            if(MeshService.getInstance().isMainDevice(device.macAddress)){
+                nametv.setTextColor(Color.RED);
+            }else{
+                nametv.setTextColor(Color.WHITE);
+            }
             nameBtn.setOnClickListener(new OnClickListener() {
 
                 @Override

@@ -47,4 +47,8 @@ public class UuidInfo {
 
     public static final UUID CFG_DESCRIPTOR_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
+    public static final UUID MAIN_DEVICE_SIGN_SERVICE_UUID = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"); // 蓝牙主设备标记Service
+    public static final UUID MAIN_DEVICE_SIGN_CHARACTERISTIC_UUID = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"); // 蓝牙主设备标记Characteristic
+
+
 }

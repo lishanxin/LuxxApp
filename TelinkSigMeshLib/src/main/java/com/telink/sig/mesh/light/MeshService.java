@@ -114,6 +114,10 @@ public class MeshService extends Service {
         checkConnectedListener = listener;
     }
 
+    public boolean isMainDevice(String macAddress){
+        return mMeshController.isMainDevice(macAddress);
+    }
+
     public void checkDeviceConnected(){
         if(checkConnectedListener != null){
             checkConnectedListener.onCheckConnected(mMeshController.isDeviceConnected());

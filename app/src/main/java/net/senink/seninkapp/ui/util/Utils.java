@@ -187,4 +187,5 @@ public class Utils {
 	public static String getApplicationName(Context context) {
 		return context.getString(R.string.app_name);
 	}
+
 }

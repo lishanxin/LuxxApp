@@ -53,6 +53,7 @@ import java.util.List;
  */
 public class DeviceProvisionListAdapter extends BaseRecyclerViewAdapter<DeviceProvisionListAdapter.ViewHolder> {
     List<ProvisioningDevice> mDevices;
+    BaseRecyclerViewAdapter.OnItemClickListener onItemClickListener;
     Context mContext;
     Handler mHandler;
 
@@ -120,14 +121,18 @@ public class DeviceProvisionListAdapter extends BaseRecyclerViewAdapter<DevicePr
             @Override
             public void onClick(View v) {
                 try {
-                    int position = (Integer) v.getTag();
-                    View tvResult = ((View) v.getParent()).findViewById(R.id.addbubble_item_result);
-
-                    mHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_LINE_INIT);
-                    ProvisioningDevice provisioningDevice = mDevices.get(position);
-                    MeshService.getInstance().startProvision(
-                            TelinkApiManager.getInstance()
-                                    .getProvisionParameters(provisioningDevice.advertisingDevice, provisioningDevice.unicastAddress));
+                    if(onItemClickListener != null){
+                        int position = (Integer) v.getTag();
+                        onItemClickListener.onItemClick(position);
+                    }
+//
+//                    View tvResult = ((View) v.getParent()).findViewById(R.id.addbubble_item_result);
+//
+//                    mHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_LINE_INIT);
+//                    ProvisioningDevice provisioningDevice = mDevices.get(position);
+//                    MeshService.getInstance().startProvision(
+//                            TelinkApiManager.getInstance()
+//                                    .getProvisionParameters(provisioningDevice.advertisingDevice, provisioningDevice.unicastAddress));
 
                 } catch (Exception e) {
                     PgyCrashManager.reportCaughtException(PISManager.getDefaultContext(), e);
@@ -136,6 +141,12 @@ public class DeviceProvisionListAdapter extends BaseRecyclerViewAdapter<DevicePr
             }
         });
     }
+
+    public void setListener(BaseRecyclerViewAdapter.OnItemClickListener listener){
+        onItemClickListener = listener;
+    }
+
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
 //        // device icon

@@ -481,6 +481,10 @@ public class HomeActivity extends BaseActivity implements OnClickListener, Event
 		}
 
 		reconnectTelink();
+//
+//		if(MeshService.getInstance() != null){
+//			MeshService.getInstance().connectDevice();
+//		}
 	}
 
 	private void reconnectTelink(){

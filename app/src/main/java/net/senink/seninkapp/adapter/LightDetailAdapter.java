@@ -14,6 +14,7 @@ import net.senink.seninkapp.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.BitmapDrawable;
@@ -28,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pgyersdk.crash.PgyCrashManager;
+import com.telink.sig.mesh.light.MeshService;
 import com.telink.sig.mesh.model.DeviceInfo;
 import com.telink.sig.mesh.model.Group;
 
@@ -169,8 +171,14 @@ public class LightDetailAdapter extends BaseAdapter {
 				TelinkBase telinkBase = generalBase.getTelinkBase();
 				String name = "";
 				if(telinkBase.isDevice()){
+
 					DeviceInfo deviceInfo = telinkBase.getDevice();
 					name = deviceInfo.getDeviceName();
+					if(MeshService.getInstance().isMainDevice(deviceInfo.macAddress)){
+						holder.tvName.setTextColor(Color.RED);
+					}else{
+						holder.tvName.setTextColor(Color.WHITE);
+					}
 					final int deviceType = deviceInfo.nodeInfo != null && deviceInfo.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
 					holder.ivIcon.setBackgroundResource(IconGenerator.getIcon(deviceType, deviceInfo.getOnOff()));
 				}else{

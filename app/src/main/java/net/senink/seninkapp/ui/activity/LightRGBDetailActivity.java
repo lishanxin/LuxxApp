@@ -353,6 +353,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
         int tempColor = Color.rgb(colors[0], colors[1], colors[2]);
         tvCurrentColor.setBackgroundColor(tempColor);
+        candle_onoff = false;
         if (isTelink) {
             if (isTelinkGroup && infor != null) {
                 setPisColor(colors, isScened, currentWhite);
@@ -416,7 +417,6 @@ public class LightRGBDetailActivity extends BaseActivity implements
         }
         infor.request(req);
 
-        candle_onoff = false;
         mHandler.sendEmptyMessage(MessageModel.MSG_SEND_CANDLE);
     }
 
@@ -689,14 +689,15 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
                 if (buttonView.isPressed()) {
                     if (isTelink) {
-//                        byte[] command = CommonMeshCommand.getOnOffCommand(isChecked);
-//                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
-//                        setTelinkTimerByteAction(command);
+                        byte[] command = CommonMeshCommand.getOnOffCommand(isChecked);
+                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+                        setTelinkTimerByteAction(command);
                         // Todo 测试 待确认是否需要屏蔽这个代码
-                        TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
+//                        TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
                         if(isChecked){
                             mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
                         }
+                        candle_onoff = false;
                     }
                     if (infor == null) return;
 //                    PipaRequest req = infor.commitCandleLight(isChecked);
@@ -1594,7 +1595,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
 
     private void setTelinkTwinkleCommand(int effectMode) {
         byte[] command = CommonMeshCommand.getTwinkleCommand(effectMode);
-        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+        if(isTelink){
+            candle_onoff = false;
+            TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+        }
         setTelinkTimerByteAction(command);
     }
     /**
