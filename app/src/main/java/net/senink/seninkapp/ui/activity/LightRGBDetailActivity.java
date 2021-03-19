@@ -694,9 +694,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
                         setTelinkTimerByteAction(command);
                         // Todo 测试 待确认是否需要屏蔽这个代码
 //                        TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
-                        if(isChecked){
-                            mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
-                        }
+//                        if(isChecked){
+//                            mHandler.sendEmptyMessage(MessageModel.MSG_SEND_ORDER);
+//                        }
                         candle_onoff = false;
                     }
                     if (infor == null) return;
