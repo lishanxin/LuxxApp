@@ -638,11 +638,6 @@ public class DeviceListActivity extends BaseActivity implements
 				holder.macTv.setText(telinkDeviceInfo.macAddress);
 				final int deviceType = telinkDeviceInfo.nodeInfo != null && telinkDeviceInfo.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
 				holder.icon.setImageResource(IconGenerator.getIcon(deviceType, telinkDeviceInfo.getOnOff()));
-				if(MeshService.getInstance().isMainDevice(telinkDeviceInfo.macAddress)){
-					holder.nameTv.setTextColor(Color.RED);
-				}else{
-					holder.nameTv.setTextColor(Color.WHITE);
-				}
 				holder.nameTv.setText(telinkDeviceInfo.getDeviceName());
 			}else{
 				PISDevice deviceInfo = (PISDevice) generalDeviceModel.getPisBase().getDeviceObject();

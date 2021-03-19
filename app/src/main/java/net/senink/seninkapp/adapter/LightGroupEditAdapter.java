@@ -148,11 +148,6 @@ public class LightGroupEditAdapter extends BaseAdapter {
 				if (telinkBase.isDevice()) {
 					DeviceInfo deviceInfo = telinkBase.getDevice();
 					name = deviceInfo.getDeviceName();
-					if(MeshService.getInstance().isMainDevice(deviceInfo.macAddress)){
-						holder.tvName.setTextColor(Color.RED);
-					}else{
-						holder.tvName.setTextColor(Color.WHITE);
-					}
 					final int deviceType = deviceInfo.nodeInfo != null && deviceInfo.nodeInfo.cpsData.lowPowerSupport() ? 1 : 0;
 					holder.ivIcon.setBackgroundResource(IconGenerator.getIcon(deviceType, deviceInfo.getOnOff()));
 					List<Integer> sublist = deviceInfo.subList;
