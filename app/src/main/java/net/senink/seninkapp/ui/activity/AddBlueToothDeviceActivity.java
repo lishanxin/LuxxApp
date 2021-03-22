@@ -21,6 +21,7 @@ import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
@@ -80,7 +81,7 @@ import org.greenrobot.eventbus.Subscribe;
  */
 public class AddBlueToothDeviceActivity extends BaseActivity implements
         View.OnClickListener, AssociationListener, EventListener<String> {
-    public final static String TAG = "AddBlueToothDeviceActivity";
+    public final static String TAG = "AddDActivityLsx";
     public final static int MSG_START_BINDING = 10;
     public final static int MSG_START_CONFIGING = 11;
     public final static int MSG_CONFIG_SUCCESS = 12;
@@ -439,6 +440,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
 //                TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
             }else{
                 TelinkApiManager.getInstance().startScanTelink(isTelinkAutoConnect, mHandler);
+                telinkListAdapter.notifyDataSetChanged();
                 if(telinkListAdapter.getItemCount() == 0 && adapter.getCount() == 0){
                     mHandler.postDelayed(new Runnable() {
                         @Override
@@ -479,7 +481,11 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
         if(isTelinkAutoConnect){
             refreshLastTelinkStatusUpdateTime();
             mHandler.postDelayed(checkTelinkAutoConnectRunnable, 1500);
-            TelinkApiManager.getInstance().startAutoBindOnCreate(mHandler);
+            boolean succeed = TelinkApiManager.getInstance().startAutoBindOnCreate(mHandler);
+            if(!succeed){
+                backBtn.performClick();
+                return;
+            }
         }else{
             TelinkApiManager.getInstance().startScanTelinkOnCreate(isTelinkAutoConnect, mHandler);
         }
@@ -849,6 +855,7 @@ public class AddBlueToothDeviceActivity extends BaseActivity implements
     public void listenTelinkDeviceAddToGroup(TelinkOperation operation){
         if(isTelinkAutoConnect){
             if(operation.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_FAIL){
+                Log.d(TAG, "listenTelinkDeviceAddToGroup fail");
                 showTelinkAutoConnectErrorAlert();
                 isTelinkOnBinding = false;
             }else if(operation.getOpr() == TelinkOperation.DEVICE_BIND_OR_UNBIND_GROUP_SUCCEED){

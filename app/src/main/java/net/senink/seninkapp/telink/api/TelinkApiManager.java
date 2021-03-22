@@ -91,8 +91,6 @@ public class TelinkApiManager implements EventListener<String> {
 
     private static Date expiredTime;
 
-    private ProvisioningDevice tempFoundDevice;
-
     public static TelinkApiManager getInstance() {
         if (instance == null) {
             synchronized (TelinkApiManager.class) {
@@ -285,7 +283,6 @@ public class TelinkApiManager implements EventListener<String> {
         byte[] provisionData = ProvisionDataGenerator.getProvisionData(mesh.networkKey, mesh.netKeyIndex, mesh.ivUpdateFlag, mesh.ivIndex, address);
         ProvisionParameters parameters = ProvisionParameters.getDefault(provisionData, targetDevice);
 //        MeshService.getInstance().startProvision(parameters);
-        tempFoundDevice = pvDevice;
         if(this.isAutoBind){
             startProvision(parameters);
         }
@@ -307,7 +304,6 @@ public class TelinkApiManager implements EventListener<String> {
     private void bindBlue(ProvisioningDevice proDevice){
         Log.d(TAG, "bindBlue");
         if (proDevice == null) return;
-        clearTempFoundDevice();
         AdvertisingDevice device = proDevice.advertisingDevice;
         int address = proDevice.unicastAddress;
         isStopScan = true;
@@ -335,11 +331,11 @@ public class TelinkApiManager implements EventListener<String> {
     private int timeout = 7 * 1000;
     private void _startScanTelink(){
         Log.d(TAG, "_startScanTelink");
-        delayedHandler.removeCallbacks(recyclerScan);
+//        delayedHandler.removeCallbacks(recyclerScan);
         if(isStopScan){
             return;
         }
-        delayedHandler.postDelayed(recyclerScan, timeout);
+//        delayedHandler.postDelayed(recyclerScan, timeout);
         ScanParameters parameters = ScanParameters.getDefault(false, true);
         parameters.setScanTimeout(timeout);
 
@@ -364,31 +360,29 @@ public class TelinkApiManager implements EventListener<String> {
         startScanTelink();
     }
 
-    public void startAutoBindOnCreate(Handler handler){
+    public boolean startAutoBindOnCreate(Handler handler){
         Log.d(TAG, "startAutoBindOnCreate");
         this.isAutoBind = true;
         addDeviceActivityHandler = handler;
         addDeviceActivityHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_LINE_INIT);
-        bindBlue(tempFoundDevice);
+        if(checkHaveTelinkDevice()){
+            bindBlue(devices.get(0));
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public boolean checkHaveTelinkDevice(){
         Log.d(TAG, "checkHaveTelinkDevice");
-        return tempFoundDevice != null;
+        return devices.size() > 0 && devices.get(0) != null;
     }
 
     public void startScanTelinkOnCreate(boolean isTelinkAutoConnect, Handler mHandler) {
         Log.d(TAG, "startScanTelinkOnCreate");
         this.isAutoBind = isTelinkAutoConnect;
         addDeviceActivityHandler = mHandler;
-        if(tempFoundDevice != null){
-            if(!devices.contains(tempFoundDevice)){
-                devices.add(tempFoundDevice);
-            }
-            if (mListAdapter != null) {
-                mListAdapter.notifyDataSetChanged();
-            }
-        }else{
+        if(!checkHaveTelinkDevice()){
             startScanTelink();
         }
     }
@@ -526,10 +520,19 @@ public class TelinkApiManager implements EventListener<String> {
 
         if(this.isAutoBind){
             if(addDeviceActivityHandler != null){
-                Message message = new Message();
+                final Message message = new Message();
                 message.what = AddBlueToothDeviceActivity.MSG_TELINK_CONFIG_SUCCESS_AUTO_CONNECT;
                 message.obj = local;
-                addDeviceActivityHandler.sendMessageDelayed(message, 1000);
+                addDeviceActivityHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if( MeshService.getInstance().isDeviceConnected()){
+                            addDeviceActivityHandler.sendMessage(message);
+                        }else{
+                            addDeviceActivityHandler.sendMessageDelayed(message, 4000);
+                        }
+                    }
+                }, 1000);
             }
         }
         getInstance().setCommonCommand(local.meshAddress, CommonMeshCommand.getSyncTimeCommand());
@@ -539,14 +542,8 @@ public class TelinkApiManager implements EventListener<String> {
 
     private void startProvision(ProvisionParameters parameters){
         Log.d(TAG, "startProvision");
-        clearTempFoundDevice();
         addDeviceActivityHandler.sendEmptyMessage(AddBlueToothDeviceActivity.MSG_TELINK_LINE_INIT);
         MeshService.getInstance().startProvision(parameters);
-    }
-
-    private void clearTempFoundDevice(){
-        Log.d(TAG, "clearTempFoundDevice");
-        tempFoundDevice = null;
     }
 
     private boolean setPublish(ProvisioningDevice provisioningDevice, DeviceInfo local) {
@@ -583,15 +580,15 @@ public class TelinkApiManager implements EventListener<String> {
         }
     };
 
-    private Runnable recyclerScan = new Runnable() {
-        @Override
-        public void run() {
-            Log.d(TAG, "recyclerScan");
-            if(!isStopScan && devices.size() == 0){
-                _startScanTelink();
-            }
-        }
-    };
+//    private Runnable recyclerScan = new Runnable() {
+//        @Override
+//        public void run() {
+//            Log.d(TAG, "recyclerScan");
+//            if(!isStopScan && devices.size() == 0){
+//                _startScanTelink();
+//            }
+//        }
+//    };
 
 
     private void onKeyBindFail(MeshEvent event) {

@@ -146,23 +146,6 @@ public class Device extends BluetoothGattCallback {
         return mainDeviceAddress.equals(macAddress);
     }
 
-    public void connectTest(BluetoothDevice device){
-        this.device = device;
-        TelinkLog.w("connect " + this.getDeviceName() + " -- " + this.getMacAddress());
-        this.mConnState.set(CONN_STATE_CONNECTING);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            this.gatt = device.connectGatt(mContext, false, this, BluetoothDevice.TRANSPORT_LE);
-        } else {
-            this.gatt = device.connectGatt(mContext, false, this);
-        }
-        if (this.gatt == null) {
-            this.disconnect();
-            this.mConnState.set(CONN_STATE_IDLE);
-            this.onDisconnect();
-        }
-    }
-
-
     public int getMeshAddress() {
         return meshAddress;
     }
@@ -1301,6 +1284,8 @@ public class Device extends BluetoothGattCallback {
                 byte[] mySign = characteristic.getValue();
                 if(mySign[0] == 10 && mySign[1] == 1){
                     mainDeviceAddress = address;
+                }else if(mySign[0] == 10 && mySign[1] == 2) {
+                    mainDeviceAddress = "";
                 }
             }catch (Exception e){
                 e.printStackTrace();
