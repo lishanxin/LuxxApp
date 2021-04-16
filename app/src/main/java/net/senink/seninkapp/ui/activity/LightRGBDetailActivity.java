@@ -1137,6 +1137,10 @@ public class LightRGBDetailActivity extends BaseActivity implements
                     byte[] command = CommonMeshCommand.getVoiceOnOffCommand(isVoiceOn);
                     TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
                     setTelinkTimerByteAction(command);
+                    if (isVoiceOn)
+                        effectsBtn.setBackgroundResource(R.drawable.btn_music_pause_selector);
+                    else
+                        effectsBtn.setBackgroundResource(R.drawable.btn_music_play_selector);
                     if (infor == null) return;
                 }
 //                intent = new Intent(LightRGBDetailActivity.this,

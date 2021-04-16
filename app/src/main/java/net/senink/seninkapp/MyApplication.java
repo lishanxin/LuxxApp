@@ -74,7 +74,10 @@ public class MyApplication extends TelinkApplication {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		CrashHandler.getInstance().init(this);
 		CrashReport.initCrashReport(getApplicationContext(), "aa9da6efac", BuildConfig.DEBUG);
+		logs = new ArrayList<>();
+		this.setLogEnable(SharedPreferenceHelper.isLogEnable(this));
 
 		PgyCrashManager.register(this);
 		Foreground.init(this);
@@ -84,13 +87,10 @@ public class MyApplication extends TelinkApplication {
 		TelinkApiManager.getInstance().init(this);
 		TelinkGroupApiManager.getInstance().init(this);
 
-		CrashHandler.init(this);
 		TelinkLog.d("app create");
 		initMesh();
 		initMeshLib();
 
-		logs = new ArrayList<>();
-		this.setLogEnable(SharedPreferenceHelper.isLogEnable(this));
 		closePErrorDialog();
 		GeneralDataManager.getInstance();
 	}

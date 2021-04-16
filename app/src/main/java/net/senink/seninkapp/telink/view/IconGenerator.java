@@ -40,11 +40,11 @@ public class IconGenerator {
             return R.drawable.ic_low_power;
         }else {
             if (onOff == -1) {
-                return R.drawable.candle_offline;
+                return R.drawable.pro_000508000108_offline_normal;
             } else if (onOff == 0) {
-                return R.drawable.candle_off_normal;
+                return R.drawable.pro_000508000108_off_normal;
             } else {
-                return R.drawable.candle_normal;
+                return R.drawable.pro_000508000108_normal;
             }
         }
     }
