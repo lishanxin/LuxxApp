@@ -690,7 +690,9 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 if (buttonView.isPressed()) {
                     if (isTelink) {
                         byte[] command = CommonMeshCommand.getOnOffCommand(isChecked);
-                        TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+                        if (isChecked || activityMode != Constant.REQUEST_CODE_TIMER_ACTION) {
+                            TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, command);
+                        }
                         setTelinkTimerByteAction(command);
                         // Todo 测试 待确认是否需要屏蔽这个代码
 //                        TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, isChecked);
