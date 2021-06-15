@@ -1098,8 +1098,7 @@ public class LightRGBDetailActivity extends BaseActivity implements
                 candle_onoff = !candle_onoff;
                 if (switcher.isChecked()) {
                     switcher.setChecked(false);
-                    TelinkApiManager.getInstance().setSwitchLightOnOff(hslEleAdr, false);
-//                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getOnOffCommand(false));
+                    TelinkApiManager.getInstance().setCommonCommand(hslEleAdr, CommonMeshCommand.getOnOffCommand(false));
                     mHandler.sendEmptyMessageDelayed(MSG_TELINK_CANDLE, 2000);
                     if (infor == null) return;
                     PipaRequest req = infor.commitLightOnOff(false);
