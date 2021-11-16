@@ -127,7 +127,7 @@ public class TelinkApiManager implements EventListener<String> {
 
         DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            expiredTime = dateFormat2.parse("2021-07-06 00:00:00");
+            expiredTime = dateFormat2.parse("2021-12-01 00:00:01");
         } catch (ParseException e) {
             e.printStackTrace();
         }

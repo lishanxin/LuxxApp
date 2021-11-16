@@ -28,9 +28,9 @@ android {
         applicationId "net.senink.seninkapp"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 1211
+        versionCode 1213
         //*** 项目在TelinkApiManager设置了限时，若最终交付，需把限时取消 ***
-        versionName "1.79"
+        versionName "1.81"
         multiDexEnabled true
         buildConfigField "boolean", "Release", "false"
 
