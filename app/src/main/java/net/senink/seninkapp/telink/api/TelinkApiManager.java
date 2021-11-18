@@ -89,7 +89,7 @@ public class TelinkApiManager implements EventListener<String> {
     public static final String TELINK_ADDRESS = "TELINKADDRESS";
     public static final String TELINK_Timer_Action_Data = "telink_timer_action_data";
 
-    private static Date expiredTime;
+    private static Date expiredTime = null;
 
     public static TelinkApiManager getInstance() {
         if (instance == null) {
@@ -125,12 +125,12 @@ public class TelinkApiManager implements EventListener<String> {
         };
         addEventListener();
 
-        DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            expiredTime = dateFormat2.parse("2021-12-01 00:00:01");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//        DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        try {
+//            expiredTime = dateFormat2.parse("2121-12-01 00:00:01");
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
